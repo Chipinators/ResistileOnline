@@ -5,15 +5,14 @@ namespace Assets.Scripts
 {
     public class BoardHandler : MonoBehaviour {
         public int Rows, Columns;
-        public static int RowsStat, ColumnsStat;
+        internal static int RowsStat, ColumnsStat;
         public GameObject Prefab;
-        public static GameObject[,] BoardArray;
-
+        internal static GameObject[,] BoardArray;
 
         private void Start() {
             RowsStat = Rows;
             ColumnsStat = Columns;
-            BoardArray = new GameObject[Columns, Rows];
+            BoardArray = new GameObject[Rows, Columns];
             var canvas = transform.parent;
             var board = GameObject.FindGameObjectWithTag("Board");
             var rect = board.GetComponent<RectTransform>();
@@ -29,18 +28,20 @@ namespace Assets.Scripts
 
             Debug.Log(Rows + "  " + Columns);
 
-            for (var i = 0; i < Columns; i++)
-            for (var j = 0; j < Rows; j++) {
+            for (var y = 0; y < Columns; y++)
+            for (var x = 0; x < Rows; x++)
+            {
                 var node = Instantiate(Prefab);
+                node.name += x + " " + y;
                 node.transform.SetParent(transform);
-                BoardArray[i, j] = node;
+                BoardArray[x, y] = node;
             }
         }
 
         public static int[] CoordinatesOf(GameObject value)
         {
-            for (var x = 0; x < ColumnsStat; ++x)
-            for (var y = 0; y < RowsStat; ++y)
+            for (var x = 0; x < ColumnsStat; x++)
+            for (var y = 0; y < RowsStat; y++)
                 if (BoardArray[x, y].GetInstanceID() == value.GetInstanceID())
                     return new int[] { x, y};
             return new int[] { -1, -1 };
