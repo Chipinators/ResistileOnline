@@ -20,7 +20,7 @@ public class BoardHandler : MonoBehaviour {
         GridLayoutGroup grid = board.GetComponent<GridLayoutGroup>();
 
         float height = canvas.transform.GetComponent<RectTransform>().rect.height;  //Canvas Size
-        float spacing = 5F;
+        float spacing = 3F;
         float boardHeight = height * 0.90F;
         float tileHeight = boardHeight / columns - spacing;   //Tile size = board size / column size
 
