@@ -4,3 +4,10 @@ C:\Users\saglikb\Desktop\ResistileOnline\Assets\Scripts\ResistileConsole\bin\Deb
 C:\Users\saglikb\Desktop\ResistileOnline\Assets\Scripts\ResistileConsole\obj\Debug\ResistileConsole.csprojResolveAssemblyReference.cache
 C:\Users\saglikb\Desktop\ResistileOnline\Assets\Scripts\ResistileConsole\obj\Debug\ResistileConsole.exe
 C:\Users\saglikb\Desktop\ResistileOnline\Assets\Scripts\ResistileConsole\obj\Debug\ResistileConsole.pdb
+C:\Users\saglikb\Desktop\ResistileOnline\Assets\Scripts\ResistileConsole\bin\Debug\Accord.dll.config
+C:\Users\saglikb\Desktop\ResistileOnline\Assets\Scripts\ResistileConsole\bin\Debug\Accord.dll
+C:\Users\saglikb\Desktop\ResistileOnline\Assets\Scripts\ResistileConsole\bin\Debug\Accord.Math.Core.dll
+C:\Users\saglikb\Desktop\ResistileOnline\Assets\Scripts\ResistileConsole\bin\Debug\Accord.Math.dll
+C:\Users\saglikb\Desktop\ResistileOnline\Assets\Scripts\ResistileConsole\bin\Debug\Accord.xml
+C:\Users\saglikb\Desktop\ResistileOnline\Assets\Scripts\ResistileConsole\bin\Debug\Accord.Math.xml
+C:\Users\saglikb\Desktop\ResistileOnline\Assets\Scripts\ResistileConsole\bin\Debug\Accord.Math.Core.xml
