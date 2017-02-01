@@ -12,8 +12,12 @@ public class DropArea : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPoin
         Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
         if(d!= null)
         {
+            int[] coord = BoardHandler.CoordinatesOf(this.gameObject);
+            Debug.Log("Coordinates: " + "X - " + coord[0] + " Y - " + coord[1]);
             d.returnParent = this.transform;
         }
+       
+        
     }
 
     public void OnPointerEnter(PointerEventData eventData)
