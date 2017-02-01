@@ -1,31 +1,33 @@
 ﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine.EventSystems;
-using System;
 
-public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {
+namespace Assets.Scripts
+{
+    public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {
 
-    public Transform returnParent = null;
+        internal Transform _returnParent = null;
+        private GameObject _draggedGameObject = null;
 
-    public void OnBeginDrag(PointerEventData eventData)
-    {
-        returnParent = this.transform.parent;
-        this.transform.SetParent(GameObject.Find("Canvas").transform);
+        public void OnBeginDrag(PointerEventData eventData)
+        {
+            _draggedGameObject = Instantiate(gameObject);
+            _returnParent = _draggedGameObject.transform.parent;
+            _draggedGameObject.transform.SetParent(GameObject.Find("Canvas").transform);
+            _draggedGameObject.GetComponent<CanvasGroup>().blocksRaycasts = false;
+        }
 
-        GetComponent<CanvasGroup>().blocksRaycasts = false;
+        public void OnDrag(PointerEventData eventData)
+        {
+            _draggedGameObject.transform.position = eventData.position;
+        }
 
-    }
+        public void OnEndDrag(PointerEventData eventData)
+        {
+            _draggedGameObject.transform.SetParent(_returnParent);
+            GetComponent<CanvasGroup>().blocksRaycasts = true;
 
-    public void OnDrag(PointerEventData eventData)
-    {
-        this.transform.position = eventData.position;
-    }
+        }
 
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        this.transform.SetParent(returnParent);
-        GetComponent<CanvasGroup>().blocksRaycasts = true;
-
+        
     }
 }

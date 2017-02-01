@@ -1,19 +1,20 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class DeckHandler : MonoBehaviour {
+namespace Assets.Scripts
+{
+    public class DeckHandler : MonoBehaviour {
 
-    public int totalWires = 30;
-    public int totalResistors = 33;
+        public int TotalWires = 30;
+        public int TotalResistors = 33;
 
 
-	void Start () {
+        private void Start () {
 		
-	}
+        }
 	
-	// Update is called once per frame
-	void Update () {
+        // Update is called once per frame
+        private void Update () {
 		
-	}
+        }
+    }
 }

@@ -1,32 +1,32 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class DropArea : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler {
+namespace Assets.Scripts
+{
+    public class DropArea : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler {
 
 
-    public void OnDrop(PointerEventData eventData)
-    {
-        Draggable d = eventData.pointerDrag.GetComponent<Draggable>();
-        if(d!= null)
+        public void OnDrop(PointerEventData eventData)
         {
-            int[] coord = BoardHandler.CoordinatesOf(this.gameObject);
-            Debug.Log("Coordinates: " + "X - " + coord[0] + " Y - " + coord[1]);
-            d.returnParent = this.transform;
-        }
+            var d = eventData.pointerDrag.GetComponent<Draggable>();
+            if(d!= null)
+            {
+                var coord = BoardHandler.CoordinatesOf(gameObject);
+                Debug.Log("Coordinates: " + "X - " + coord[0] + " Y - " + coord[1]);
+                d._returnParent = transform;
+            }
        
         
-    }
+        }
 
-    public void OnPointerEnter(PointerEventData eventData)
-    {
+        public void OnPointerEnter(PointerEventData eventData)
+        {
         
-    }
+        }
 
-    public void OnPointerExit(PointerEventData eventData)
-    {
+        public void OnPointerExit(PointerEventData eventData)
+        {
         
+        }
     }
 }
