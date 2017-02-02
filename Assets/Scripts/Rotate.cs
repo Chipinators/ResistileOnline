@@ -3,7 +3,9 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts
 {
-    public class Rotate : MonoBehaviour {
+    public class Rotate : MonoBehaviour
+    {
+        internal int rotation = 0;
         public Button YourButton;
 
         private void Start()
@@ -12,9 +14,12 @@ namespace Assets.Scripts
             YourButton.onClick.AddListener(TaskOnClick);
         }
 
-        private void TaskOnClick()
+        public void TaskOnClick()
         {
+            rotation = (rotation + 1) % 4;
             transform.Rotate(0, 0, -90);
+            GameNodeAdapter adapter = GetComponent<GameNodeAdapter>();
+            adapter.Rotate();
             Debug.Log("You have clicked the button!");
         }
     }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using ResistileConsole;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.Scripts
@@ -7,7 +8,10 @@ namespace Assets.Scripts
         public int Rows, Columns;
         internal static int RowsStat, ColumnsStat;
         public GameObject Prefab;
+        public GameObject StartNode;
+        public GameObject EndNode;
         internal static GameObject[,] BoardArray;
+        internal static GameControl myGame = new GameControl();
 
         private void Start() {
             RowsStat = Rows;
@@ -28,14 +32,29 @@ namespace Assets.Scripts
 
             Debug.Log(Rows + "  " + Columns);
 
+            var nodeS = Instantiate(StartNode);
+            nodeS.transform.SetParent(transform);
+            BoardArray[0, 0] = nodeS;
+            
             for (var y = 0; y < Columns; y++)
             for (var x = 0; x < Rows; x++)
             {
+                if(y == 0 && x == 0)
+                    continue;
+                if (y == Columns - 1 && x == Rows - 1)
+                    continue;
                 var node = Instantiate(Prefab);
                 node.name += x + " " + y;
                 node.transform.SetParent(transform);
                 BoardArray[x, y] = node;
             }
+
+
+            var nodeE = Instantiate(EndNode);
+            nodeE.transform.Rotate(0, 0, -180);
+            nodeE.transform.SetParent(transform);
+            BoardArray[Rows - 1, Columns - 1] = nodeE;
+
         }
 
         public static int[] CoordinatesOf(GameObject value)

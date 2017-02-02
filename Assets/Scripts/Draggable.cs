@@ -10,7 +10,13 @@ namespace Assets.Scripts
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            _draggedGameObject = Instantiate(gameObject);
+            GameObject newInstance = Instantiate(gameObject);
+            newInstance.transform.SetParent(GameObject.Find("Hand").transform);
+
+            newInstance.GetComponent<Rotate>().rotation = gameObject.GetComponent<Rotate>().rotation;
+            
+            
+            _draggedGameObject = gameObject;
             _returnParent = _draggedGameObject.transform.parent;
             _draggedGameObject.transform.SetParent(GameObject.Find("Canvas").transform);
             _draggedGameObject.GetComponent<CanvasGroup>().blocksRaycasts = false;
