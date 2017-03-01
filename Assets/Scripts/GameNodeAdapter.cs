@@ -36,7 +36,7 @@ public class GameNodeAdapter : MonoBehaviour {
             gameNode = new GameNodeTypeTWire();
         }
 
-	    Rotate gameObjectRotate = gameObject.GetComponent<Rotate>();
+	    RotateTile gameObjectRotate = gameObject.GetComponent<RotateTile>();
 	    for (int i = 0; i < gameObjectRotate.rotation; i++)
 	    {
 	        Rotate();

@@ -13,7 +13,7 @@ namespace Assets.Scripts
             GameObject newInstance = Instantiate(gameObject);
             newInstance.transform.SetParent(GameObject.Find("Hand").transform);
 
-            newInstance.GetComponent<Rotate>().rotation = gameObject.GetComponent<Rotate>().rotation;
+            newInstance.GetComponent<RotateTile>().rotation = gameObject.GetComponent<RotateTile>().rotation;
             
             
             _draggedGameObject = gameObject;

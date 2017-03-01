@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts
 {
-    public class Rotate : MonoBehaviour
+    public class RotateTile : MonoBehaviour
     {
         internal int rotation = 0;
         public Button YourButton;
