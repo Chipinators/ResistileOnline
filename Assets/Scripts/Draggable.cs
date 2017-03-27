@@ -5,16 +5,13 @@ namespace Assets.Scripts
 {
     public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {
 
+        public string hand;
         internal Transform _returnParent = null;
         private GameObject _draggedGameObject = null;
 
         public void OnBeginDrag(PointerEventData eventData)
         {
-            GameObject newInstance = Instantiate(gameObject);
-            newInstance.transform.SetParent(GameObject.Find("Hand").transform);
-
-            newInstance.GetComponent<RotateTile>().rotation = gameObject.GetComponent<RotateTile>().rotation;
-            
+     
             
             _draggedGameObject = gameObject;
             _returnParent = _draggedGameObject.transform.parent;

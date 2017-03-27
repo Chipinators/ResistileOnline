@@ -22,18 +22,8 @@ namespace Assets.Scripts
             var rect = board.GetComponent<RectTransform>();
             var grid = board.GetComponent<GridLayoutGroup>();
 
-            var height = canvas.transform.GetComponent<RectTransform>().rect.height;  //Canvas Size
-            var spacing = 3F;
-            var boardHeight = height * 0.90F;
-            var tileHeight = boardHeight / Columns - spacing;   //Tile size = board size / column size
-
-            rect.sizeDelta = new Vector2(boardHeight, boardHeight);
-            grid.cellSize = new Vector2(tileHeight, tileHeight);
-
-            Debug.Log(Rows + "  " + Columns);
-
             var nodeS = Instantiate(StartNode);
-            nodeS.transform.SetParent(transform);
+            nodeS.transform.SetParent(transform, false);
             BoardArray[0, 0] = nodeS;
             
             for (var y = 0; y < Columns; y++)
@@ -45,14 +35,14 @@ namespace Assets.Scripts
                     continue;
                 var node = Instantiate(Prefab);
                 node.name += x + " " + y;
-                node.transform.SetParent(transform);
+                node.transform.SetParent(transform, false);
                 BoardArray[x, y] = node;
             }
 
 
             var nodeE = Instantiate(EndNode);
             nodeE.transform.Rotate(0, 0, -180);
-            nodeE.transform.SetParent(transform);
+            nodeE.transform.SetParent(transform, false);
             BoardArray[Rows - 1, Columns - 1] = nodeE;
 
         }
