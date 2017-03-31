@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
+/*
+Changed Gametile ID to Int (was Guid)
+*/
 namespace ResistileServer
 {
     class GameTile
     {
-        public Guid id;
+        public int id;
         private Dictionary<string, GameTile> neighbors = new Dictionary<string, GameTile>
         {
             {Directions.up, null},
@@ -22,7 +25,7 @@ namespace ResistileServer
             this.type = type;
             this.resistance = resistance;
             SetNeighbors(type);
-            id = new Guid();
+            id = new int();
         }
 
         public GameTile Clone()
