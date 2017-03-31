@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Collections;
 
 namespace ResistileServer
 {
@@ -37,9 +38,10 @@ namespace ResistileServer
         }
         static void testcase()
         {
-            DeckManager myManager = new DeckManager();
-            
-
+            int[] second = new int[2] { 1, 2 };
+            //DeckManager myManager = new DeckManager(); 
+            ArrayList shit = new ArrayList();
+            Player myPlayer = new Player("Rob",shit, 10.2, second);
         }
     }
 

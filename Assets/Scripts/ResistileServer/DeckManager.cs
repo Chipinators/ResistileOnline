@@ -121,5 +121,9 @@ namespace ResistileServer
             foreach (var value in values.OrderBy(x => rng.Next()))
                 stack.Push(value);
         }
+        public GameTile draw()
+        {
+            return resistorSolderDeck.Pop();
+        }
     }
 }
