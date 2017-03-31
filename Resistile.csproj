@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{68F56A93-4FC9-A42A-7BBA-D4AEDA1B2573}</ProjectGuid>
+    <ProjectGuid>{6E764D43-78FD-ACE8-024E-F007CD28E35F}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AssemblyName>Assembly-CSharp</AssemblyName>
     <FileAlignment>512</FileAlignment>
@@ -13,13 +13,11 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.5.0f3</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <LangVersion Condition=" '$(VisualStudioVersion)' != '10.0' ">4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -54,9 +52,6 @@
     <Reference Include="UnityEngine">
       <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Advertisements">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Advertisements.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
@@ -71,9 +66,6 @@
     </Reference>
     <Reference Include="UnityEngine.HoloLens">
       <HintPath>Library\UnityAssemblies\UnityEngine.HoloLens.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.Purchasing">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Purchasing.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.VR">
       <HintPath>Library\UnityAssemblies\UnityEngine.VR.dll</HintPath>
@@ -117,7 +109,15 @@
     <Compile Include="Assets\Scripts\DropArea.cs" />
     <Compile Include="Assets\Scripts\FillHand.cs" />
     <Compile Include="Assets\Scripts\GameNodeAdapter.cs" />
+    <Compile Include="Assets\Scripts\HostScreenPanelAdapter.cs" />
     <Compile Include="Assets\Scripts\LoadLevel.cs" />
+    <Compile Include="Assets\Scripts\MessageHandlers\MH_Board.cs" />
+    <Compile Include="Assets\Scripts\MessageHandlers\MH_Host.cs" />
+    <Compile Include="Assets\Scripts\MessageHandlers\MH_Login.cs" />
+    <Compile Include="Assets\Scripts\MessageHandlers\MH_MainMenu.cs" />
+    <Compile Include="Assets\Scripts\MessageHandlers\MH_ServerBrowser.cs" />
+    <Compile Include="Assets\Scripts\MessageHandlers\MH_SettingTutorial.cs" />
+    <Compile Include="Assets\Scripts\MessageType.cs" />
     <Compile Include="Assets\Scripts\NetworkManager.cs" />
     <Compile Include="Assets\Scripts\ResistileClient\Program.cs" />
     <Compile Include="Assets\Scripts\ResistileConsole\BlockedDirection.cs" />

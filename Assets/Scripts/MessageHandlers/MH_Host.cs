@@ -1,0 +1,24 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class MH_Host : MonoBehaviour {
+    public void decline()
+    {
+        NetworkManager.networkManager.sendMessage(MessageType.hostDecline, "HostDecline");
+        LoadLevel.LoadScene("HostWaitingScene");
+    }
+
+    public void cancelSearch()
+    {
+        NetworkManager.networkManager.sendMessage(MessageType.cancelHost, "HostCancel");
+        LoadLevel.LoadScene("MainMenu");
+    }
+
+    public void accept()
+    {
+        NetworkManager.networkManager.sendMessage(MessageType.startGame, "HostAccept");
+        LoadLevel.LoadScene("Board");
+    }
+}

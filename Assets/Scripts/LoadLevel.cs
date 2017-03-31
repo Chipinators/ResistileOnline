@@ -4,9 +4,7 @@ using UnityEngine;
 
 public class LoadLevel : MonoBehaviour {
 
-    public string Destination;
-
-    public void LoadScene()
+    public static void LoadScene(string Destination)
     {
         Application.LoadLevel(Destination);
     }
