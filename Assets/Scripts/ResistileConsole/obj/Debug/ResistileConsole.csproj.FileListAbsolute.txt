@@ -11,3 +11,6 @@ C:\Users\saglikb\Desktop\ResistileOnline\Assets\Scripts\ResistileConsole\bin\Deb
 C:\Users\saglikb\Desktop\ResistileOnline\Assets\Scripts\ResistileConsole\bin\Debug\Accord.xml
 C:\Users\saglikb\Desktop\ResistileOnline\Assets\Scripts\ResistileConsole\bin\Debug\Accord.Math.xml
 C:\Users\saglikb\Desktop\ResistileOnline\Assets\Scripts\ResistileConsole\bin\Debug\Accord.Math.Core.xml
+C:\Users\saglikb\Desktop\yolo\Resistile\Assets\Scripts\ResistileConsole\bin\Debug\ResistileConsole.exe.config
+C:\Users\saglikb\Desktop\yolo\Resistile\Assets\Scripts\ResistileConsole\obj\Debug\ResistileConsole.exe
+C:\Users\saglikb\Desktop\yolo\Resistile\Assets\Scripts\ResistileConsole\obj\Debug\ResistileConsole.pdb
