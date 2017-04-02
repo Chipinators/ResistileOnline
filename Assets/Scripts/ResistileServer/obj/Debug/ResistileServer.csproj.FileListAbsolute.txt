@@ -2,3 +2,8 @@ C:\Users\saglikb\Desktop\Git Repos\ResistileOnline\Assets\Scripts\ResistileServe
 C:\Users\saglikb\Desktop\Git Repos\ResistileOnline\Assets\Scripts\ResistileServer\bin\Debug\ResistileServer.pdb
 C:\Users\saglikb\Desktop\Git Repos\ResistileOnline\Assets\Scripts\ResistileServer\obj\Debug\ResistileServer.exe
 C:\Users\saglikb\Desktop\Git Repos\ResistileOnline\Assets\Scripts\ResistileServer\obj\Debug\ResistileServer.pdb
+C:\Users\Chris\Documents\Git\Resistile\Assets\Scripts\ResistileServer\bin\Debug\ResistileServer.exe
+C:\Users\Chris\Documents\Git\Resistile\Assets\Scripts\ResistileServer\bin\Debug\ResistileServer.pdb
+C:\Users\Chris\Documents\Git\Resistile\Assets\Scripts\ResistileServer\obj\Debug\ResistileServer.csprojResolveAssemblyReference.cache
+C:\Users\Chris\Documents\Git\Resistile\Assets\Scripts\ResistileServer\obj\Debug\ResistileServer.exe
+C:\Users\Chris\Documents\Git\Resistile\Assets\Scripts\ResistileServer\obj\Debug\ResistileServer.pdb
