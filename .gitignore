@@ -19,6 +19,7 @@ ExportedObj/
 
 # Unity3D generated meta files
 *.meta
+*.cache
 
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
