@@ -12,7 +12,7 @@ public class MH_MainMenu : MonoBehaviour {
 
     public void serverBrowser()
     {
-        NetworkManager.networkManager.sendMessage(MessageType.serverList, "StartHosting");
+        NetworkManager.networkManager.sendMessage(MessageType.serverList, "serverList");
         LoadLevel.LoadScene("ServerBrowser");
     }
 

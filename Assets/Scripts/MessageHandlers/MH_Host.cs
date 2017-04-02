@@ -4,10 +4,17 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class MH_Host : MonoBehaviour {
+    public GameObject panelManager;
+
+    void Start()
+    {
+        panelManager = GameObject.FindGameObjectWithTag("PanelManager");
+    }
+
     public void decline()
     {
         NetworkManager.networkManager.sendMessage(MessageType.hostDecline, "HostDecline");
-        LoadLevel.LoadScene("HostWaitingScene");
+        panelManager.GetComponent<HostScreenPanelAdapter>().isWaiting = true;
     }
 
     public void cancelSearch()

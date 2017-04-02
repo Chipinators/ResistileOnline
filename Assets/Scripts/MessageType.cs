@@ -30,6 +30,7 @@ public class MessageType : MonoBehaviour {
     public const int rotate = 21;
     public const int endTurn = 22;
     public const int resGuess = 23;
+    public const int quitGame = 24;
 
     void Start()
     {

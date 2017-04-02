@@ -107,8 +107,9 @@
     <Compile Include="Assets\Scripts\DeckHandler.cs" />
     <Compile Include="Assets\Scripts\Draggable.cs" />
     <Compile Include="Assets\Scripts\DropArea.cs" />
-    <Compile Include="Assets\Scripts\FillHand.cs" />
+    <Compile Include="Assets\Scripts\GameHandler.cs" />
     <Compile Include="Assets\Scripts\GameNodeAdapter.cs" />
+    <Compile Include="Assets\Scripts\GameTiles.cs" />
     <Compile Include="Assets\Scripts\HostScreenPanelAdapter.cs" />
     <Compile Include="Assets\Scripts\LoadLevel.cs" />
     <Compile Include="Assets\Scripts\MessageHandlers\MH_Board.cs" />
@@ -144,6 +145,7 @@
     <Compile Include="Assets\Scripts\RotateTile.cs" />
     <Compile Include="Assets\Scripts\SetDimensions.cs" />
     <Compile Include="Assets\Scripts\Spin.cs" />
+    <Compile Include="Assets\Scripts\TileData.cs" />
     <Compile Include="Assets\Scripts\Tutorial.cs" />
   </ItemGroup>
   <ItemGroup>
