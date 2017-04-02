@@ -52,6 +52,12 @@
     <Reference Include="UnityEngine">
       <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
     </Reference>
+<<<<<<< HEAD
+=======
+    <Reference Include="UnityEngine.Advertisements">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Advertisements.dll</HintPath>
+    </Reference>
+>>>>>>> RobAdditions
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
@@ -67,6 +73,12 @@
     <Reference Include="UnityEngine.HoloLens">
       <HintPath>Library\UnityAssemblies\UnityEngine.HoloLens.dll</HintPath>
     </Reference>
+<<<<<<< HEAD
+=======
+    <Reference Include="UnityEngine.Purchasing">
+      <HintPath>Library\UnityAssemblies\UnityEngine.Purchasing.dll</HintPath>
+    </Reference>
+>>>>>>> RobAdditions
     <Reference Include="UnityEngine.VR">
       <HintPath>Library\UnityAssemblies\UnityEngine.VR.dll</HintPath>
     </Reference>
@@ -107,6 +119,7 @@
     <Compile Include="Assets\Scripts\DeckHandler.cs" />
     <Compile Include="Assets\Scripts\Draggable.cs" />
     <Compile Include="Assets\Scripts\DropArea.cs" />
+<<<<<<< HEAD
     <Compile Include="Assets\Scripts\GameHandler.cs" />
     <Compile Include="Assets\Scripts\GameNodeAdapter.cs" />
     <Compile Include="Assets\Scripts\GameTiles.cs" />
@@ -120,6 +133,11 @@
     <Compile Include="Assets\Scripts\MessageHandlers\MH_SettingTutorial.cs" />
     <Compile Include="Assets\Scripts\MessageType.cs" />
     <Compile Include="Assets\Scripts\NetworkManager.cs" />
+=======
+    <Compile Include="Assets\Scripts\FillHand.cs" />
+    <Compile Include="Assets\Scripts\GameNodeAdapter.cs" />
+    <Compile Include="Assets\Scripts\LoadLevel.cs" />
+>>>>>>> RobAdditions
     <Compile Include="Assets\Scripts\ResistileClient\Program.cs" />
     <Compile Include="Assets\Scripts\ResistileConsole\BlockedDirection.cs" />
     <Compile Include="Assets\Scripts\ResistileConsole\Coordinates.cs" />
@@ -139,13 +157,23 @@
     <Compile Include="Assets\Scripts\ResistileConsole\obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
     <Compile Include="Assets\Scripts\ResistileConsole\obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
     <Compile Include="Assets\Scripts\ResistileConsole\obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
+<<<<<<< HEAD
     <Compile Include="Assets\Scripts\ResistileServer\GameTile.cs" />
     <Compile Include="Assets\Scripts\ResistileServer\HandleClient.cs" />
+=======
+    <Compile Include="Assets\Scripts\ResistileServer\DeckManager.cs" />
+    <Compile Include="Assets\Scripts\ResistileServer\GameTile.cs" />
+    <Compile Include="Assets\Scripts\ResistileServer\HandleClient.cs" />
+    <Compile Include="Assets\Scripts\ResistileServer\Player.cs" />
+>>>>>>> RobAdditions
     <Compile Include="Assets\Scripts\ResistileServer\Program.cs" />
     <Compile Include="Assets\Scripts\RotateTile.cs" />
     <Compile Include="Assets\Scripts\SetDimensions.cs" />
     <Compile Include="Assets\Scripts\Spin.cs" />
+<<<<<<< HEAD
     <Compile Include="Assets\Scripts\TileData.cs" />
+=======
+>>>>>>> RobAdditions
     <Compile Include="Assets\Scripts\Tutorial.cs" />
   </ItemGroup>
   <ItemGroup>

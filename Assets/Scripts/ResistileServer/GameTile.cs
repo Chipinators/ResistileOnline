@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 
+/*
+Changed Gametile ID to Int (was Guid)
+*/
 namespace ResistileServer
 {
     class GameTile
     {
-        public Guid id;
+        public int id;
         private Dictionary<string, GameTile> neighbors = new Dictionary<string, GameTile>
         {
             {Directions.up, null},
@@ -17,19 +20,20 @@ namespace ResistileServer
         private int currentIndex = -1;
         public string type;
         
-        public GameTile(string type, double resistance = double.Epsilon)
+        public GameTile(string type, int id = 0, double resistance = double.Epsilon)
         {
             this.type = type;
+            this.id = id;
             this.resistance = resistance;
             SetNeighbors(type);
-            id = new Guid();
+            id = new int();
         }
 
         public GameTile Clone()
         {
             //clone a tile with a different id
             //usefull for temperory objects and path finding
-            GameTile copy = new GameTile(type, resistance);
+            GameTile copy = new GameTile(type, id, resistance);
             copy.neighbors = new Dictionary<string, GameTile>(neighbors);
             copy.currentIndex = currentIndex;
             return copy;
@@ -46,7 +50,7 @@ namespace ResistileServer
             return gameTile != null && id == gameTile.id;
         }
 
-        public static readonly GameTile blockedDirectionTile = new GameTile(GameTileTypes.blockedDirection);
+        public static readonly GameTile blockedDirectionTile = new GameTile(GameTileTypes.blockedDirection, -1);
         private void SetNeighbors(string type)
         {
             switch (type)

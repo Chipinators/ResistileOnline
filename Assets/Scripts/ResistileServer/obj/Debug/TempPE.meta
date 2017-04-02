@@ -1,7 +1,13 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: f903a88f9719dcc45ab43ce21dcd42a4
 folderAsset: yes
 timeCreated: 1490979107
+=======
+guid: 63df319516920df439b94bbdd3cd48a7
+folderAsset: yes
+timeCreated: 1491087859
+>>>>>>> RobAdditions
 licenseType: Free
 DefaultImporter:
   userData: 
