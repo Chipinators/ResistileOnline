@@ -11,27 +11,30 @@ namespace ResistileServer
         private const int MAX = 92;
         private static int currId = -1;
         private static Random rng = new Random();
-
         public Stack<GameTile> wireHand = new Stack<GameTile>();
         public Stack<GameTile> tileHand = new Stack<GameTile>();
         private Stack<GameTile> wireDeck = new Stack<GameTile>();
         private Stack<GameTile> resistorSolderDeck = new Stack<GameTile>();
-
+        private Dictionary<int, GameTile> allTiles = new Dictionary<int, GameTile>();
         static private Dictionary<String, int> cardCounts = new Dictionary<String, int>
             {
-            {GameTileTypes.Wire.typeI, 14},
-            {GameTileTypes.Wire.typeII, 14},
-            {GameTileTypes.Wire.typeT, 11}, //11
-            {GameTileTypes.Resistor.typeI, 24}, //24
+            {GameTileTypes.Wire.typeI, 14}, //0-13
+            {GameTileTypes.Wire.typeII, 14}, //14-27
+            {GameTileTypes.Wire.typeT, 11}, //28-38
+            {GameTileTypes.Resistor.typeI, 24}, //
             {GameTileTypes.Resistor.typeII, 24}, //24
             {GameTileTypes.solder, 5} //5
             };
 
-        private static int CreateId()
-        {
-            currId++;
-            return currId;
-        }
+        //static private Dictionary<int, String> idList = new Dictionary<int, String>
+        //{
+        //    {0, GameTileTypes.Wire.typeI},
+        //    {1, GameTileTypes.Wire.typeI},
+        //    {2, GameTileTypes.Wire.typeI},
+        //    {3, GameTileTypes.Wire.typeI},
+        //    {4, GameTileTypes.Wire.typeI},
+        //    {5, GameTileTypes.Wire.typeI},
+        //}
 
         public DeckManager()
         {
@@ -41,15 +44,22 @@ namespace ResistileServer
             */
             for (i=0; i<cardCounts[GameTileTypes.Wire.typeI]; i++) //Straight Wires
             {
-                wireDeck.Push(new GameTile(GameTileTypes.Wire.typeI, CreateId()));
+                var tile = new GameTile(GameTileTypes.Wire.typeI, CreateId());
+                wireDeck.Push(tile);
+                allTiles.Add(i, tile);
             }
             for (i=0; i<cardCounts[GameTileTypes.Wire.typeII]; i++) //Angle Wires
             {
-                wireDeck.Push(new GameTile(GameTileTypes.Wire.typeII, CreateId()));
+                var tile = new GameTile(GameTileTypes.Wire.typeII, CreateId());
+                wireDeck.Push(tile);
+                allTiles.Add(i, tile);
+
             }
             for (i=0; i<cardCounts[GameTileTypes.Wire.typeT]; i++) //T Wires
             {
-                wireDeck.Push(new GameTile(GameTileTypes.Wire.typeT, CreateId()));
+                var tile = new GameTile(GameTileTypes.Wire.typeT, CreateId());
+                wireDeck.Push(tile);
+                allTiles.Add(i, tile);
             }
             /*
             STRAIGHT RESISTORS
@@ -58,23 +68,33 @@ namespace ResistileServer
             {
                 if (i < 6)
                 {
-                    resistorSolderDeck.Push(new GameTile(GameTileTypes.Resistor.typeI, CreateId(), 1));
+                    var tile = new GameTile(GameTileTypes.Resistor.typeI, CreateId(), 1);
+                    resistorSolderDeck.Push(tile);
+                    allTiles.Add(i, tile);
                 }
                 else if(i < 12)
                 {
-                    resistorSolderDeck.Push(new GameTile(GameTileTypes.Resistor.typeI, CreateId(), 2));
+                    var tile = new GameTile(GameTileTypes.Resistor.typeI, CreateId(), 2);
+                    resistorSolderDeck.Push(tile);
+                    allTiles.Add(i, tile);
                 }
                 else if(i < 17)
                 {
-                    resistorSolderDeck.Push(new GameTile(GameTileTypes.Resistor.typeI, CreateId(), 3));
+                    var tile = new GameTile(GameTileTypes.Resistor.typeI, CreateId(), 3);
+                    resistorSolderDeck.Push(tile);
+                    allTiles.Add(i, tile);
                 }
                 else if(i < 21)
                 {
-                    resistorSolderDeck.Push(new GameTile(GameTileTypes.Resistor.typeI, CreateId(), 4));
+                    var tile = new GameTile(GameTileTypes.Resistor.typeI, CreateId(), 4);
+                    resistorSolderDeck.Push(tile);
+                    allTiles.Add(i, tile);
                 }
                 else
                 {
-                    resistorSolderDeck.Push(new GameTile(GameTileTypes.Resistor.typeI, CreateId(), 5));
+                    var tile = new GameTile(GameTileTypes.Resistor.typeI, CreateId(), 5);
+                    resistorSolderDeck.Push(tile);
+                    allTiles.Add(i, tile);
                 }
             }
             /*
@@ -84,23 +104,33 @@ namespace ResistileServer
             {
                 if(i < 6)
                 {
-                    resistorSolderDeck.Push(new GameTile(GameTileTypes.Resistor.typeII, CreateId(), 1));
+                    var tile = new GameTile(GameTileTypes.Resistor.typeII, CreateId(), 1);
+                    resistorSolderDeck.Push(tile);
+                    allTiles.Add(i, tile);
                 }
                 else if(i < 12)
                 {
-                    resistorSolderDeck.Push(new GameTile(GameTileTypes.Resistor.typeII, CreateId(), 2));
+                    var tile = new GameTile(GameTileTypes.Resistor.typeII, CreateId(), 2);
+                    resistorSolderDeck.Push(tile);
+                    allTiles.Add(i, tile);
                 }
                 else if (i < 17)
                 {
-                    resistorSolderDeck.Push(new GameTile(GameTileTypes.Resistor.typeII, CreateId(), 3));
+                    var tile = new GameTile(GameTileTypes.Resistor.typeII, CreateId(), 3);
+                    resistorSolderDeck.Push(tile);
+                    allTiles.Add(i, tile);
                 }
                 else if (i < 21)
                 {
-                    resistorSolderDeck.Push(new GameTile(GameTileTypes.Resistor.typeII, CreateId(), 4));
+                    var tile = new GameTile(GameTileTypes.Resistor.typeII, CreateId(), 4);
+                    resistorSolderDeck.Push(tile);
+                    allTiles.Add(i, tile);
                 }
                 else
                 {
-                    resistorSolderDeck.Push(new GameTile(GameTileTypes.Resistor.typeII, CreateId(), 5));
+                    var tile = new GameTile(GameTileTypes.Resistor.typeII, CreateId(), 5);
+                    resistorSolderDeck.Push(tile);
+                    allTiles.Add(i, tile);
                 }
             }
             /*
@@ -108,7 +138,9 @@ namespace ResistileServer
             */
             for (i=0; i<cardCounts[GameTileTypes.solder]; i++)
             {
-                resistorSolderDeck.Push(new GameTile(GameTileTypes.solder, CreateId()));
+                var tile = new GameTile(GameTileTypes.solder, CreateId());
+                resistorSolderDeck.Push(tile);
+                allTiles.Add(i, tile);
             }
 
             /*
@@ -121,6 +153,11 @@ namespace ResistileServer
             Shuffle(resistorSolderDeck);
 
         }
+        private static int CreateId()
+        {
+            currId++;
+            return currId;
+        }
 
         public void Shuffle<GameTile>(Stack<GameTile> stack)
         {
@@ -132,6 +169,10 @@ namespace ResistileServer
         public GameTile draw()
         {
             return resistorSolderDeck.Pop();
+        }
+        public Dictionary<int, GameTile> returnAllTileDict()
+        {
+            return allTiles;
         }
     }
 }

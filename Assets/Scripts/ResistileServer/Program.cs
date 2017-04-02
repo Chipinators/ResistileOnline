@@ -38,7 +38,7 @@ namespace ResistileServer
         }
         static void testcase()
         {
-        DeckManager myManager = new DeckManager(); //Deck Creation test.
+        //DeckManager myManager = new DeckManager(); //Deck Creation test.
         }
     }
 

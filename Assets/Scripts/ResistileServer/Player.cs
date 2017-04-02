@@ -41,34 +41,9 @@ namespace ResistileServer
             this.hand = hand;
         }
 
-
-
-        //public string getUsername()
-        //{
-        //    return userName;
-        //}
-        //public void setUsername(string newUserName)
-        //{
-        //    userName = newUserName;
-        //}
-        //public double getPrimaryObj()
-        //{
-        //    return primaryObjective;
-        //}
-
-        //public void setPrimaryObj(double newPrimary)
-        //{
-        //    primaryObjective = newPrimary;
-        //}
-
-        //public int[] getSecondaryObj()
-        //{
-        //    return secondaryObjective;
-        //}
-
-        //public void setSecondaryObj(int[] newSecondary)
-        //{
-        //    secondaryObjective = newSecondary;
-        //}
+        public ArrayList getHand()
+        {
+            return hand;
+        }
     }
 }
