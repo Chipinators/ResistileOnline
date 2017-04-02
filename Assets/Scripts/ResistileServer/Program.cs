@@ -38,10 +38,7 @@ namespace ResistileServer
         }
         static void testcase()
         {
-            int[] second = new int[2] { 1, 2 };
-            //DeckManager myManager = new DeckManager(); 
-            ArrayList shit = new ArrayList();
-            Player myPlayer = new Player("Rob",shit, 10.2, second);
+        DeckManager myManager = new DeckManager(); //Deck Creation test.
         }
     }
 
