@@ -3,14 +3,33 @@ using System.Collections.Generic;
 using UnityEngine;
 using ResistileClient;
 
-public class MH_ServerBrowser : MonoBehaviour {
+public class MH_ServerBrowser : MonoBehaviour, MessageHanderInterface {
     public GameObject panelManager;
 
     void Start()
     {
+        GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<NetworkManager>().messageHandler = this.gameObject;
         panelManager = GameObject.FindGameObjectWithTag("PanelManager");
     }
 
+    public void doAction(ResistileMessage message)
+    {
+        switch (message.messageCode)
+        {
+            case ResistileMessageTypes.hostList:
+                break;
+            case ResistileMessageTypes.hostDecline:
+                break;
+            case ResistileMessageTypes.startGame:
+                break;
+            default: break;
+
+        }
+    }
+
+    //RECEIVE MESSAGES FROM SERVER
+
+    //SEND MESSAGES TO SERVER
     public void getHostList()
     {
         NetworkManager.networkManager.sendMessage(ResistileMessageTypes.hostList, "HostList");
@@ -19,7 +38,7 @@ public class MH_ServerBrowser : MonoBehaviour {
 
     public void joinLobby()
     {
-        NetworkManager.networkManager.sendMessage(ResistileMessageTypes.guestRequest, "guestRequest");
+        NetworkManager.networkManager.sendMessage(ResistileMessageTypes.joinLobby, "guestRequest");
         panelManager.GetComponent<HostScreenPanelAdapter>().isWaiting = false;
     }
 

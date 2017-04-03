@@ -14,6 +14,8 @@ public class NetworkManager : MonoBehaviour {
     public NetworkStream destStream;
     public int gameID;
     private static XmlSerializer serializer;
+    public GameObject messageHandler;
+    private MessageHanderInterface messageInterface;
 
     // Use this for initialization
     void Start () {
@@ -33,6 +35,7 @@ public class NetworkManager : MonoBehaviour {
         Thread readDataThread = new Thread(receiveMessage);
         readDataThread.Start();
     }
+
 
     void Awake()
     {
@@ -78,6 +81,7 @@ public class NetworkManager : MonoBehaviour {
                     message = (ResistileClient.ResistileMessage)serializer.Deserialize(ms);
                 }
             }
+            messageInterface.doAction(message);
             var dataFromClient = message.gameID + " " + message.messageCode + " " + message.message;
             Debug.Log("Data from Server : " + dataFromClient);
             serverStream.Flush();

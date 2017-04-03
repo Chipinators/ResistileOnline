@@ -109,6 +109,7 @@
     <Compile Include="Assets\Scripts\MessageHandlers\MH_MainMenu.cs" />
     <Compile Include="Assets\Scripts\MessageHandlers\MH_ServerBrowser.cs" />
     <Compile Include="Assets\Scripts\MessageHandlers\MH_SettingTutorial.cs" />
+    <Compile Include="Assets\Scripts\MessageHandlers\MessageHanderInterface.cs" />
     <Compile Include="Assets\Scripts\NetworkManager.cs" />
     <Compile Include="Assets\Scripts\ResistileClient\Program.cs" />
     <Compile Include="Assets\Scripts\ResistileClient\ResistileMessage.cs" />
