@@ -31,7 +31,8 @@ namespace ResistileServer
             byte[] bytesFrom = new byte[clientSocket.ReceiveBufferSize];
             string dataFromClient;
             //while timeout datetime greater than current datetime
-            while (true)
+            bool noException = true;
+            while (noException)
             {
                 try
                 {
@@ -72,7 +73,9 @@ namespace ResistileServer
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(" >> " + ex.ToString());
+                    Console.WriteLine(" >> " + ex.Message);
+                    noException = false;
+
                 }
             }
         }
