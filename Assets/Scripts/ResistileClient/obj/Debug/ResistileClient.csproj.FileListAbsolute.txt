@@ -1,5 +1,0 @@
-C:\Users\saglikb\Desktop\Git Repos\ResistileOnline\Assets\Scripts\ResistileClient\bin\Debug\ResistileClient.exe
-C:\Users\saglikb\Desktop\Git Repos\ResistileOnline\Assets\Scripts\ResistileClient\bin\Debug\ResistileClient.pdb
-C:\Users\saglikb\Desktop\Git Repos\ResistileOnline\Assets\Scripts\ResistileClient\obj\Debug\ResistileClient.exe
-C:\Users\saglikb\Desktop\Git Repos\ResistileOnline\Assets\Scripts\ResistileClient\obj\Debug\ResistileClient.pdb
-C:\Users\saglikb\Desktop\Git Repos\ResistileOnline\Assets\Scripts\ResistileClient\obj\Debug\ResistileClient.csprojResolveAssemblyReference.cache
