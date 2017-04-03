@@ -109,9 +109,10 @@
     <Compile Include="Assets\Scripts\MessageHandlers\MH_MainMenu.cs" />
     <Compile Include="Assets\Scripts\MessageHandlers\MH_ServerBrowser.cs" />
     <Compile Include="Assets\Scripts\MessageHandlers\MH_SettingTutorial.cs" />
-    <Compile Include="Assets\Scripts\MessageType.cs" />
     <Compile Include="Assets\Scripts\NetworkManager.cs" />
     <Compile Include="Assets\Scripts\ResistileClient\Program.cs" />
+    <Compile Include="Assets\Scripts\ResistileClient\ResistileMessage.cs" />
+    <Compile Include="Assets\Scripts\ResistileClient\ResistileMessageTypes.cs" />
     <Compile Include="Assets\Scripts\ResistileConsole\BlockedDirection.cs" />
     <Compile Include="Assets\Scripts\ResistileConsole\Coordinates.cs" />
     <Compile Include="Assets\Scripts\ResistileConsole\GameControl.cs" />
@@ -127,6 +128,8 @@
     <Compile Include="Assets\Scripts\ResistileConsole\IGameNode.cs" />
     <Compile Include="Assets\Scripts\ResistileConsole\Program.cs" />
     <Compile Include="Assets\Scripts\ResistileConsole\Properties\AssemblyInfo.cs" />
+    <Compile Include="Assets\Scripts\ResistileServer\BoardManager.cs" />
+    <Compile Include="Assets\Scripts\ResistileServer\Coordinates.cs" />
     <Compile Include="Assets\Scripts\ResistileServer\DeckManager.cs" />
     <Compile Include="Assets\Scripts\ResistileServer\GameManager.cs" />
     <Compile Include="Assets\Scripts\ResistileServer\GameTile.cs" />
@@ -135,11 +138,14 @@
     <Compile Include="Assets\Scripts\ResistileServer\Program.cs" />
     <Compile Include="Assets\Scripts\RotateTile.cs" />
     <Compile Include="Assets\Scripts\SetDimensions.cs" />
+    <Compile Include="Assets\Scripts\SetMsgHandler.cs" />
     <Compile Include="Assets\Scripts\Spin.cs" />
     <Compile Include="Assets\Scripts\TileData.cs" />
     <Compile Include="Assets\Scripts\Tutorial.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Scripts\ResistileClient\obj\Debug\ResistileClient.csproj.FileListAbsolute.txt" />
+    <None Include="Assets\Scripts\ResistileServer\obj\Debug\ResistileServer.csproj.FileListAbsolute.txt" />
     <None Include="Assets\packages\Accord.3.4.0\lib\net35\Accord.xml" />
     <None Include="Assets\packages\Accord.3.4.0\lib\net40\Accord.xml" />
     <None Include="Assets\packages\Accord.3.4.0\lib\net45\Accord.xml" />

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using ResistileClient;
 
 public class MH_Host : MonoBehaviour {
     public GameObject panelManager;
@@ -13,19 +14,19 @@ public class MH_Host : MonoBehaviour {
 
     public void decline()
     {
-        NetworkManager.networkManager.sendMessage(MessageType.hostDecline, "HostDecline");
+        NetworkManager.networkManager.sendMessage(ResistileMessageTypes.hostDecline, "HostDecline");
         panelManager.GetComponent<HostScreenPanelAdapter>().isWaiting = true;
     }
 
     public void cancelSearch()
     {
-        NetworkManager.networkManager.sendMessage(MessageType.cancelHost, "HostCancel");
+        NetworkManager.networkManager.sendMessage(ResistileMessageTypes.cancelHost, "HostCancel");
         LoadLevel.LoadScene("MainMenu");
     }
 
     public void accept()
     {
-        NetworkManager.networkManager.sendMessage(MessageType.startGame, "HostAccept");
+        NetworkManager.networkManager.sendMessage(ResistileMessageTypes.startGame, "HostAccept");
         LoadLevel.LoadScene("Board");
     }
 }

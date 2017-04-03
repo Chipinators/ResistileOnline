@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using ResistileClient;
 
 public class MH_MainMenu : MonoBehaviour {
     public void startHosting()
     {
-        NetworkManager.networkManager.sendMessage(MessageType.host, "StartHosting");
+        NetworkManager.networkManager.sendMessage(ResistileMessageTypes.host, "StartHosting");
         LoadLevel.LoadScene("HostWaitingScreen");
     }
 
     public void serverBrowser()
     {
-        NetworkManager.networkManager.sendMessage(MessageType.serverList, "serverList");
+        NetworkManager.networkManager.sendMessage(ResistileMessageTypes.serverList, "serverList");
         LoadLevel.LoadScene("ServerBrowser");
     }
 
@@ -30,7 +31,7 @@ public class MH_MainMenu : MonoBehaviour {
 
     public void ping()
     {
-        NetworkManager.networkManager.sendMessage(MessageType.ping, "Ping");
+        NetworkManager.networkManager.sendMessage(ResistileMessageTypes.ping, "Ping");
     }
 
 }

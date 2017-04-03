@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ResistileClient;
 
 public class MH_Board : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        NetworkManager.networkManager.sendMessage(MessageType.gameLoaded, "Game Loaded");
+        NetworkManager.networkManager.sendMessage(ResistileMessageTypes.gameLoaded, "Game Loaded");
     }
 	
 	// Update is called once per frame
@@ -16,7 +17,7 @@ public class MH_Board : MonoBehaviour {
 
     public void quitGame()
     {
-        NetworkManager.networkManager.sendMessage(MessageType.quitGame, "Quit Game");
+        NetworkManager.networkManager.sendMessage(ResistileMessageTypes.quitGame, "Quit Game");
         LoadLevel.LoadScene("MainMenu");
     }
 

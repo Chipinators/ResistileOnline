@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using ResistileClient;
 
 public class MH_ServerBrowser : MonoBehaviour {
     public GameObject panelManager;
@@ -12,31 +13,31 @@ public class MH_ServerBrowser : MonoBehaviour {
 
     public void getHostList()
     {
-        NetworkManager.networkManager.sendMessage(MessageType.hostList, "HostList");
+        NetworkManager.networkManager.sendMessage(ResistileMessageTypes.hostList, "HostList");
         LoadLevel.LoadScene("HostWaitingScene");
     }
 
     public void joinLobby()
     {
-        NetworkManager.networkManager.sendMessage(MessageType.guestRequest, "guestRequest");
+        NetworkManager.networkManager.sendMessage(ResistileMessageTypes.guestRequest, "guestRequest");
         panelManager.GetComponent<HostScreenPanelAdapter>().isWaiting = false;
     }
 
     public void cancelRequest()
     {
-        NetworkManager.networkManager.sendMessage(MessageType.cancelJoin, "CancelJoin");
+        NetworkManager.networkManager.sendMessage(ResistileMessageTypes.cancelJoin, "CancelJoin");
         panelManager.GetComponent<HostScreenPanelAdapter>().isWaiting = true;
     }
 
     public void goBack()
     {
         if (panelManager.GetComponent<HostScreenPanelAdapter>().isWaiting) ping();
-        else NetworkManager.networkManager.sendMessage(MessageType.cancelJoin, "CancelJoin");
+        else NetworkManager.networkManager.sendMessage(ResistileMessageTypes.cancelJoin, "CancelJoin");
         LoadLevel.LoadScene("MainMenu");
     }
 
     public void ping()
     {
-        NetworkManager.networkManager.sendMessage(MessageType.ping, "Ping");
+        NetworkManager.networkManager.sendMessage(ResistileMessageTypes.ping, "Ping");
     }
 }
