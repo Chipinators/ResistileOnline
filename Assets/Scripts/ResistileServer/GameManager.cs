@@ -8,7 +8,6 @@ namespace ResistileServer
 {
     class GameManager
     {
-
         private const int MAXHAND = 5;
         private const double primaryMIN = 8.0;
         private const double primaryMAX = 17.0;
@@ -19,21 +18,31 @@ namespace ResistileServer
 
         Player playerOne;
         Player playerTwo;
-        //BoardManager board;
         DeckManager deck;
         ArrayList tempHand;
+        BoardManager board;
 
         GameManager(string playerOneUsername, string playerTwoUsername, int clientID, int gameID)
         {
-            // board = new BoardManager;
+            /*
+            Initialize Board
+            */
+            board = new BoardManager();
+            /*
+            Initialize Deck
+            */
             deck = new DeckManager();
-            //Initialize playerOne
+            /*
+            Initialize playerOne
+            */
             for (int i = 0; i < MAXHAND; i++)
             {
                 tempHand.Add(deck.draw());
             }
             playerOne = new Player(playerOneUsername, tempHand, GetRandomPrimary(primaryMIN, primaryMAX), CreateSecondaryObj());
-            //Initialize playerTwo
+            /*
+            Initialize playerTwo
+            */
             for (int i = 0; i < MAXHAND; i++)
             {
                 tempHand.Add(deck.draw());

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace ResistileServer
@@ -10,6 +9,10 @@ namespace ResistileServer
     {
         public const int xlength = 9;
         public const int ylength = 9;
+        public const int xUpTerminal = 8;
+        public const int yUpTerminal = 7;
+        public const int xLeftTerminal = 7;
+        public const int yLeftTerminal = 8;
         public GameTile[,] board = new GameTile[xlength, ylength];
 
         private GameTile startTile, endTile;
@@ -38,6 +41,7 @@ namespace ResistileServer
             // 3 Check neighbors
             //    3.1 at least one neighbor looking to be connected
             //    3.2 no blocking neighbor
+            //    3.3 has at least one neighbor
             // 4 if tile is on terminal spot(neighbors of end tile)
             //        should have another connection to another tile.
 
@@ -47,10 +51,12 @@ namespace ResistileServer
             {
                 isValid = false;
             }
-            // Case 2 and 3
+
+            // Case 2, 3.1, 3.2
+            neighborCount = 0;
             foreach (var neighbor in tile.neighbors)
             {
-                if (!neighbor.Value.Equals(GameTile.blockedDirectionTile))
+                if (neighbor.Value == null)
                 {
                     int x = -1, y = -1;
                     string oppositeDirection = "";
@@ -77,12 +83,26 @@ namespace ResistileServer
                             oppositeDirection = Directions.left;
                             break;
                     }
-                    isValid = isValid && IsOutOfBoard(x, y) && HappyNeighbor(board[x, y], oppositeDirection);
+                    isValid = isValid && !IsOutOfBoard(x, y) && HappyNeighbor(board[x, y], oppositeDirection);
+                }
+            }
+            //Case 3.3
+            isValid = isValid & HasAtLeastOneNeighbor();
+            //Case 4
+            if ((coordinates[0] == xUpTerminal && coordinates[1] == yUpTerminal) || 
+                (coordinates[0] == xLeftTerminal && coordinates[1] == yLeftTerminal))
+            {
+                if (neighborCount > 1)
+                {
+                    isValid = true;
+                }
+                else
+                {
+                    isValid = false;
                 }
             }
 
-            // case 4
-
+            
             return isValid;
 
         }
@@ -95,11 +115,25 @@ namespace ResistileServer
 
         // Check if tile has an end looking to a tile that doesn't look back
         // Not right
+        private static int neighborCount;
+
         private bool HappyNeighbor(GameTile tile, string direction)
         {
-            return !tile.neighbors[direction].Equals(GameTile.blockedDirectionTile);
+            if(tile == null)
+            {
+                return true;
+            }
+            else
+            {
+                neighborCount++;
+                return tile.neighbors[direction] == null;
+            }
+            
         }
 
-
+        private bool HasAtLeastOneNeighbor()
+        {
+            return neighborCount > 0;
+        }
     }
 }
