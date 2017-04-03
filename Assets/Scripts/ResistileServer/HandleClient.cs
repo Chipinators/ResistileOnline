@@ -60,7 +60,10 @@ namespace ResistileServer
                     //{
                     //    targetNo = "0";
                     //}
-
+                    if (message.messageCode == 0)
+                    {
+                        writeClient(1, 1, "Ack");
+                    }
 
                     for (var index = 0; index < handleClients.Count; index++)
                     {
@@ -84,6 +87,20 @@ namespace ResistileServer
         {
             string serverResponse = "Server to clinet(" + clNo + ") " + msg;
             var message = new ResistileMessage(0, 0, serverResponse);
+            using (StringWriter textWriter = new StringWriter())
+            {
+                NetworkStream serverStream = clientSocket.GetStream();
+                serializer.Serialize(textWriter, message);
+                var line = textWriter.ToString();
+                byte[] outStream = Encoding.ASCII.GetBytes(line + "$");
+                serverStream.Write(outStream, 0, outStream.Length);
+                serverStream.Flush();
+            }
+        }
+
+        private void writeClient(int gameID, int msgType, string msg)
+        {
+            var message = new ResistileMessage(gameID, msgType, msg);
             using (StringWriter textWriter = new StringWriter())
             {
                 NetworkStream serverStream = clientSocket.GetStream();

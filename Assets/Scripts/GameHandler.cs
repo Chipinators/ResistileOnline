@@ -91,7 +91,6 @@ public class GameHandler : MonoBehaviour {
 
     public void setSecondaryI(int obj)
     {
-        Debug.Log("Set Secondary I: " + secondaryObjs[obj]);
         secondaryObjI.GetComponent<Text>().text = secondaryObjs[obj];
     }
 

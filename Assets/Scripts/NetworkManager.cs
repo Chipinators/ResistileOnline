@@ -4,17 +4,23 @@ using UnityEngine;
 using System.Net.Sockets;
 using System;
 using System.Text;
+using System.Xml.Serialization;
+using System.IO;
+using System.Threading;
 
 public class NetworkManager : MonoBehaviour {
     public static NetworkManager networkManager;
     public TcpClient dest;
     public NetworkStream destStream;
     public int gameID;
+    private static XmlSerializer serializer;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         networkManager = this;
+        serializer = new XmlSerializer(typeof(ResistileClient.ResistileMessage));
         dest = new TcpClient();
+        
         try
         {
             dest.Connect("127.0.0.1", 8888);
@@ -24,12 +30,9 @@ public class NetworkManager : MonoBehaviour {
         {
             Debug.Log("Couldn't connect to server.\n" + e);
         }
+        Thread readDataThread = new Thread(receiveMessage);
+        readDataThread.Start();
     }
-	
-	// Update is called once per frame
-	void Update () {
-        //receiveMessage();
-	}
 
     void Awake()
     {
@@ -38,32 +41,46 @@ public class NetworkManager : MonoBehaviour {
 
     public void sendMessage(int messageType, string data)
     {
-        string finalMsg = gameID + "/////" + messageType + "/////" + data;
-        Debug.Log("MESSAGE SENT = " + finalMsg);
+        var finalMsg = new ResistileClient.ResistileMessage(gameID, messageType, data);
         transmitMessage(finalMsg);
     }
 
-    private void transmitMessage(string message)
+    private void transmitMessage(ResistileClient.ResistileMessage message)
     {
-        NetworkStream serverStream = dest.GetStream();
-        byte[] outStream = Encoding.ASCII.GetBytes(message + "$");
-        serverStream.Write(outStream, 0, outStream.Length);
-        serverStream.Flush();
+        using (StringWriter textWriter = new StringWriter())
+        {
+            serializer.Serialize(textWriter, message);
+            NetworkStream serverStream = dest.GetStream();
+            byte[] outStream = Encoding.ASCII.GetBytes(textWriter.ToString() + "$");
+            serverStream.Write(outStream, 0, outStream.Length);
+            serverStream.Flush();
+        }
+        
     }
 
     private void receiveMessage()
     {
-        NetworkStream serverStream = dest.GetStream();
-        byte[] inStream = new byte[dest.ReceiveBufferSize];
-        serverStream.Read(inStream, 0, dest.ReceiveBufferSize);
-        string returndata = Encoding.ASCII.GetString(inStream);
-        returndata = returndata.Substring(0, returndata.IndexOf("$"));
-        serverStream.Flush();
-        parseMessage( returndata);
-    }
+        while (true)
+        {
 
-    private void parseMessage(string message)
-    {
-       
+
+            NetworkStream serverStream = dest.GetStream();
+            byte[] inStream = new byte[dest.ReceiveBufferSize];
+            serverStream.Read(inStream, 0, dest.ReceiveBufferSize);
+            string returndata = Encoding.ASCII.GetString(inStream);
+            returndata = returndata.Substring(0, returndata.IndexOf("$"));
+            var bytes = Encoding.ASCII.GetBytes(returndata);
+            ResistileClient.ResistileMessage message;
+            using (MemoryStream stream = new MemoryStream(bytes))
+            {
+                using (StreamReader ms = new StreamReader(stream, Encoding.ASCII))
+                {
+                    message = (ResistileClient.ResistileMessage)serializer.Deserialize(ms);
+                }
+            }
+            var dataFromClient = message.gameID + " " + message.messageCode + " " + message.message;
+            Debug.Log("Data from Server : " + dataFromClient);
+            serverStream.Flush();
+        }
     }
 }

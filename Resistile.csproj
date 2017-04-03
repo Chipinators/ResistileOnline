@@ -13,13 +13,11 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile>
-    </CompilerResponseFile>
+    <CompilerResponseFile></CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.5.0f3</UnityVersion>
-    <RootNamespace>
-    </RootNamespace>
+    <RootNamespace></RootNamespace>
     <LangVersion Condition=" '$(VisualStudioVersion)' != '10.0' ">4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -111,9 +109,10 @@
     <Compile Include="Assets\Scripts\MessageHandlers\MH_MainMenu.cs" />
     <Compile Include="Assets\Scripts\MessageHandlers\MH_ServerBrowser.cs" />
     <Compile Include="Assets\Scripts\MessageHandlers\MH_SettingTutorial.cs" />
-    <Compile Include="Assets\Scripts\MessageType.cs" />
     <Compile Include="Assets\Scripts\NetworkManager.cs" />
     <Compile Include="Assets\Scripts\ResistileClient\Program.cs" />
+    <Compile Include="Assets\Scripts\ResistileClient\ResistileMessage.cs" />
+    <Compile Include="Assets\Scripts\ResistileClient\ResistileMessageTypes.cs" />
     <Compile Include="Assets\Scripts\ResistileConsole\BlockedDirection.cs" />
     <Compile Include="Assets\Scripts\ResistileConsole\Coordinates.cs" />
     <Compile Include="Assets\Scripts\ResistileConsole\GameControl.cs" />
@@ -129,6 +128,8 @@
     <Compile Include="Assets\Scripts\ResistileConsole\IGameNode.cs" />
     <Compile Include="Assets\Scripts\ResistileConsole\Program.cs" />
     <Compile Include="Assets\Scripts\ResistileConsole\Properties\AssemblyInfo.cs" />
+    <Compile Include="Assets\Scripts\ResistileServer\BoardManager.cs" />
+    <Compile Include="Assets\Scripts\ResistileServer\Coordinates.cs" />
     <Compile Include="Assets\Scripts\ResistileServer\DeckManager.cs" />
     <Compile Include="Assets\Scripts\ResistileServer\GameManager.cs" />
     <Compile Include="Assets\Scripts\ResistileServer\GameTile.cs" />
@@ -137,11 +138,14 @@
     <Compile Include="Assets\Scripts\ResistileServer\Program.cs" />
     <Compile Include="Assets\Scripts\RotateTile.cs" />
     <Compile Include="Assets\Scripts\SetDimensions.cs" />
+    <Compile Include="Assets\Scripts\SetMsgHandler.cs" />
     <Compile Include="Assets\Scripts\Spin.cs" />
     <Compile Include="Assets\Scripts\TileData.cs" />
     <Compile Include="Assets\Scripts\Tutorial.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Scripts\ResistileClient\obj\Debug\ResistileClient.csproj.FileListAbsolute.txt" />
+    <None Include="Assets\Scripts\ResistileServer\obj\Debug\ResistileServer.csproj.FileListAbsolute.txt" />
     <None Include="Assets\packages\Accord.3.4.0\lib\net35\Accord.xml" />
     <None Include="Assets\packages\Accord.3.4.0\lib\net40\Accord.xml" />
     <None Include="Assets\packages\Accord.3.4.0\lib\net45\Accord.xml" />
@@ -155,12 +159,6 @@
     <None Include="Assets\packages\Accord.Math.3.4.0\lib\net46\Accord.Math.Core.xml" />
     <None Include="Assets\packages\Accord.Math.3.4.0\lib\net46\Accord.Math.xml" />
     <None Include="Assets\packages\Microsoft\System.ComponentModel.DataAnnotations.xml" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="Assets\Scripts\ResistileClient\ResistileClient.csproj">
-      <Project>{82A52894-9313-46CA-8169-A781979142B2}</Project>
-      <Name>ResistileClient</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
