@@ -61,7 +61,17 @@ namespace ResistileClient
                 serverStream.Read(inStream, 0, clientSocket.ReceiveBufferSize);
                 string returndata = Encoding.ASCII.GetString(inStream);
                 returndata = returndata.Substring(0, returndata.IndexOf("$"));
-                Console.WriteLine("Data from Server : " + returndata);
+                var bytes = Encoding.ASCII.GetBytes(returndata);
+                ResistileMessage message;
+                using (MemoryStream stream = new MemoryStream(bytes))
+                {
+                    using (StreamReader ms = new StreamReader(stream, Encoding.ASCII))
+                    {
+                        message = (ResistileMessage)serializer.Deserialize(ms);
+                    }
+                }
+                var dataFromClient = message.gameID + " " + message.messageCode + " " + message.message;
+                Console.WriteLine("Data from Server : " + dataFromClient);
                 serverStream.Flush();
             }
         }

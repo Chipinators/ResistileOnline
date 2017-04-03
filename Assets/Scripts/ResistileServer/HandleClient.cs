@@ -14,7 +14,6 @@ namespace ResistileServer
     {
         private static XmlSerializer serializer = new XmlSerializer(typeof(ResistileMessage));
         TcpClient clientSocket;
-        NetworkStream networkStream;
         string clNo;
         //private string targetNo = "0";
         private static List<HandleClient> handleClients = new List<HandleClient>();
@@ -36,7 +35,7 @@ namespace ResistileServer
             {
                 try
                 {
-                    networkStream = clientSocket.GetStream();
+                    NetworkStream networkStream = clientSocket.GetStream();
                     networkStream.Read(bytesFrom, 0, clientSocket.ReceiveBufferSize);
                     dataFromClient = Encoding.ASCII.GetString(bytesFrom);
                     dataFromClient = dataFromClient.Substring(0, dataFromClient.IndexOf("$"));
@@ -80,11 +79,17 @@ namespace ResistileServer
 
         private void writeClient(string msg)
         {
-            networkStream = clientSocket.GetStream();
-            string serverResponse = "Server to clinet(" + clNo + ") " + msg + "$";
-            Byte[] sendBytes = Encoding.ASCII.GetBytes(serverResponse);
-            networkStream.Write(sendBytes, 0, sendBytes.Length);
-            networkStream.Flush();
+            string serverResponse = "Server to clinet(" + clNo + ") " + msg;
+            var message = new ResistileMessage(0, 0, serverResponse);
+            using (StringWriter textWriter = new StringWriter())
+            {
+                NetworkStream serverStream = clientSocket.GetStream();
+                serializer.Serialize(textWriter, message);
+                var line = textWriter.ToString();
+                byte[] outStream = Encoding.ASCII.GetBytes(line + "$");
+                serverStream.Write(outStream, 0, outStream.Length);
+                serverStream.Flush();
+            }
         }
     }
 }
