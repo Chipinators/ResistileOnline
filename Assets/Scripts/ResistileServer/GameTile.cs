@@ -9,7 +9,7 @@ namespace ResistileServer
     class GameTile
     {
         public int id;
-        private Dictionary<string, GameTile> neighbors = new Dictionary<string, GameTile>
+        public Dictionary<string, GameTile> neighbors = new Dictionary<string, GameTile>
         {
             {Directions.up, null},
             {Directions.down, null},
@@ -73,9 +73,11 @@ namespace ResistileServer
                     break;
             }
         }
-        
+
+        public int rotation = 0;
         public void Rotate()
         {
+            rotation = (rotation + 1) % 4;
             //Rotate tile references clockwise
             GameTile temp = neighbors[Directions.up];
             neighbors[Directions.up] = neighbors[Directions.left];
