@@ -12,8 +12,8 @@ namespace ResistileServer
         private const int MAXHAND = 5;
         private const double primaryMIN = 8.0;
         private const double primaryMAX = 17.0;
-        private const double secondaryMIN = 1;
-        private const double secondaryMAX = 6;
+        private const int secondaryMIN = 1;
+        private const int secondaryMAX = 6;
         int[] secondaryObj = new int[2];
         Random random = new Random();
 
@@ -32,21 +32,14 @@ namespace ResistileServer
             {
                 tempHand.Add(deck.draw());
             }
-            playerOne = new Player(playerOneUsername, tempHand, GetRandomPrimary(primaryMIN, primaryMAX), secondaryObj);
+            playerOne = new Player(playerOneUsername, tempHand, GetRandomPrimary(primaryMIN, primaryMAX), CreateSecondaryObj());
             //Initialize playerTwo
             for (int i = 0; i < MAXHAND; i++)
             {
                 tempHand.Add(deck.draw());
             }
-            playerTwo = new Player(playerTwoUsername, tempHand, GetRandomPrimary(primaryMIN, primaryMAX), secondaryObj);
+            playerTwo = new Player(playerTwoUsername, tempHand, GetRandomPrimary(primaryMIN, primaryMAX), CreateSecondaryObj());
         }
-
-
-
-
-
-
-
 
 
 
@@ -55,18 +48,20 @@ namespace ResistileServer
             return random.NextDouble() * (maximum - minimum) + minimum;
         }
 
-        private int GetRandomSecondary(double minimum, double maximum)
+        private int GetRandomSecondary()
         {
             int randomNumber = random.Next(secondaryMIN, secondaryMAX);
+            return randomNumber;
         }
 
-        private void CreateSecondaryObj()
+        private int[] CreateSecondaryObj()
         {
-            secondaryObj[0] = GetRandomSecondary;
+            secondaryObj[0] = GetRandomSecondary();
             do
             {
-                secondaryObj[1] = GetRandomSecondary;
+                secondaryObj[1] = GetRandomSecondary();
             } while (secondaryObj[0] == secondaryObj[1]);
+            return secondaryObj;
         }
     }
 }
