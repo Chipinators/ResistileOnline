@@ -91,15 +91,6 @@
     <Reference Include="System.ComponentModel.DataAnnotations">
       <HintPath>Assets\packages\Microsoft\System.ComponentModel.DataAnnotations.dll</HintPath>
     </Reference>
-    <Reference Include="Accord">
-      <HintPath>Assets\Scripts\ResistileConsole\bin\Debug\Accord.dll</HintPath>
-    </Reference>
-    <Reference Include="Accord.Math.Core">
-      <HintPath>Assets\Scripts\ResistileConsole\bin\Debug\Accord.Math.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Accord.Math">
-      <HintPath>Assets\Scripts\ResistileConsole\bin\Debug\Accord.Math.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\BoardHandler.cs" />
@@ -136,9 +127,6 @@
     <Compile Include="Assets\Scripts\ResistileConsole\IGameNode.cs" />
     <Compile Include="Assets\Scripts\ResistileConsole\Program.cs" />
     <Compile Include="Assets\Scripts\ResistileConsole\Properties\AssemblyInfo.cs" />
-    <Compile Include="Assets\Scripts\ResistileConsole\obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
-    <Compile Include="Assets\Scripts\ResistileConsole\obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
-    <Compile Include="Assets\Scripts\ResistileConsole\obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
     <Compile Include="Assets\Scripts\ResistileServer\DeckManager.cs" />
     <Compile Include="Assets\Scripts\ResistileServer\GameManager.cs" />
     <Compile Include="Assets\Scripts\ResistileServer\GameTile.cs" />
@@ -152,12 +140,6 @@
     <Compile Include="Assets\Scripts\Tutorial.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Scripts\ResistileClient\obj\Debug\ResistileClient.csproj.FileListAbsolute.txt" />
-    <None Include="Assets\Scripts\ResistileConsole\bin\Debug\Accord.Math.Core.xml" />
-    <None Include="Assets\Scripts\ResistileConsole\bin\Debug\Accord.Math.xml" />
-    <None Include="Assets\Scripts\ResistileConsole\bin\Debug\Accord.xml" />
-    <None Include="Assets\Scripts\ResistileConsole\obj\Debug\ResistileConsole.csproj.FileListAbsolute.txt" />
-    <None Include="Assets\Scripts\ResistileServer\obj\Debug\ResistileServer.csproj.FileListAbsolute.txt" />
     <None Include="Assets\packages\Accord.3.4.0\lib\net35\Accord.xml" />
     <None Include="Assets\packages\Accord.3.4.0\lib\net40\Accord.xml" />
     <None Include="Assets\packages\Accord.3.4.0\lib\net45\Accord.xml" />
