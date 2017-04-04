@@ -31,6 +31,44 @@ namespace ResistileServer
             // Assume valid move, find non blocked directions of tile,
             // if neighbors exist:
             //   connect all neigbors to corresponding direction
+
+            //up
+            int x = coordinates[0];
+            int y = coordinates[1] - 1;
+            string oppositeDirection = Directions.down;
+            if (!IsOutOfBoard(x, y) && board[x, y] != null)
+            {
+                board[x, y].neighbors[oppositeDirection] = tile;
+                tile.neighbors[Directions.up] = board[x, y];
+            }
+            //left
+            x = coordinates[0] - 1;
+            y = coordinates[1];
+            oppositeDirection = Directions.right;
+            if (!IsOutOfBoard(x, y) && board[x, y] != null)
+            {
+                board[x, y].neighbors[oppositeDirection] = tile;
+                tile.neighbors[Directions.left] = board[x, y];
+            }
+            //down
+            x = coordinates[0];
+            y = coordinates[1] + 1;
+            oppositeDirection = Directions.up;
+            if (!IsOutOfBoard(x, y) && board[x, y] != null)
+            {
+                board[x, y].neighbors[oppositeDirection] = tile;
+                tile.neighbors[Directions.down] = board[x, y];
+            }
+            //right
+            x = coordinates[0] + 1;
+            y = coordinates[1];
+            oppositeDirection = Directions.left;
+            if (!IsOutOfBoard(x, y) && board[x, y] != null)
+            {
+                board[x, y].neighbors[oppositeDirection] = tile;
+                tile.neighbors[Directions.right] = board[x, y];
+            }
+
         }
 
         public bool IsValidMove(GameTile tile, int[] coordinates)

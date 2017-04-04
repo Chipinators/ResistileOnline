@@ -91,6 +91,9 @@
     <Reference Include="System.ComponentModel.DataAnnotations">
       <HintPath>Assets\packages\Microsoft\System.ComponentModel.DataAnnotations.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+      <HintPath>Assets\Scripts\ResistileServer\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\BoardHandler.cs" />
@@ -137,6 +140,7 @@
     <Compile Include="Assets\Scripts\ResistileServer\HandleClient.cs" />
     <Compile Include="Assets\Scripts\ResistileServer\Player.cs" />
     <Compile Include="Assets\Scripts\ResistileServer\Program.cs" />
+    <Compile Include="Assets\Scripts\ResistileServer\TestCases.cs" />
     <Compile Include="Assets\Scripts\RotateTile.cs" />
     <Compile Include="Assets\Scripts\SetDimensions.cs" />
     <Compile Include="Assets\Scripts\SetMsgHandler.cs" />
