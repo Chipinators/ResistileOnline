@@ -6,7 +6,7 @@ Changed Gametile ID to Int (was Guid)
 */
 namespace ResistileServer
 {
-    class GameTile
+    public class GameTile
     {
         public int id;
         public Dictionary<string, GameTile> neighbors = new Dictionary<string, GameTile>

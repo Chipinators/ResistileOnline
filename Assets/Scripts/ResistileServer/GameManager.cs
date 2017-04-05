@@ -17,13 +17,12 @@ namespace ResistileServer
         int[] secondaryObj = new int[2];
         Random random = new Random();
 
-        ResistilePlayer playerOne;
-        ResistilePlayer playerTwo;
-        DeckManager deck;
-        ArrayList tempHand;
-        BoardManager board;
-
-        GameManager(string playerOneUsername, string playerTwoUsername, int clientID, int gameID)
+        public ResistilePlayer playerOne;
+        public ResistilePlayer playerTwo;
+        public DeckManager deck;
+        public BoardManager board;
+        public ResistilePlayer currentTurnPlayer;
+        public GameManager(string playerOneUsername, string playerTwoUsername)
         {
             /*
             Initialize Board
@@ -36,6 +35,7 @@ namespace ResistileServer
             /*
             Initialize playerOne
             */
+            ArrayList tempHand = new ArrayList();
             for (int i = 0; i < MAXHAND; i++)
             {
                 tempHand.Add(deck.draw());
@@ -49,6 +49,8 @@ namespace ResistileServer
                 tempHand.Add(deck.draw());
             }
             playerTwo = new ResistilePlayer(playerTwoUsername, tempHand, GetRandomPrimary(primaryMIN, primaryMAX), CreateSecondaryObj());
+
+            currentTurnPlayer = random.Next(0, 2) == 1 ? playerOne : playerTwo;
         }
 
         private double GetRandomPrimary(double minimum, double maximum)
@@ -70,6 +72,16 @@ namespace ResistileServer
                 secondaryObj[1] = GetRandomSecondary();
             } while (secondaryObj[0] == secondaryObj[1]);
             return secondaryObj;
+        }
+
+        public ResistilePlayer getPlayer(string clName)
+        {
+            return playerOne.userName == clName ? playerOne : playerTwo;
+        }
+
+        public ResistilePlayer getOpponent(string clName)
+        {
+            return playerOne.userName == clName ? playerTwo : playerOne;
         }
     }
 }

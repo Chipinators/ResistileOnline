@@ -21,6 +21,7 @@ namespace ResistileServer
         //private string targetNo = "0";
         private static List<HandleClient> handleClients = new List<HandleClient>();
         private static List<string> availableHosts = new List<string>();
+        private GameManager gameManager;
         public void startClient(TcpClient inClientSocket, string clineNo)
         {
             this.clientSocket = inClientSocket;
@@ -119,12 +120,16 @@ namespace ResistileServer
                     //in message client name
                     var opponentToBeDeclined = handleClients.Find(client => client.clName == message.message);
                     opponentToBeDeclined.writeClient(0, ResistileMessageTypes.hostDeclined, clName);
+                    availableHosts.Add(clName);
                     break;
                 case ResistileMessageTypes.acceptOpponent:
                     var opponentToBeAccepted = handleClients.Find(client => client.clName == message.message);
                     gameID = generateGameId();
                     opponentToBeAccepted.gameID = gameID;
                     opponentToBeAccepted.writeClient(gameID, ResistileMessageTypes.startGame, "");
+                    //create GameManager
+                    gameManager = new GameManager(clName, opponentToBeAccepted.clName);
+                    opponentToBeAccepted.gameManager = gameManager;
                     break;
                 ////Server Browser
                 case ResistileMessageTypes.getHostList:
@@ -138,36 +143,33 @@ namespace ResistileServer
                         theHost.writeClient(0, ResistileMessageTypes.opponentFound, this.clName);
                     else
                         writeClient(0, ResistileMessageTypes.hostNotFound, message.message);
+                    availableHosts.Remove(theHost.clName);
                     break;
                 case ResistileMessageTypes.cancelJoinRequest:
                     var theHost2 = handleClients.Find(client => client.clName == message.message);
                     theHost2.writeClient(0, ResistileMessageTypes.opponentCanceled, "");
                     break;
+                case ResistileMessageTypes.gameLoaded:
+                    var player = gameManager.getPlayer(clName);
+                    var playersOpponent = gameManager.getOpponent(clName);
+                    var initializeGameMessage = new ResistileMessage(gameID, ResistileMessageTypes.initializeGame, playersOpponent.userName);
+                    initializeGameMessage.ResistilePlayer = player;
+                    initializeGameMessage.turn = gameManager.currentTurnPlayer == player;
+                    writeClient(initializeGameMessage);
+                    break;
                 ////In Game
-                //case ResistileMessageTypes.initializeGame:
-                //    break;
-                //case ResistileMessageTypes.tilePlaced:
+                // case ResistileMessageTypes.endTurn:
                 //    break;
                 //case ResistileMessageTypes.solderPlaced:
-                //    break;
-                //case ResistileMessageTypes.drawResistor:
-                //    break;
-                //case ResistileMessageTypes.drawWire:
-                //    break;
-                //case ResistileMessageTypes.invalidMove:
                 //    break;
                 //case ResistileMessageTypes.gameResults:
                 //    break;
                 //case ResistileMessageTypes.replay:
                 //    break;
-                //case ResistileMessageTypes.opponentQuit:
-                //    break;
-                //case ResistileMessageTypes.gameLoaded:
-                //    break;
+
                 //case ResistileMessageTypes.quitGame:
                 //    break;
-                //case ResistileMessageTypes.endTurn:
-                //    break;
+
                 //case ResistileMessageTypes.rotateTile:
                 //    break;
                 //case ResistileMessageTypes.guessResistance:
