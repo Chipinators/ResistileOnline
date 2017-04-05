@@ -140,17 +140,8 @@
     <None Include="Assets\Scripts\ResistileClient\obj\Debug\ResistileClient.csproj.FileListAbsolute.txt" />
     <None Include="Assets\Scripts\ResistileServer\obj\Debug\ResistileServer.csproj.FileListAbsolute.txt" />
     <None Include="Assets\packages\Accord.3.4.0\lib\net35\Accord.xml" />
-    <None Include="Assets\packages\Accord.3.4.0\lib\net40\Accord.xml" />
-    <None Include="Assets\packages\Accord.3.4.0\lib\net45\Accord.xml" />
-    <None Include="Assets\packages\Accord.3.4.0\lib\net46\Accord.xml" />
     <None Include="Assets\packages\Accord.Math.3.4.0\lib\net35\Accord.Math.Core.xml" />
     <None Include="Assets\packages\Accord.Math.3.4.0\lib\net35\Accord.Math.xml" />
-    <None Include="Assets\packages\Accord.Math.3.4.0\lib\net40\Accord.Math.Core.xml" />
-    <None Include="Assets\packages\Accord.Math.3.4.0\lib\net40\Accord.Math.xml" />
-    <None Include="Assets\packages\Accord.Math.3.4.0\lib\net45\Accord.Math.Core.xml" />
-    <None Include="Assets\packages\Accord.Math.3.4.0\lib\net45\Accord.Math.xml" />
-    <None Include="Assets\packages\Accord.Math.3.4.0\lib\net46\Accord.Math.Core.xml" />
-    <None Include="Assets\packages\Accord.Math.3.4.0\lib\net46\Accord.Math.xml" />
     <None Include="Assets\packages\Microsoft\System.ComponentModel.DataAnnotations.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
