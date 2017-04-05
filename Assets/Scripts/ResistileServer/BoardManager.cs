@@ -89,17 +89,6 @@ namespace ResistileServer
 
         private void blockOpenEnds()
         {
-            foreach (var gameTile in board)
-            {
-                if (gameTile != null)
-                {
-                    foreach (var key in gameTile.neighbors.Keys.ToList())
-                    {
-                        if (gameTile.neighbors[key] == null)
-                            gameTile.neighbors[key] = GameTile.blockedDirectionTile;
-                    }
-                }
-            }
             // for every open end,
             //    if wireT with only one null
             //         put blocked direction,
@@ -118,7 +107,7 @@ namespace ResistileServer
                         {
                             var nullNeighbor = gameTile.neighbors.First(neighbor => neighbor.Value == null).Key;
                             gameTile.neighbors[nullNeighbor] = GameTile.blockedDirectionTile;
-                            gameTile.type = GameTileTypes.Wire.typeI; //required for calculations.
+                            gameTile.type = GameTileTypes.Wire.typeI; // HACK, required for calculations.
                         }
                         else if (nullNeighborCount == 2)
                         {
@@ -162,7 +151,6 @@ namespace ResistileServer
                 {
                     neighbor.neighbors[direction] = GameTile.blockedDirectionTile;
                 }
-
             }
         }
 
