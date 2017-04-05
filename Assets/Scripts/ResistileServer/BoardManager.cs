@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,6 +30,65 @@ namespace ResistileServer
         {
             var resistance = 0;
             // every open end should reference to blocked direction tile
+            blockOpenEnds();
+            var paths = FindAllPaths();
+            // one path, return sum of all.
+            if (paths.Count == 1)
+                return paths[0].Sum(gameTile => gameTile.resistance);
+
+            
+            return resistance;
+        }
+
+        private List<List<GameTile>> FindAllPaths()
+        {
+            List<GameTile> toBeTraversed = new List<GameTile> {endTile};
+            Dictionary<GameTile, List<GameTile>> visited = new Dictionary<GameTile, List<GameTile>>();
+            List<List<GameTile>> paths = new List<List<GameTile>>();
+            for (var i = 0; i < toBeTraversed.Count; i++)
+            {
+                var tempTile = toBeTraversed[i];
+                List<GameTile> currentVisits;
+                if (!visited.ContainsKey(tempTile))
+                {
+                    currentVisits = new List<GameTile>();
+                    visited.Add(tempTile, currentVisits);
+                }
+                else
+                {
+                    currentVisits = visited[tempTile];
+                }
+
+                List<GameTile> tempPath = new List<GameTile>();
+                while (tempTile != null || tempTile != startTile)
+                {
+                    currentVisits.Add(tempTile);
+                    if (tempTile.type == GameTileTypes.Wire.typeT)
+                    {
+                        //there will be two nodes to be traversed
+                        //those neighbors should be the ones not in the current visit.
+                        var addToBeTraversedList = tempTile.neighbors.Values.Where(search => !currentVisits.Contains(search));
+                        foreach (var addToBeTraversed in addToBeTraversedList)
+                        {
+                            toBeTraversed.Add(addToBeTraversed);
+                            var copyCurrentPath = new List<GameTile>(currentVisits);
+                            visited.Add(addToBeTraversed, copyCurrentPath);
+                        }
+                    }
+                    else
+                    {
+                        tempTile = tempTile.neighbors.Values.FirstOrDefault(search => !currentVisits.Contains(search));
+                    }
+                }
+
+                if (tempTile == startTile)
+                    paths.Add(tempPath);
+            }
+            return paths;
+        }
+
+        private void blockOpenEnds()
+        {
             foreach (var gameTile in board)
             {
                 if (gameTile != null)
@@ -58,6 +118,7 @@ namespace ResistileServer
                         {
                             var nullNeighbor = gameTile.neighbors.First(neighbor => neighbor.Value == null).Key;
                             gameTile.neighbors[nullNeighbor] = GameTile.blockedDirectionTile;
+                            gameTile.type = GameTileTypes.Wire.typeI; //required for calculations.
                         }
                         else if (nullNeighborCount == 2)
                         {
@@ -78,19 +139,31 @@ namespace ResistileServer
             }
             foreach (var gameTile in openEnds)
             {
+                GameTile neighbor = gameTile;
+                List<GameTile> traversed = new List<GameTile>();
+                do
+                {
+                    traversed.Add(neighbor);
+                    neighbor = 
+                       neighbor.neighbors.Values.First(
+                           newNeighbor => newNeighbor != null && !traversed.Contains(newNeighbor) && newNeighbor != GameTile.blockedDirectionTile);
+
+                } while (neighbor.type != GameTileTypes.Wire.typeT);
+                var beforeT = traversed.Last();
+                string direction = "";
+                foreach (var neighborPair in neighbor.neighbors)
+                {
+                    if (neighborPair.Value == beforeT)
+                    {
+                        direction = neighborPair.Key;
+                    }
+                }
+                if (direction != "")
+                {
+                    neighbor.neighbors[direction] = GameTile.blockedDirectionTile;
+                }
 
             }
-
-            // if there is no T wires, return sum of all.
-            if (
-                board.Cast<GameTile>().Count(gameTile => gameTile != null && gameTile.type == GameTileTypes.Wire.typeT) ==
-                0)
-                return board.Cast<GameTile>().Sum(gameTile => gameTile != null ? gameTile.resistance : 0);
-
-            
-
-
-            return resistance;
         }
 
         public void AddTile(GameTile tile, int[] coordinates)
