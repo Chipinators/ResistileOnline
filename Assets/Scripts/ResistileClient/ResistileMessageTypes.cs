@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ResistileClient
 {
-    class ResistileMessageTypes
+    public class ResistileMessageTypes
     {
         //General
         public const int ping = 0;

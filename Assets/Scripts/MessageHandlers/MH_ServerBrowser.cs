@@ -38,13 +38,11 @@ public class MH_ServerBrowser : MonoBehaviour, MessageHanderInterface {
     //RECEIVE MESSAGES FROM SERVER
     private void hostList(ResistileMessage message)
     {
-        //TODO: For each host in messages.message add them to the content window
-
-        //foreach (string name in message.message)
-        //{
-        //    addHost(name);
-        //}
-
+        var hosts = message.messageArray;
+        foreach (string host in hosts)
+        {
+            addHost(host);
+        }
     }
 
     private void hostDeclined(ResistileMessage message)

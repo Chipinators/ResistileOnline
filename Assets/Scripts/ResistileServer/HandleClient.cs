@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
@@ -15,8 +16,10 @@ namespace ResistileServer
         private static XmlSerializer serializer = new XmlSerializer(typeof(ResistileMessage));
         TcpClient clientSocket;
         string clNo;
+        private string clName;
         //private string targetNo = "0";
         private static List<HandleClient> handleClients = new List<HandleClient>();
+        private static List<string> availableHosts = new List<string>();
         public void startClient(TcpClient inClientSocket, string clineNo)
         {
             this.clientSocket = inClientSocket;
@@ -49,17 +52,13 @@ namespace ResistileServer
                             message = (ResistileMessage)serializer.Deserialize(ms);
                         }
                     }
-
+                    handleMessage(message);
                     Console.WriteLine(" >> " + "From client-" + clNo);
                     dataFromClient = message.gameID + " " + message.messageCode + " " + message.message;
                     Console.WriteLine(dataFromClient);
                     networkStream.Flush();
 
-
-                    //if (dataFromClient[0] == '0')
-                    //{
-                    //    targetNo = "0";
-                    //}
+                    
                     if (message.messageCode == 0)
                     {
                         writeClient(1, 1, "Ack");
@@ -80,6 +79,86 @@ namespace ResistileServer
                     noException = false;
 
                 }
+            }
+        }
+
+        private void handleMessage(ResistileMessage message)
+        {
+            switch (message.messageCode)
+            {
+                //General
+                case ResistileMessageTypes.ping:
+                    // reset timeout thing
+                    break;
+                //Login Scene
+                case ResistileMessageTypes.login:
+                    // create a player object with username
+                    clName = message.message;
+                    break;
+                //MainMenu
+                case ResistileMessageTypes.startHosting:
+                    // put player to host list
+                    availableHosts.Add(clName);
+                    break;
+                //Host Scene
+                case ResistileMessageTypes.opponentFound:
+                    // ????
+                    break;
+                case ResistileMessageTypes.opponentCanceled:
+                    // ????
+                    break;
+                case ResistileMessageTypes.startGame:
+                    break;
+                //case ResistileMessageTypes.cancelSearch:
+                //    break;
+                //case ResistileMessageTypes.declineOpponent:
+                //    break;
+                //case ResistileMessageTypes.acceptOpponent:
+                //    break;
+                ////Server Browser
+                case ResistileMessageTypes.getHostList:
+                    var newMessage = new ResistileMessage(0, ResistileMessageTypes.hostList, "");
+                    newMessage.messageArray = new ArrayList(availableHosts.ToArray());
+                    break;
+                //case ResistileMessageTypes.hostList:
+                //    break;
+                //case ResistileMessageTypes.hostDeclined:
+                //    break;
+                //case ResistileMessageTypes.requestJoinGame:
+                //    break;
+                //case ResistileMessageTypes.cancelJoinRequest:
+                //    break;
+                ////In Game
+                //case ResistileMessageTypes.initializeGame:
+                //    break;
+                //case ResistileMessageTypes.tilePlaced:
+                //    break;
+                //case ResistileMessageTypes.solderPlaced:
+                //    break;
+                //case ResistileMessageTypes.drawResistor:
+                //    break;
+                //case ResistileMessageTypes.drawWire:
+                //    break;
+                //case ResistileMessageTypes.invalidMove:
+                //    break;
+                //case ResistileMessageTypes.gameResults:
+                //    break;
+                //case ResistileMessageTypes.replay:
+                //    break;
+                //case ResistileMessageTypes.opponentQuit:
+                //    break;
+                //case ResistileMessageTypes.gameLoaded:
+                //    break;
+                //case ResistileMessageTypes.quitGame:
+                //    break;
+                //case ResistileMessageTypes.endTurn:
+                //    break;
+                //case ResistileMessageTypes.rotateTile:
+                //    break;
+                //case ResistileMessageTypes.guessResistance:
+                //    break;
+                default:
+                    break;
             }
         }
 
