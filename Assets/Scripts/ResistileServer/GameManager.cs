@@ -17,8 +17,8 @@ namespace ResistileServer
         int[] secondaryObj = new int[2];
         Random random = new Random();
 
-        Player playerOne;
-        Player playerTwo;
+        ResistilePlayer playerOne;
+        ResistilePlayer playerTwo;
         DeckManager deck;
         ArrayList tempHand;
         BoardManager board;
@@ -40,7 +40,7 @@ namespace ResistileServer
             {
                 tempHand.Add(deck.draw());
             }
-            playerOne = new Player(playerOneUsername, tempHand, GetRandomPrimary(primaryMIN, primaryMAX), CreateSecondaryObj());
+            playerOne = new ResistilePlayer(playerOneUsername, tempHand, GetRandomPrimary(primaryMIN, primaryMAX), CreateSecondaryObj());
             /*
             Initialize playerTwo
             */
@@ -48,7 +48,7 @@ namespace ResistileServer
             {
                 tempHand.Add(deck.draw());
             }
-            playerTwo = new Player(playerTwoUsername, tempHand, GetRandomPrimary(primaryMIN, primaryMAX), CreateSecondaryObj());
+            playerTwo = new ResistilePlayer(playerTwoUsername, tempHand, GetRandomPrimary(primaryMIN, primaryMAX), CreateSecondaryObj());
         }
 
         private double GetRandomPrimary(double minimum, double maximum)
