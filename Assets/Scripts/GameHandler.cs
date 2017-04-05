@@ -17,6 +17,7 @@ public class GameHandler : MonoBehaviour {
     public Button playAgain;
 
     private Dictionary<int, string> secondaryObjs;
+    private Dictionary<int, ResistileServer.GameTile> tileLookup = (new ResistileServer.DeckManager()).allTiles;
     private string yourName, opponentName;
     private bool isTurn;
     private float alertTimer;

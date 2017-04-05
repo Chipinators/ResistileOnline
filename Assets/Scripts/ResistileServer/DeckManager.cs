@@ -15,7 +15,7 @@ namespace ResistileServer
         public Stack<GameTile> tileHand = new Stack<GameTile>();
         private Stack<GameTile> wireDeck = new Stack<GameTile>();
         private Stack<GameTile> resistorSolderDeck = new Stack<GameTile>();
-        private Dictionary<int, GameTile> allTiles = new Dictionary<int, GameTile>();
+        public Dictionary<int, GameTile> allTiles = new Dictionary<int, GameTile>();
         static private Dictionary<String, int> cardCounts = new Dictionary<String, int>
             {
             {GameTileTypes.Wire.typeI, 14}, //0-13

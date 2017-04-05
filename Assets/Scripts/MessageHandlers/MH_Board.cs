@@ -6,46 +6,84 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MH_Board : MonoBehaviour, MessageHanderInterface {
+    private int msgFromThread = -1;
+    private ResistileMessage messageFromThread;
 
-	// Use this for initialization
-	void Start () {
+
+    // Use this for initialization
+    void Start () {
         GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<NetworkManager>().messageInterface = this;
         NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.gameLoaded, ""));
     }
 
     public void doAction(ResistileMessage message)
     {
+        messageFromThread = message;
         switch (message.messageCode)
         {
             case ResistileMessageTypes.initializeGame:
-                initializeGame(message);
+                msgFromThread = message.messageCode;
                 break;
             case ResistileMessageTypes.tilePlaced:
-                tilePlaced(message);
+                msgFromThread = message.messageCode;
                 break;
             case ResistileMessageTypes.drawResistor:
-                drawResistor(message);
+                msgFromThread = message.messageCode;
                 break;
             case ResistileMessageTypes.drawWire:
-                drawWire(message);
+                msgFromThread = message.messageCode;
                 break;
             case ResistileMessageTypes.invalidMove:
-                invalidMove(message);
+                msgFromThread = message.messageCode;
                 break;
             case ResistileMessageTypes.gameResults:
-                gameResults(message);
+                msgFromThread = message.messageCode;
                 break;
             case ResistileMessageTypes.replay:
-                replay(message);
+                msgFromThread = message.messageCode;
                 break;
             case ResistileMessageTypes.opponentQuit:
-                opponentQuit(message);
+                msgFromThread = message.messageCode;
                 break;
             default:
                 Debug.Log("Unrecognized Message Type: " + message.messageCode + " --- " + message.message);
                 break;
 
         }
+    }
+
+    void Update()
+    {
+        switch (msgFromThread)
+        {
+            case ResistileMessageTypes.initializeGame:
+                initializeGame(messageFromThread);
+                break;
+            case ResistileMessageTypes.tilePlaced:
+                tilePlaced(messageFromThread);
+                break;
+            case ResistileMessageTypes.drawResistor:
+                drawResistor(messageFromThread);
+                break;
+            case ResistileMessageTypes.drawWire:
+                drawWire(messageFromThread);
+                break;
+            case ResistileMessageTypes.invalidMove:
+                invalidMove(messageFromThread);
+                break;
+            case ResistileMessageTypes.gameResults:
+                gameResults(messageFromThread);
+                break;
+            case ResistileMessageTypes.replay:
+                replay(messageFromThread);
+                break;
+            case ResistileMessageTypes.opponentQuit:
+                opponentQuit(messageFromThread);
+                break;
+            default:
+                break;
+        }
+        msgFromThread = -1;
     }
 
     //RECEIVE MESSAGES FROM SERVER
