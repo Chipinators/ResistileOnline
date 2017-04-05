@@ -52,9 +52,6 @@
     <Reference Include="UnityEngine">
       <HintPath>Library\UnityAssemblies\UnityEngine.dll</HintPath>
     </Reference>
-    <Reference Include="UnityEngine.Advertisements">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Advertisements.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
     </Reference>
@@ -69,9 +66,6 @@
     </Reference>
     <Reference Include="UnityEngine.HoloLens">
       <HintPath>Library\UnityAssemblies\UnityEngine.HoloLens.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.Purchasing">
-      <HintPath>Library\UnityAssemblies\UnityEngine.Purchasing.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.VR">
       <HintPath>Library\UnityAssemblies\UnityEngine.VR.dll</HintPath>
@@ -100,6 +94,15 @@
     <Reference Include="System.ComponentModel.DataAnnotations">
       <HintPath>Assets\packages\Microsoft\System.ComponentModel.DataAnnotations.dll</HintPath>
     </Reference>
+    <Reference Include="Accord">
+      <HintPath>Assets\Scripts\ResistileConsole\bin\Debug\Accord.dll</HintPath>
+    </Reference>
+    <Reference Include="Accord.Math.Core">
+      <HintPath>Assets\Scripts\ResistileConsole\bin\Debug\Accord.Math.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Accord.Math">
+      <HintPath>Assets\Scripts\ResistileConsole\bin\Debug\Accord.Math.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\BoardHandler.cs" />
@@ -121,6 +124,9 @@
     <Compile Include="Assets\Scripts\ResistileClient\ResistileMessage.cs" />
     <Compile Include="Assets\Scripts\ResistileClient\ResistileMessageTypes.cs" />
     <Compile Include="Assets\Scripts\ResistileClient\ResistilePlayer.cs" />
+    <Compile Include="Assets\Scripts\ResistileConsole\obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
+    <Compile Include="Assets\Scripts\ResistileConsole\obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
+    <Compile Include="Assets\Scripts\ResistileConsole\obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
     <Compile Include="Assets\Scripts\ResistileServer\BoardManager.cs" />
     <Compile Include="Assets\Scripts\ResistileServer\Coordinates.cs" />
     <Compile Include="Assets\Scripts\ResistileServer\DeckManager.cs" />
