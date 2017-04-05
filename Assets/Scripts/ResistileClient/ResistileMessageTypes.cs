@@ -41,5 +41,8 @@ namespace ResistileClient
         public const int endTurn = 25;
         public const int rotateTile = 26;
         public const int guessResistance = 27;
+
+        //Exceptional Case
+        public const int hostNotFound = 28;
     }
 }

@@ -128,7 +128,10 @@ namespace ResistileServer
                     break;
                 case ResistileMessageTypes.requestJoinGame:
                     var theHost = handleClients.Find(client => client.clName == message.message);
-                    theHost.writeClient(0, ResistileMessageTypes.opponentFound, this.clName);
+                    if (theHost != null)
+                        theHost.writeClient(0, ResistileMessageTypes.opponentFound, this.clName);
+                    else
+                        writeClient(0, ResistileMessageTypes.hostNotFound, message.message);
                     break;
                 case ResistileMessageTypes.cancelJoinRequest:
                     var theHost2 = handleClients.Find(client => client.clName == message.message);
