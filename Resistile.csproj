@@ -138,6 +138,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Scripts\ResistileClient\obj\Debug\ResistileClient.csproj.FileListAbsolute.txt" />
+    <None Include="Assets\Scripts\ResistileConsole\bin\Debug\Accord.Math.Core.xml" />
+    <None Include="Assets\Scripts\ResistileConsole\bin\Debug\Accord.Math.xml" />
+    <None Include="Assets\Scripts\ResistileConsole\bin\Debug\Accord.xml" />
+    <None Include="Assets\Scripts\ResistileConsole\obj\Debug\ResistileConsole.csproj.FileListAbsolute.txt" />
     <None Include="Assets\Scripts\ResistileServer\obj\Debug\ResistileServer.csproj.FileListAbsolute.txt" />
     <None Include="Assets\packages\Accord.3.4.0\lib\net35\Accord.xml" />
     <None Include="Assets\packages\Accord.Math.3.4.0\lib\net35\Accord.Math.Core.xml" />
