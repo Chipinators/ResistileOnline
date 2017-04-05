@@ -16,7 +16,8 @@ namespace ResistileServer
         private static XmlSerializer serializer = new XmlSerializer(typeof(ResistileMessage));
         TcpClient clientSocket;
         string clNo;
-        private string clName;
+        public int gameID;
+        public string clName;
         //private string targetNo = "0";
         private static List<HandleClient> handleClients = new List<HandleClient>();
         private static List<string> availableHosts = new List<string>();
@@ -67,20 +68,14 @@ namespace ResistileServer
                     Console.WriteLine(dataFromClient);
                     networkStream.Flush();
 
-                    
-                    if (message.messageCode == 0)
-                    {
-                        writeClient(0, ResistileMessageTypes.ping, "Ack");
-                    }
-
-                    for (var index = 0; index < handleClients.Count; index++)
-                    {
-                        var client = handleClients[index];
-                        if (client == this)
-                            client.writeClient("Success");
-                        else
-                            client.writeClient(dataFromClient);
-                    }
+                    //for (var index = 0; index < handleClients.Count; index++)
+                    //{
+                    //    var client = handleClients[index];
+                    //    if (client == this)
+                    //        client.writeClient("Success");
+                    //    else
+                    //        client.writeClient(dataFromClient);
+                    //}
                 }
                 catch (Exception ex)
                 {
@@ -97,7 +92,8 @@ namespace ResistileServer
             {
                 //General
                 case ResistileMessageTypes.ping:
-                    // reset timeout thing
+                    //TODO: reset timeout thing
+                    writeClient(0, ResistileMessageTypes.ping, "Ack");
                     break;
                 //Login Scene
                 case ResistileMessageTypes.login:
@@ -110,34 +106,34 @@ namespace ResistileServer
                     availableHosts.Add(clName);
                     break;
                 //Host Scene
-                case ResistileMessageTypes.opponentFound:
-                    // ????
+                case ResistileMessageTypes.cancelSearch:
+                    availableHosts.Remove(clName);
                     break;
-                case ResistileMessageTypes.opponentCanceled:
-                    // ????
+                case ResistileMessageTypes.declineOpponent:
+                    //in message client name
+                    var opponentToBeDeclined = handleClients.Find(client => client.clName == message.message);
+                    opponentToBeDeclined.writeClient(0, ResistileMessageTypes.hostDeclined, clName);
                     break;
-                case ResistileMessageTypes.startGame:
+                case ResistileMessageTypes.acceptOpponent:
+                    var opponentToBeAccepted = handleClients.Find(client => client.clName == message.message);
+                    gameID = generateGameId();
+                    opponentToBeAccepted.gameID = gameID;
+                    opponentToBeAccepted.writeClient(gameID, ResistileMessageTypes.startGame, "");
                     break;
-                //case ResistileMessageTypes.cancelSearch:
-                //    break;
-                //case ResistileMessageTypes.declineOpponent:
-                //    break;
-                //case ResistileMessageTypes.acceptOpponent:
-                //    break;
                 ////Server Browser
                 case ResistileMessageTypes.getHostList:
                     var newMessage = new ResistileMessage(0, ResistileMessageTypes.hostList, "");
                     newMessage.messageArray = new ArrayList(availableHosts.ToArray());
                     writeClient(newMessage);
                     break;
-                //case ResistileMessageTypes.hostList:
-                //    break;
-                //case ResistileMessageTypes.hostDeclined:
-                //    break;
-                //case ResistileMessageTypes.requestJoinGame:
-                //    break;
-                //case ResistileMessageTypes.cancelJoinRequest:
-                //    break;
+                case ResistileMessageTypes.requestJoinGame:
+                    var theHost = handleClients.Find(client => client.clName == message.message);
+                    theHost.writeClient(0, ResistileMessageTypes.opponentFound, this.clName);
+                    break;
+                case ResistileMessageTypes.cancelJoinRequest:
+                    var theHost2 = handleClients.Find(client => client.clName == message.message);
+                    theHost2.writeClient(0, ResistileMessageTypes.opponentCanceled, "");
+                    break;
                 ////In Game
                 //case ResistileMessageTypes.initializeGame:
                 //    break;
@@ -170,6 +166,12 @@ namespace ResistileServer
                 default:
                     break;
             }
+        }
+
+        private static int gameIdCount = 1;
+        private static int generateGameId()
+        {
+            return gameIdCount++;
         }
 
         private void writeClient(string msg)
