@@ -88,11 +88,11 @@
     <Reference Include="Accord.Math">
       <HintPath>Assets\packages\Accord.Math.3.4.0\lib\net35\Accord.Math.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+      <HintPath>Assets\packages\Microsoft\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</HintPath>
+    </Reference>
     <Reference Include="System.ComponentModel.DataAnnotations">
       <HintPath>Assets\packages\Microsoft\System.ComponentModel.DataAnnotations.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
-      <HintPath>Assets\Scripts\ResistileServer\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -114,6 +114,7 @@
     <Compile Include="Assets\Scripts\MessageHandlers\MH_SettingTutorial.cs" />
     <Compile Include="Assets\Scripts\MessageHandlers\MessageHanderInterface.cs" />
     <Compile Include="Assets\Scripts\NetworkManager.cs" />
+    <Compile Include="Assets\Scripts\ResistileClient\Player.cs" />
     <Compile Include="Assets\Scripts\ResistileClient\Program.cs" />
     <Compile Include="Assets\Scripts\ResistileClient\ResistileMessage.cs" />
     <Compile Include="Assets\Scripts\ResistileClient\ResistileMessageTypes.cs" />
@@ -138,7 +139,6 @@
     <Compile Include="Assets\Scripts\ResistileServer\GameManager.cs" />
     <Compile Include="Assets\Scripts\ResistileServer\GameTile.cs" />
     <Compile Include="Assets\Scripts\ResistileServer\HandleClient.cs" />
-    <Compile Include="Assets\Scripts\ResistileServer\Player.cs" />
     <Compile Include="Assets\Scripts\ResistileServer\Program.cs" />
     <Compile Include="Assets\Scripts\ResistileServer\TestCases.cs" />
     <Compile Include="Assets\Scripts\RotateTile.cs" />
@@ -149,8 +149,6 @@
     <Compile Include="Assets\Scripts\Tutorial.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Scripts\ResistileClient\obj\Debug\ResistileClient.csproj.FileListAbsolute.txt" />
-    <None Include="Assets\Scripts\ResistileServer\obj\Debug\ResistileServer.csproj.FileListAbsolute.txt" />
     <None Include="Assets\packages\Accord.3.4.0\lib\net35\Accord.xml" />
     <None Include="Assets\packages\Accord.3.4.0\lib\net40\Accord.xml" />
     <None Include="Assets\packages\Accord.3.4.0\lib\net45\Accord.xml" />

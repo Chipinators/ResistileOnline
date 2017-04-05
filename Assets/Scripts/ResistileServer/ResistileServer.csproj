@@ -51,7 +51,6 @@
     <Compile Include="GameManager.cs" />
     <Compile Include="GameTile.cs" />
     <Compile Include="HandleClient.cs" />
-    <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="TestCases.cs" />
   </ItemGroup>

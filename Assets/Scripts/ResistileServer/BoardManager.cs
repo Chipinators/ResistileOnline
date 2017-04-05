@@ -257,26 +257,6 @@ namespace ResistileServer
                 }
             }
             return isValid;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            return false;
         }
 
         // Check if tile has an end looking out of the board
