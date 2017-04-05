@@ -1,10 +1,14 @@
-﻿namespace ResistileClient
+﻿using System.Collections;
+
+namespace ResistileClient
 {
     public class ResistileMessage
     {
         public int gameID;
         public int messageCode;
         public string message;
+        public int tileID;
+        public bool turn;
 
         ResistileMessage()
         {

@@ -16,7 +16,7 @@ namespace ResistileServer
             {Directions.left, null},
             {Directions.right, null}
         };
-        private double resistance;
+        public double resistance;
         private int currentIndex = -1;
         public string type;
         

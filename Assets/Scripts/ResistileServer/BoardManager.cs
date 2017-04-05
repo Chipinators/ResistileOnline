@@ -25,6 +25,74 @@ namespace ResistileServer
             board[xlength - 1, ylength - 1] = endTile;
         }
 
+        public double Calculate()
+        {
+            var resistance = 0;
+            // every open end should reference to blocked direction tile
+            foreach (var gameTile in board)
+            {
+                if (gameTile != null)
+                {
+                    foreach (var key in gameTile.neighbors.Keys.ToList())
+                    {
+                        if (gameTile.neighbors[key] == null)
+                            gameTile.neighbors[key] = GameTile.blockedDirectionTile;
+                    }
+                }
+            }
+            // for every open end,
+            //    if wireT with only one null
+            //         put blocked direction,
+            //     else
+            //         save them in a list
+            //     then iterate board, find them, then put blockedNeighbor to its closes't wireT parent.
+            List<GameTile> openEnds = new List<GameTile>();
+            foreach (var gameTile in board)
+            {
+                if (gameTile != null)
+                {
+                    if (gameTile.type == GameTileTypes.Wire.typeT)
+                    {
+                        var nullNeighborCount = gameTile.neighbors.Count(neighbor => neighbor.Value == null);
+                        if (nullNeighborCount == 1)
+                        {
+                            var nullNeighbor = gameTile.neighbors.First(neighbor => neighbor.Value == null).Key;
+                            gameTile.neighbors[nullNeighbor] = GameTile.blockedDirectionTile;
+                        }
+                        else if (nullNeighborCount == 2)
+                        {
+                            openEnds.Add(gameTile);
+                        }
+                    }
+                    else
+                    {
+                        foreach (var neighbor in gameTile.neighbors.Keys.ToList())
+                        {
+                            if (gameTile.neighbors[neighbor] == null)
+                            {
+                                openEnds.Add(gameTile);
+                            }
+                        }
+                    }
+                }
+            }
+            foreach (var gameTile in openEnds)
+            {
+
+            }
+
+            // if there is no T wires, return sum of all.
+            if (
+                board.Cast<GameTile>().Count(gameTile => gameTile != null && gameTile.type == GameTileTypes.Wire.typeT) ==
+                0)
+                return board.Cast<GameTile>().Sum(gameTile => gameTile != null ? gameTile.resistance : 0);
+
+            
+
+
+            return resistance;
+        }
+
         public void AddTile(GameTile tile, int[] coordinates)
         {
             board[coordinates[0], coordinates[1]] = tile;
@@ -36,7 +104,7 @@ namespace ResistileServer
             int x = coordinates[0];
             int y = coordinates[1] - 1;
             string oppositeDirection = Directions.down;
-            if (!IsOutOfBoard(x, y) && board[x, y] != null)
+            if (tile.neighbors[Directions.up] == null && !IsOutOfBoard(x, y) && board[x, y] != null)
             {
                 board[x, y].neighbors[oppositeDirection] = tile;
                 tile.neighbors[Directions.up] = board[x, y];
@@ -45,7 +113,7 @@ namespace ResistileServer
             x = coordinates[0] - 1;
             y = coordinates[1];
             oppositeDirection = Directions.right;
-            if (!IsOutOfBoard(x, y) && board[x, y] != null)
+            if (tile.neighbors[Directions.left] == null && !IsOutOfBoard(x, y) && board[x, y] != null)
             {
                 board[x, y].neighbors[oppositeDirection] = tile;
                 tile.neighbors[Directions.left] = board[x, y];
@@ -54,7 +122,7 @@ namespace ResistileServer
             x = coordinates[0];
             y = coordinates[1] + 1;
             oppositeDirection = Directions.up;
-            if (!IsOutOfBoard(x, y) && board[x, y] != null)
+            if (tile.neighbors[Directions.down] == null && !IsOutOfBoard(x, y) && board[x, y] != null)
             {
                 board[x, y].neighbors[oppositeDirection] = tile;
                 tile.neighbors[Directions.down] = board[x, y];
@@ -63,12 +131,11 @@ namespace ResistileServer
             x = coordinates[0] + 1;
             y = coordinates[1];
             oppositeDirection = Directions.left;
-            if (!IsOutOfBoard(x, y) && board[x, y] != null)
+            if (tile.neighbors[Directions.right] == null && !IsOutOfBoard(x, y) && board[x, y] != null)
             {
                 board[x, y].neighbors[oppositeDirection] = tile;
                 tile.neighbors[Directions.right] = board[x, y];
             }
-
         }
 
         public bool IsValidMove(GameTile tile, int[] coordinates)

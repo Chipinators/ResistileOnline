@@ -50,8 +50,6 @@ namespace ResistileServer
             playerTwo = new Player(playerTwoUsername, tempHand, GetRandomPrimary(primaryMIN, primaryMAX), CreateSecondaryObj());
         }
 
-
-
         private double GetRandomPrimary(double minimum, double maximum)
         {
             return random.NextDouble() * (maximum - minimum) + minimum;

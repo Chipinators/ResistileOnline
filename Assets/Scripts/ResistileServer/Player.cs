@@ -3,27 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Collections;
-/*
-        hand
-        userName
-        primaryObjective
-        secondaryObjective
-
-        getUsername()
-        setUsername()
-
-        getPrimaryObj()
-        setPrimaryObj()
-
-        getSecondaryObj()
-        setSecondaryObj()
-
-        getHand()
-        */
 
 namespace ResistileServer
 {
-    class Player
+    public class Player
     {
         public ArrayList hand;
         private string userName;
