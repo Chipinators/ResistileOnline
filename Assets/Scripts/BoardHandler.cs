@@ -1,5 +1,4 @@
-﻿using ResistileConsole;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 namespace Assets.Scripts
@@ -11,7 +10,6 @@ namespace Assets.Scripts
         public GameObject StartNode;
         public GameObject EndNode;
         internal static GameObject[,] BoardArray;
-        internal static GameControl myGame = new GameControl();
 
         private void Start() {
             RowsStat = Rows;

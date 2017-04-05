@@ -13,11 +13,13 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.5.0f3</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <LangVersion Condition=" '$(VisualStudioVersion)' != '10.0' ">4</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -97,12 +99,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\BoardHandler.cs" />
-    <Compile Include="Assets\Scripts\Calculate.cs" />
     <Compile Include="Assets\Scripts\DeckHandler.cs" />
     <Compile Include="Assets\Scripts\Draggable.cs" />
-    <Compile Include="Assets\Scripts\DropArea.cs" />
     <Compile Include="Assets\Scripts\GameHandler.cs" />
-    <Compile Include="Assets\Scripts\GameNodeAdapter.cs" />
     <Compile Include="Assets\Scripts\GameTiles.cs" />
     <Compile Include="Assets\Scripts\HostScreenPanelAdapter.cs" />
     <Compile Include="Assets\Scripts\LoadLevel.cs" />
@@ -118,21 +117,6 @@
     <Compile Include="Assets\Scripts\ResistileClient\Program.cs" />
     <Compile Include="Assets\Scripts\ResistileClient\ResistileMessage.cs" />
     <Compile Include="Assets\Scripts\ResistileClient\ResistileMessageTypes.cs" />
-    <Compile Include="Assets\Scripts\ResistileConsole\BlockedDirection.cs" />
-    <Compile Include="Assets\Scripts\ResistileConsole\Coordinates.cs" />
-    <Compile Include="Assets\Scripts\ResistileConsole\GameControl.cs" />
-    <Compile Include="Assets\Scripts\ResistileConsole\GameNode.cs" />
-    <Compile Include="Assets\Scripts\ResistileConsole\GameNodeResistor.cs" />
-    <Compile Include="Assets\Scripts\ResistileConsole\GameNodeTypeIIResistor.cs" />
-    <Compile Include="Assets\Scripts\ResistileConsole\GameNodeTypeIIWire.cs" />
-    <Compile Include="Assets\Scripts\ResistileConsole\GameNodeTypeIResistor.cs" />
-    <Compile Include="Assets\Scripts\ResistileConsole\GameNodeTypeIWire.cs" />
-    <Compile Include="Assets\Scripts\ResistileConsole\GameNodeTypeRoot.cs" />
-    <Compile Include="Assets\Scripts\ResistileConsole\GameNodeTypeTWire.cs" />
-    <Compile Include="Assets\Scripts\ResistileConsole\GameNodeWire.cs" />
-    <Compile Include="Assets\Scripts\ResistileConsole\IGameNode.cs" />
-    <Compile Include="Assets\Scripts\ResistileConsole\Program.cs" />
-    <Compile Include="Assets\Scripts\ResistileConsole\Properties\AssemblyInfo.cs" />
     <Compile Include="Assets\Scripts\ResistileServer\BoardManager.cs" />
     <Compile Include="Assets\Scripts\ResistileServer\Coordinates.cs" />
     <Compile Include="Assets\Scripts\ResistileServer\DeckManager.cs" />
