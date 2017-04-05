@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Xml.Serialization;
@@ -22,7 +23,7 @@ namespace ResistileClient
             Console.WriteLine("Client Started");
             try
             {
-                clientSocket.Connect("127.0.0.1", 8888);
+                clientSocket.Connect(Dns.GetHostAddresses("witr90gme4p.wit.private"), 8888);
                 Console.WriteLine("Client Socket Program - Server Connected ...");
             }
             catch (Exception e)
