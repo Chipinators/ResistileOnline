@@ -14,6 +14,11 @@ namespace ResistileClient
         private int[] secondaryObjective = new int[2];
         private const int MAXHAND = 5;
 
+        public Player()
+        {
+            
+        }
+
         public Player(string newUserName,ArrayList hand, double newPrimaryObjective, int[] newSecondaryOjective)
         {
 

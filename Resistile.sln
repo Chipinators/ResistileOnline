@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2015
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resistile", "Resistile.csproj", "{6E764D43-78FD-ACE8-024E-F007CD28E35F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResistileConsole", "Assets\Scripts\ResistileConsole\ResistileConsole.csproj", "{E3E14E23-24B2-40A5-96B7-A8A05478033B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResistileServer", "Assets\Scripts\ResistileServer\ResistileServer.csproj", "{71AE4D4D-6F05-4AD8-B41B-191581668C7A}"
 EndProject
@@ -19,10 +19,6 @@ Global
 		{6E764D43-78FD-ACE8-024E-F007CD28E35F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E764D43-78FD-ACE8-024E-F007CD28E35F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E764D43-78FD-ACE8-024E-F007CD28E35F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E3E14E23-24B2-40A5-96B7-A8A05478033B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E3E14E23-24B2-40A5-96B7-A8A05478033B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E3E14E23-24B2-40A5-96B7-A8A05478033B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E3E14E23-24B2-40A5-96B7-A8A05478033B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{71AE4D4D-6F05-4AD8-B41B-191581668C7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{71AE4D4D-6F05-4AD8-B41B-191581668C7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71AE4D4D-6F05-4AD8-B41B-191581668C7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
