@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using ResistileClient;
+using UnityEngine.SceneManagement;
 
 public class MH_SettingTutorial : MonoBehaviour, MessageHanderInterface {
 
@@ -14,7 +15,9 @@ public class MH_SettingTutorial : MonoBehaviour, MessageHanderInterface {
     {
         switch (message.messageCode)
         {
-            default: break;
+            default:
+                Debug.Log("Unrecognized Message Type: " + message.messageCode + " --- " + message.message);
+                break;
 
         }
     }
@@ -24,7 +27,12 @@ public class MH_SettingTutorial : MonoBehaviour, MessageHanderInterface {
     //SEND MESSAGES TO SERVER
     public void MainMenu()
     {
-        NetworkManager.networkManager.sendMessage(ResistileMessageTypes.ping, "Ping");
-        LoadLevel.LoadScene("MainMenu");
+        ping();
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    private void ping()
+    {
+        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.ping, ""));
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using ResistileClient;
+using UnityEngine.SceneManagement;
 
 public class MH_Login : MonoBehaviour, MessageHanderInterface {
     public Text inputField;
@@ -16,7 +17,9 @@ public class MH_Login : MonoBehaviour, MessageHanderInterface {
     {
         switch (message.messageCode)
         {
-            default: break;
+            default:
+                Debug.Log("Unrecognized Message Type: " + message.messageCode + " --- " + message.message);
+                break;
 
         }
     }
@@ -27,7 +30,8 @@ public class MH_Login : MonoBehaviour, MessageHanderInterface {
     public void login()
     {
         string username = inputField.text;
-        NetworkManager.networkManager.sendMessage(ResistileMessageTypes.login, username);
-        LoadLevel.LoadScene("MainMenu");
+        NetworkManager.networkManager.username = username;
+        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.login, username));
+        SceneManager.LoadScene("MainMenu");
     }
 }

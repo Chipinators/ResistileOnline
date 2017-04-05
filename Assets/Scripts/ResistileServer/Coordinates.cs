@@ -4,7 +4,7 @@ namespace ResistileServer
     {
         public int[] coordinates = new int[2];
 
-        Coordinates(int x, int y)
+        public Coordinates(int x, int y)
         {
             coordinates[0] = x;
             coordinates[1] = y;
@@ -20,6 +20,20 @@ namespace ResistileServer
             return coordinates[1];
         }
 
+        public Coordinates getDirection(string direction)
+        {
+            switch (direction)
+            {
+                case Directions.up:
+                    return up();
+                case Directions.down:
+                    return down();
+                case Directions.left:
+                    return left();
+                default:
+                    return right();
+            }
+        }
         public Coordinates up()
         {
             return new Coordinates(coordinates[0], coordinates[1] - 1);

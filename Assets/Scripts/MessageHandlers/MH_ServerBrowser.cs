@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 using ResistileClient;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MH_ServerBrowser : MonoBehaviour, MessageHanderInterface {
-    public GameObject panelManager;
+    public GameObject panelManager, contentView;
+    public GameObject serverInfoPrefab;
 
     void Start()
     {
@@ -17,46 +20,83 @@ public class MH_ServerBrowser : MonoBehaviour, MessageHanderInterface {
         switch (message.messageCode)
         {
             case ResistileMessageTypes.hostList:
+                hostList(message);
                 break;
-            case ResistileMessageTypes.hostDecline:
+            case ResistileMessageTypes.hostDeclined:
+                hostDeclined(message);
                 break;
             case ResistileMessageTypes.startGame:
+                startGame(message);
                 break;
-            default: break;
+            default:
+                Debug.Log("Unrecognized Message Type: " + message.messageCode + " --- " + message.message);
+                break;
 
         }
     }
 
     //RECEIVE MESSAGES FROM SERVER
+    private void hostList(ResistileMessage message)
+    {
+        //TODO: For each host in messages.message add them to the content window
+
+        //foreach (string name in message.message)
+        //{
+        //    addHost(name);
+        //}
+
+    }
+
+    private void hostDeclined(ResistileMessage message)
+    {
+        //TODO: Tell user that host declined
+        panelManager.GetComponent<HostScreenPanelAdapter>().isWaiting = true;
+    }
+
+    private void startGame(ResistileMessage message)
+    {
+        SceneManager.LoadScene("Board");
+    }
+
 
     //SEND MESSAGES TO SERVER
     public void getHostList()
     {
-        NetworkManager.networkManager.sendMessage(ResistileMessageTypes.hostList, "HostList");
-        LoadLevel.LoadScene("HostWaitingScene");
+        foreach(Transform obj in contentView.transform)
+        {
+            Destroy(obj.gameObject);
+        }
+        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.getHostList, ""));
     }
 
-    public void joinLobby()
+    public void joinLobby(string username)
     {
-        NetworkManager.networkManager.sendMessage(ResistileMessageTypes.joinLobby, "guestRequest");
+        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.requestJoinGame, username));
         panelManager.GetComponent<HostScreenPanelAdapter>().isWaiting = false;
     }
 
     public void cancelRequest()
     {
-        NetworkManager.networkManager.sendMessage(ResistileMessageTypes.cancelJoin, "CancelJoin");
+        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.cancelJoinRequest, ""));
         panelManager.GetComponent<HostScreenPanelAdapter>().isWaiting = true;
     }
 
-    public void goBack()
+    public void goBack() //uses for back button, if viewing server list it sends a ping, if waiting for host sends cancelJoinRequest
     {
         if (panelManager.GetComponent<HostScreenPanelAdapter>().isWaiting) ping();
-        else NetworkManager.networkManager.sendMessage(ResistileMessageTypes.cancelJoin, "CancelJoin");
-        LoadLevel.LoadScene("MainMenu");
+        else NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.cancelJoinRequest, ""));
+        SceneManager.LoadScene("MainMenu");
     }
 
-    public void ping()
+    private void ping()
     {
-        NetworkManager.networkManager.sendMessage(ResistileMessageTypes.ping, "Ping");
+        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.ping, ""));
+    }
+
+    private void addHost(string username)
+    {
+        var host = Instantiate(serverInfoPrefab);
+        host.transform.SetParent(contentView.transform, false);
+        host.transform.FindChild("Username").GetComponent<Text>().text = username;
     }
 }

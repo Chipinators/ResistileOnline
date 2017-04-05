@@ -8,6 +8,10 @@ namespace Assets.Scripts
         public string hand;
         internal Transform _returnParent = null;
         private GameObject _draggedGameObject = null;
+        void Start()
+        {
+
+        }
 
         public void OnBeginDrag(PointerEventData eventData)
         {

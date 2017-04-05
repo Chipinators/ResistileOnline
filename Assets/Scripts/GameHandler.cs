@@ -5,12 +5,21 @@ using UnityEngine.UI;
 
 public class GameHandler : MonoBehaviour {
     public static GameHandler gameHandler;
+    public GameObject headerText;
     public GameObject resHand, resDeck, wireHand, wireDeck, gameBoard;
     public GameObject tilePrefab;
     public Button endTurn;
     public Sprite solder, resI, resII, wireI, wireII, wireIII;
     public GameObject primaryObj, secondaryObjI, secondaryObjII;
+    public GameObject gameOverPanelHeader, primaryScore, secondary1Score, secondary2Score, guessScore, totalScore, starPanel, yellowStar, blueStar;
+    public Sprite winTrophy, loseTrophy;
+    public GameObject alertPanel, alertText;
+    public Button playAgain;
+
     private Dictionary<int, string> secondaryObjs;
+    private string yourName, opponentName;
+    private bool isTurn;
+    private float alertTimer;
 
     void Start()
     {
@@ -28,6 +37,20 @@ public class GameHandler : MonoBehaviour {
         DrawWire(2);
         setPrimaryObj(10.5);
         setSecondaryObjs(1, 2);
+        alertTimer = 0.0f;
+    }
+
+    void Update()
+    {
+        if (alertTimer > 0)
+        {
+            alertTimer -= Time.deltaTime;
+            alertPanel.SetActive(true);
+        }
+        if (alertTimer < 0)
+        {
+            alertPanel.SetActive(false);
+        }
     }
 
     public void DrawResistor(int res, int type)
@@ -97,6 +120,99 @@ public class GameHandler : MonoBehaviour {
     public void setSecondaryII(int obj)
     {
         secondaryObjII.GetComponent<Text>().text = secondaryObjs[obj];
+    }
+
+    public void placeTile(int tileID, int xCoord, int yCoord, int rotation)
+    {
+
+    }
+
+    public void setTurn()
+    {
+        string header;
+        if (isTurn)
+        {
+            header = "Your Turn!";
+            endTurn.GetComponent<Button>().interactable = true;
+        }
+        else
+        {
+            header = opponentName + "'s Turn";
+            endTurn.GetComponent<Button>().interactable = false;
+        }
+        headerText.GetComponent<Text>().text = header;
+        
+    }
+
+    public void changeTurn()
+    {
+        isTurn = !isTurn;
+    }
+
+    public void alert(string alertStr)
+    {
+        alertText.GetComponent<Text>().text = alertStr;
+        alertTimer = 2.0f;
+    }
+
+    public void gameOver(bool isWinner, int pScore, int s1Score, int s2Score, int gScore, int tScore)
+    {
+        GameObject overlay = GameObject.Find("EndGameOverlay");
+        setGameOver(isWinner, pScore, s1Score, s2Score, gScore, tScore);
+        overlay.SetActive(true);
+    }
+
+    private void setGameOver(bool isWinner, int pScore, int s1Score, int s2Score, int gScore, int tScore)
+    {
+        if (isWinner)
+        {
+            gameOverPanelHeader.transform.FindChild("winLose").GetComponent<Text>().text = "WIN";
+            gameOverPanelHeader.transform.FindChild("winLose").GetComponent<Text>().color = new Color(215.0f / 255.0f, 182.0f / 255.0f, 0.0f / 255.0f);
+            gameOverPanelHeader.transform.FindChild("Trophy1").GetComponent<Image>().sprite = winTrophy;
+            gameOverPanelHeader.transform.FindChild("Trophy2").GetComponent<Image>().sprite = winTrophy;
+            primaryScore.GetComponent<Text>().text = pScore.ToString();
+            secondary1Score.GetComponent<Text>().text = s1Score.ToString();
+            secondary2Score.GetComponent<Text>().text = s2Score.ToString();
+            guessScore.GetComponent<Text>().text = gScore.ToString();
+            totalScore.GetComponent<Text>().text = tScore.ToString();
+            for(int i = 0; i < tScore; i++)
+            {
+                var star = Instantiate(yellowStar);
+                star.transform.SetParent(starPanel.transform, false);
+            }
+            for(int i = 0; i < 5-tScore; i++)
+            {
+                var star = Instantiate(blueStar);
+                star.transform.SetParent(starPanel.transform, false);
+            }
+        }
+        else
+        {
+            gameOverPanelHeader.transform.FindChild("winLose").GetComponent<Text>().text = "LOSE";
+            gameOverPanelHeader.transform.FindChild("winLose").GetComponent<Text>().color = new Color(99.0f / 255.0f, 17.0f / 255.0f, 17.0f / 255.0f);
+            gameOverPanelHeader.transform.FindChild("Trophy1").GetComponent<Image>().sprite = loseTrophy;
+            gameOverPanelHeader.transform.FindChild("Trophy2").GetComponent<Image>().sprite = loseTrophy;
+            primaryScore.GetComponent<Text>().text = pScore.ToString();
+            secondary1Score.GetComponent<Text>().text = s1Score.ToString();
+            secondary2Score.GetComponent<Text>().text = s2Score.ToString();
+            guessScore.GetComponent<Text>().text = gScore.ToString();
+            totalScore.GetComponent<Text>().text = tScore.ToString();
+            for (int i = 0; i < tScore; i++)
+            {
+                var star = Instantiate(yellowStar);
+                star.transform.SetParent(starPanel.transform, false);
+            }
+            for (int i = 0; i < 5 - tScore; i++)
+            {
+                var star = Instantiate(blueStar);
+                star.transform.SetParent(starPanel.transform, false);
+            }
+        }
+    }
+
+    public void noPlayAgain()
+    {
+        playAgain.GetComponent<Button>().interactable = false;
     }
 
     private void fillObjectives()

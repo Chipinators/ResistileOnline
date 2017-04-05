@@ -11,8 +11,9 @@ namespace ResistileClient
         public const int ping = 0;
         //Login Scene
         public const int login = 1;
-        //Host Scene
+        //MainMenu
         public const int startHosting = 2;
+        //Host Scene
         public const int opponentFound = 3;
         public const int opponentCanceled = 4;
         public const int startGame = 5;
@@ -28,16 +29,17 @@ namespace ResistileClient
         //In Game
         public const int initializeGame = 11;
         public const int tilePlaced = 12;
-        public const int drawResistor = 13;
-        public const int drawWire = 14;
-        public const int invalidMove = 15;
-        public const int gameResults = 16;
-        public const int replay = 17;
-        public const int opponentQuit = 18;
-        public const int gameLoaded = 19;
-        public const int quitGame = 20;
-        public const int endTurn = 21;
-        public const int rotateTile = 22;
-        public const int guessResistance = 23;
+        public const int solderPlaced = 13;
+        public const int drawResistor = 14;
+        public const int drawWire = 15;
+        public const int invalidMove = 16;
+        public const int gameResults = 17;
+        public const int replay = 18;
+        public const int opponentQuit = 19;
+        public const int gameLoaded = 20;
+        public const int quitGame = 21;
+        public const int endTurn = 22;
+        public const int rotateTile = 23;
+        public const int guessResistance = 24;
     }
 }
