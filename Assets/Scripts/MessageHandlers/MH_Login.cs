@@ -10,13 +10,16 @@ public class MH_Login : MonoBehaviour, MessageHanderInterface {
 
     void Start()
     {
-        GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<NetworkManager>().messageHandler = this.gameObject;
+        GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<NetworkManager>().messageInterface = this;
     }
 
     public void doAction(ResistileMessage message)
     {
         switch (message.messageCode)
         {
+            case ResistileMessageTypes.ping:
+                Debug.Log("Received Ping From Server");
+                break;
             default:
                 Debug.Log("Unrecognized Message Type: " + message.messageCode + " --- " + message.message);
                 break;

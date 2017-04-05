@@ -9,7 +9,7 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
 
 	// Use this for initialization
 	void Start () {
-        GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<NetworkManager>().messageHandler = this.gameObject;
+        GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<NetworkManager>().messageInterface = this;
         NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.gameLoaded, ""));
     }
 

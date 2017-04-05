@@ -119,6 +119,7 @@ namespace ResistileServer
                 case ResistileMessageTypes.getHostList:
                     var newMessage = new ResistileMessage(0, ResistileMessageTypes.hostList, "");
                     newMessage.messageArray = new ArrayList(availableHosts.ToArray());
+                    writeClient(newMessage);
                     break;
                 //case ResistileMessageTypes.hostList:
                 //    break;
@@ -166,6 +167,7 @@ namespace ResistileServer
         {
             string serverResponse = "Server to clinet(" + clNo + ") " + msg;
             var message = new ResistileMessage(0, 0, serverResponse);
+            Console.WriteLine("Message sent to client: " + msg);
             using (StringWriter textWriter = new StringWriter())
             {
                 NetworkStream serverStream = clientSocket.GetStream();
@@ -184,6 +186,19 @@ namespace ResistileServer
             {
                 NetworkStream serverStream = clientSocket.GetStream();
                 serializer.Serialize(textWriter, message);
+                var line = textWriter.ToString();
+                byte[] outStream = Encoding.ASCII.GetBytes(line + "$");
+                serverStream.Write(outStream, 0, outStream.Length);
+                serverStream.Flush();
+            }
+        }
+
+        private void writeClient(ResistileMessage msg)
+        {
+            using (StringWriter textWriter = new StringWriter())
+            {
+                NetworkStream serverStream = clientSocket.GetStream();
+                serializer.Serialize(textWriter, msg);
                 var line = textWriter.ToString();
                 byte[] outStream = Encoding.ASCII.GetBytes(line + "$");
                 serverStream.Write(outStream, 0, outStream.Length);

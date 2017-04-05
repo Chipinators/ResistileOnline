@@ -21,25 +21,25 @@ namespace ResistileClient
         public const int declineOpponent = 7;
         public const int acceptOpponent = 8;
         //Server Browser
-        public const int getHostList = 6;
-        public const int hostList = 7;
-        public const int hostDeclined = 8;
-        public const int requestJoinGame = 9;
-        public const int cancelJoinRequest = 10;
+        public const int getHostList = 9;
+        public const int hostList = 10;
+        public const int hostDeclined = 11;
+        public const int requestJoinGame = 12;
+        public const int cancelJoinRequest = 13;
         //In Game
-        public const int initializeGame = 11;
-        public const int tilePlaced = 12;
-        public const int solderPlaced = 13;
-        public const int drawResistor = 14;
-        public const int drawWire = 15;
-        public const int invalidMove = 16;
-        public const int gameResults = 17;
-        public const int replay = 18;
-        public const int opponentQuit = 19;
-        public const int gameLoaded = 20;
-        public const int quitGame = 21;
-        public const int endTurn = 22;
-        public const int rotateTile = 23;
-        public const int guessResistance = 24;
+        public const int initializeGame = 14;
+        public const int tilePlaced = 15;
+        public const int solderPlaced = 16;
+        public const int drawResistor = 17;
+        public const int drawWire = 18;
+        public const int invalidMove = 19;
+        public const int gameResults = 20;
+        public const int replay = 21;
+        public const int opponentQuit = 22;
+        public const int gameLoaded = 23;
+        public const int quitGame = 24;
+        public const int endTurn = 25;
+        public const int rotateTile = 26;
+        public const int guessResistance = 27;
     }
 }

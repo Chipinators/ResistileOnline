@@ -14,10 +14,8 @@ namespace Assets.Scripts
         }
 
         public void OnBeginDrag(PointerEventData eventData)
-        {
-     
-            
-            _draggedGameObject = gameObject;
+        { 
+            _draggedGameObject = this.gameObject;
             _returnParent = _draggedGameObject.transform.parent;
             _draggedGameObject.transform.SetParent(GameObject.Find("Canvas").transform);
             _draggedGameObject.GetComponent<CanvasGroup>().blocksRaycasts = false;

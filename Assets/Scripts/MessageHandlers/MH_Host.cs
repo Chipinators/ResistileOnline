@@ -11,7 +11,7 @@ public class MH_Host : MonoBehaviour, MessageHanderInterface {
 
     void Start()
     {
-        GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<NetworkManager>().messageHandler = this.gameObject;
+        GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<NetworkManager>().messageInterface = this;
         panelManager = GameObject.FindGameObjectWithTag("PanelManager");
     }
 

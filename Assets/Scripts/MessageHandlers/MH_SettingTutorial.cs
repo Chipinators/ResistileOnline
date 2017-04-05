@@ -8,7 +8,7 @@ public class MH_SettingTutorial : MonoBehaviour, MessageHanderInterface {
 
     void Start()
     {
-        GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<NetworkManager>().messageHandler = this.gameObject;
+        GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<NetworkManager>().messageInterface = this;
     }
 
     public void doAction(ResistileMessage message)

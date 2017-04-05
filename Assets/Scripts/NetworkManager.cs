@@ -15,8 +15,8 @@ public class NetworkManager : MonoBehaviour {
     public int gameID;
     public string username;
     private static XmlSerializer serializer;
-    public GameObject messageHandler;
-    private MessageHanderInterface messageInterface;
+    private Thread readDataThread;
+    public MessageHanderInterface messageInterface;
 
     // Use this for initialization
     void Start () {
@@ -33,7 +33,7 @@ public class NetworkManager : MonoBehaviour {
         {
             Debug.Log("Couldn't connect to server.\n" + e);
         }
-        Thread readDataThread = new Thread(receiveMessage);
+        readDataThread = new Thread(receiveMessage);
         readDataThread.Start();
     }
 
@@ -66,8 +66,6 @@ public class NetworkManager : MonoBehaviour {
     {
         while (true)
         {
-
-
             NetworkStream serverStream = dest.GetStream();
             byte[] inStream = new byte[dest.ReceiveBufferSize];
             serverStream.Read(inStream, 0, dest.ReceiveBufferSize);

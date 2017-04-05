@@ -11,8 +11,9 @@ public class MH_ServerBrowser : MonoBehaviour, MessageHanderInterface {
 
     void Start()
     {
-        GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<NetworkManager>().messageHandler = this.gameObject;
+        GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<NetworkManager>().messageInterface = this;
         panelManager = GameObject.FindGameObjectWithTag("PanelManager");
+        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.getHostList, ""));
     }
 
     public void doAction(ResistileMessage message)
