@@ -81,6 +81,12 @@ namespace ResistileServer
                 {
                     Console.WriteLine(" >> " + ex.Message);
                     noException = false;
+                    if (availableHosts.Contains(clName))
+                    {
+                        availableHosts.Remove(clName);
+                    }
+                    handleClients.Remove(this);
+                    clientSocket.Close();
 
                 }
             }

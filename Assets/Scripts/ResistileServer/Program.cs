@@ -9,7 +9,7 @@ namespace ResistileServer
         static void Main(string[] args)
         {
             writeServerTitle();
-            IPAddress ip = IPAddress.Parse("127.0.0.1");
+            IPAddress ip = IPAddress.Parse("0.0.0.0");
             TcpListener serverSocket = new TcpListener(ip, 8888);
             TcpClient clientSocket = default(TcpClient);
             int counter = 0;
