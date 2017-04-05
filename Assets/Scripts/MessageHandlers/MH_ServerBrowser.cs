@@ -8,6 +8,8 @@ using UnityEngine.UI;
 public class MH_ServerBrowser : MonoBehaviour, MessageHanderInterface {
     public GameObject panelManager, contentView;
     public GameObject serverInfoPrefab;
+    private int msgFromThread = -1;
+    private ResistileMessage messageFromThread;
 
     void Start()
     {
@@ -18,22 +20,46 @@ public class MH_ServerBrowser : MonoBehaviour, MessageHanderInterface {
 
     public void doAction(ResistileMessage message)
     {
+        messageFromThread = message;
         switch (message.messageCode)
         {
             case ResistileMessageTypes.hostList:
-                hostList(message);
+                msgFromThread = message.messageCode;
                 break;
             case ResistileMessageTypes.hostDeclined:
-                hostDeclined(message);
+                msgFromThread = message.messageCode;
                 break;
             case ResistileMessageTypes.startGame:
-                startGame(message);
+                msgFromThread = message.messageCode;
+                break;
+            case ResistileMessageTypes.hostNotFound:
+                msgFromThread = message.messageCode;
                 break;
             default:
                 Debug.Log("Unrecognized Message Type: " + message.messageCode + " --- " + message.message);
                 break;
 
         }
+    }
+
+    void Update()
+    {
+        switch (msgFromThread)
+        {
+            case ResistileMessageTypes.hostList:
+                hostList(messageFromThread);
+                break;
+            case ResistileMessageTypes.hostDeclined:
+                hostDeclined(messageFromThread);
+                break;
+            case ResistileMessageTypes.startGame:
+                startGame(messageFromThread);
+                break;
+            case ResistileMessageTypes.hostNotFound:
+                hostNotFound(messageFromThread);
+                break;
+        }
+        msgFromThread = -1;
     }
 
     //RECEIVE MESSAGES FROM SERVER
@@ -57,6 +83,12 @@ public class MH_ServerBrowser : MonoBehaviour, MessageHanderInterface {
         SceneManager.LoadScene("Board");
     }
 
+    private void hostNotFound(ResistileMessage message)
+    {
+        //TODO Add alert
+        panelManager.GetComponent<HostScreenPanelAdapter>().isWaiting = true;
+        getHostList();
+    }
 
     //SEND MESSAGES TO SERVER
     public void getHostList()

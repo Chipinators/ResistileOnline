@@ -7,6 +7,7 @@ using System.Text;
 using System.Xml.Serialization;
 using System.IO;
 using System.Threading;
+using System.Net;
 
 public class NetworkManager : MonoBehaviour {
     public static NetworkManager networkManager;

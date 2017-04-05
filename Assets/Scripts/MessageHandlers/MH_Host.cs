@@ -7,7 +7,9 @@ using System;
 using UnityEngine.SceneManagement;
 
 public class MH_Host : MonoBehaviour, MessageHanderInterface {
-    public GameObject panelManager;
+    public GameObject panelManager, opponentName;
+    private int msgFromThread = -1;
+    private ResistileMessage messageFromThread;
 
     void Start()
     {
@@ -17,16 +19,17 @@ public class MH_Host : MonoBehaviour, MessageHanderInterface {
 
     public void doAction(ResistileMessage message)
     {
+        messageFromThread = message;
         switch (message.messageCode)
         {
             case ResistileMessageTypes.opponentFound:
-                opponentFound(message);
+                msgFromThread = message.messageCode;
                 break;
             case ResistileMessageTypes.opponentCanceled:
-                opponentCanceled(message);
+                msgFromThread = message.messageCode;
                 break;
             case ResistileMessageTypes.startGame:
-                startGame(message);
+                msgFromThread = message.messageCode;
                 break;
             default:
                 Debug.Log("Unrecognized Message Type: " + message.messageCode + " --- " + message.message);
@@ -34,15 +37,33 @@ public class MH_Host : MonoBehaviour, MessageHanderInterface {
         }
     }
 
+    void Update()
+    {
+        switch (msgFromThread)
+        {
+            case ResistileMessageTypes.opponentFound:
+                opponentFound(messageFromThread);
+                break;
+            case ResistileMessageTypes.opponentCanceled:
+                opponentCanceled(messageFromThread);
+                break;
+            case ResistileMessageTypes.startGame:
+                startGame(messageFromThread);
+                break;
+        }
+        msgFromThread = -1;
+    }
+
     //RECEIVE MESSAGES FROM SERVER
     private void opponentFound(ResistileMessage message)
     {
-        panelManager.GetComponent<HostScreenPanelAdapter>().isWaiting = false;
+        panelManager.GetComponent<HostScreenPanelAdapter>().changeWaiting();
+        opponentName.GetComponent<Text>().text = message.message;
     }
 
     private void opponentCanceled(ResistileMessage message)
     {
-        panelManager.GetComponent<HostScreenPanelAdapter>().isWaiting = true;
+        panelManager.GetComponent<HostScreenPanelAdapter>().changeWaiting();
     }
 
     private void startGame(ResistileMessage message)
@@ -54,18 +75,18 @@ public class MH_Host : MonoBehaviour, MessageHanderInterface {
     public void declineOpponent()
     {
         NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.declineOpponent, ""));
-        panelManager.GetComponent<HostScreenPanelAdapter>().isWaiting = true;
+        panelManager.GetComponent<HostScreenPanelAdapter>().changeWaiting();
     }
 
     public void cancelSearch()
     {
-        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.cancelSearch, ""));
+        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.cancelSearch, NetworkManager.networkManager.username));
         SceneManager.LoadScene("MainMenu");
     }
 
     public void acceptOpponent()
     {
-        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.acceptOpponent, ""));
+        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.acceptOpponent, opponentName.GetComponent<Text>().text));
         SceneManager.LoadScene("Board");
     }
 

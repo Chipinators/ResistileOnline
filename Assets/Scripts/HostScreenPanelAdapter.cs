@@ -20,17 +20,26 @@ public class HostScreenPanelAdapter : MonoBehaviour {
     {
         if (isWaiting)
         {
-            waitCanvas.alpha = 1;
-            waitCanvas.blocksRaycasts = true;
-            foundCanvas.alpha = 0;
-            foundCanvas.blocksRaycasts = false;
+            waitingPanel.SetActive(true);
+            foundPanel.SetActive(false);
+            //waitCanvas.alpha = 1;
+            //waitCanvas.blocksRaycasts = true;
+            //foundCanvas.alpha = 0;
+            //foundCanvas.blocksRaycasts = false;
         }
         else
         {
-            waitCanvas.alpha = 0;
-            waitCanvas.blocksRaycasts = false;
-            foundCanvas.alpha = 1;
-            foundCanvas.blocksRaycasts = true;
+            waitingPanel.SetActive(false);
+            foundPanel.SetActive(true);
+            //waitCanvas.alpha = 0;
+            //waitCanvas.blocksRaycasts = false;
+            //foundCanvas.alpha = 1;
+            //foundCanvas.blocksRaycasts = true;
         }
+    }
+
+    public void changeWaiting()
+    {
+        isWaiting = !isWaiting;
     }
 }
