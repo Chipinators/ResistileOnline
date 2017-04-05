@@ -26,16 +26,16 @@ public class GameHandler : MonoBehaviour {
     {
         gameHandler = this;
         fillObjectives();
-        DrawResistor(2, 1);
-        DrawResistor(-1, 1);
-        DrawResistor(5, 2);
-        DrawResistor(3, 1);
-        DrawResistor(1, 2);
-        DrawWire(1);
-        DrawWire(2);
-        DrawWire(3);
-        DrawWire(1);
-        DrawWire(2);
+        DrawResistor(2, ResistileServer.GameTileTypes.Resistor.typeI);
+        DrawResistor(-1, ResistileServer.GameTileTypes.Resistor.typeI);
+        DrawResistor(5, ResistileServer.GameTileTypes.Resistor.typeII);
+        DrawResistor(3, ResistileServer.GameTileTypes.Resistor.typeI);
+        DrawResistor(1, ResistileServer.GameTileTypes.Resistor.typeII);
+        DrawWire(ResistileServer.GameTileTypes.Wire.typeI);
+        DrawWire(ResistileServer.GameTileTypes.Wire.typeII);
+        DrawWire(ResistileServer.GameTileTypes.Wire.typeT);
+        DrawWire(ResistileServer.GameTileTypes.Wire.typeI);
+        DrawWire(ResistileServer.GameTileTypes.Wire.typeII);
         setPrimaryObj(10.5);
         setSecondaryObjs(1, 2);
         alertTimer = 0.0f;
@@ -54,7 +54,12 @@ public class GameHandler : MonoBehaviour {
         }
     }
 
-    public void DrawResistor(int res, int type)
+    public void Draw()
+    {
+
+    }
+
+    public void DrawResistor(int res, string type)
     {
         if (resHand.transform.childCount >= 5) return;
         var tile = Instantiate(tilePrefab);
@@ -69,34 +74,34 @@ public class GameHandler : MonoBehaviour {
         else
         {
             tile.GetComponentInChildren<Text>().text = res.ToString();
-            if (type == 1)
+            if (type.Equals(ResistileServer.GameTileTypes.Resistor.typeI))
             {
                 tile.transform.FindChild("Background").GetComponent<Image>().sprite = resI;
 
             }   
-            else if (type == 2)
+            else if (type.Equals(ResistileServer.GameTileTypes.Resistor.typeII))
             {
                 tile.transform.FindChild("Background").GetComponent<Image>().sprite = resII;
             }         
         }
     }
 
-    public void DrawWire(int type)
+    public void DrawWire(string type)
     {
         if (wireHand.transform.childCount >= 5) return;
         var tile = Instantiate(tilePrefab);
         tile.transform.SetParent(wireHand.transform, false);
         tile.transform.FindChild("OhmIcon").gameObject.SetActive(false);
         tile.transform.FindChild("Resistance").gameObject.SetActive(false);
-        if (type == 1) //Wire Straight
+        if (type.Equals(ResistileServer.GameTileTypes.Wire.typeI)) //Wire Straight
         {
             tile.transform.FindChild("Background").GetComponent<Image>().sprite = wireI;
         }
-        else if (type == 2) //Wire Bend
+        else if (type.Equals(ResistileServer.GameTileTypes.Wire.typeII)) //Wire Bend
         {
             tile.transform.FindChild("Background").GetComponent<Image>().sprite = wireII;
         }
-        else if (type == 3) //Wire T
+        else if (type.Equals(ResistileServer.GameTileTypes.Wire.typeT)) //Wire T
         {
             tile.transform.FindChild("Background").GetComponent<Image>().sprite = wireIII;
         }

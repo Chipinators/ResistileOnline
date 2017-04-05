@@ -104,7 +104,7 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
     private void drawResistor(ResistileMessage message) //You End Turn
     {
         //TODO:
-        GameHandler.gameHandler.DrawResistor(1, 2);
+        //GameHandler.gameHandler.DrawResistor(1, 2);
         GameHandler.gameHandler.changeTurn();
         GameHandler.gameHandler.setTurn();
     }
@@ -112,7 +112,7 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
     private void drawWire(ResistileMessage message)
     {
         //TODO:
-        GameHandler.gameHandler.DrawWire(1);
+        //GameHandler.gameHandler.DrawWire(1);
         GameHandler.gameHandler.changeTurn();
         GameHandler.gameHandler.setTurn();
     }
@@ -164,8 +164,8 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
     {
         //TODO: Send server tile, coordinates, 
         NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.endTurn, ""));
-        GameHandler.gameHandler.DrawResistor(Random.Range(1,6), Random.Range(1, 3));
-        GameHandler.gameHandler.DrawWire(Random.Range(1, 4));
+        //GameHandler.gameHandler.DrawResistor(Random.Range(1,6), Random.Range(1, 3));
+        //GameHandler.gameHandler.DrawWire(Random.Range(1, 4));
     }
 
     public void guessResistance()
