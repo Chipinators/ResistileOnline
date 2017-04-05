@@ -31,6 +31,15 @@ namespace ResistileServer
 
         private void readClient()
         {
+            if (!clientSocket.Connected)
+            {
+                if (availableHosts.Contains(clName))
+                {
+                    availableHosts.Remove(clName);
+                }
+                handleClients.Remove(this);
+                clientSocket.Close();
+            }
             byte[] bytesFrom = new byte[clientSocket.ReceiveBufferSize];
             string dataFromClient;
             //while timeout datetime greater than current datetime
@@ -61,7 +70,7 @@ namespace ResistileServer
                     
                     if (message.messageCode == 0)
                     {
-                        writeClient(1, 1, "Ack");
+                        writeClient(0, ResistileMessageTypes.ping, "Ack");
                     }
 
                     for (var index = 0; index < handleClients.Count; index++)
