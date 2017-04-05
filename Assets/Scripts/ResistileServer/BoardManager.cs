@@ -60,6 +60,20 @@ namespace ResistileServer
                 tile.neighbors[Directions.down] = board[x, y];
             }
             //right
+            GetValue(tile, coordinates);
+        }
+
+        public void solderTile(GameTile newTile, int[] coordinates)
+        {
+            //Delete current tile 
+            AddTile(newTile, coordinates);
+        }
+
+        private void GetValue(GameTile tile, int[] coordinates)
+        {
+            int x;
+            int y;
+            string oppositeDirection;
             x = coordinates[0] + 1;
             y = coordinates[1];
             oppositeDirection = Directions.left;
@@ -68,7 +82,6 @@ namespace ResistileServer
                 board[x, y].neighbors[oppositeDirection] = tile;
                 tile.neighbors[Directions.right] = board[x, y];
             }
-
         }
 
         public bool IsValidMove(GameTile tile, int[] coordinates)
@@ -143,6 +156,59 @@ namespace ResistileServer
             
             return isValid;
 
+        }
+
+        public bool IsValidSolder(GameTile newtile, Coordinates coordinates)
+        {
+            bool isValid = true;
+            if (board[coordinates.x(), coordinates.y()] == null)
+            {
+                return false;
+            }
+
+
+            var tileOnBoard = board[coordinates.x(), coordinates.y()];
+            foreach (var neighbor in tileOnBoard.neighbors)
+            {
+                if (neighbor.Value == GameTile.blockedDirectionTile)
+                {
+                    if (newtile.neighbors[neighbor.Key] == null)
+                    {
+                        var facingDirection = Directions.Facing[neighbor.Key];
+                        var facingTile = board[coordinates.getDirection(neighbor.Key).x(),
+                            coordinates.getDirection(neighbor.Key).y()];
+                        if (facingTile != null && facingTile.neighbors[facingDirection] == GameTile.blockedDirectionTile)
+                        {
+                            isValid = false;
+                        }
+                    }
+                    else
+                    {
+                        isValid &= newtile.neighbors[neighbor.Key] == neighbor.Value;
+                    }
+                }
+            }
+            return isValid;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            return false;
         }
 
         // Check if tile has an end looking out of the board

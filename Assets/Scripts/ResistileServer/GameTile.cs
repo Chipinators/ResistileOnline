@@ -19,7 +19,7 @@ namespace ResistileServer
         private double resistance;
         private int currentIndex = -1;
         public string type;
-        
+
         public GameTile(string type, int id = 0, double resistance = double.Epsilon)
         {
             this.type = type;
@@ -46,7 +46,7 @@ namespace ResistileServer
 
         public override bool Equals(object obj)
         {
-            var gameTile = (GameTile) obj;
+            var gameTile = (GameTile)obj;
             return gameTile != null && id == gameTile.id;
         }
 
@@ -93,7 +93,23 @@ namespace ResistileServer
         public const string down = "down";
         public const string left = "left";
         public const string right = "right";
+        public static readonly Dictionary<string, string> Facing = new Dictionary<string, string>
+        {
+            {
+                up, down
+            },
+            {
+                left, right
+            },
+            {
+                right, left
+            },
+            {
+                down, up
+            }
+        };
     }
+
 
     public struct GameTileTypes
     {

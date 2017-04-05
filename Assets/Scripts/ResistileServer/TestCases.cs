@@ -90,7 +90,7 @@ namespace ResistileServer
             }
             check = boardManager.IsValidMove(res, new int[] { 2, 0 });
             Assert.IsTrue(check, "Is resistor placed");
-            if (check == true)
+            if (check)
             {
                 boardManager.AddTile(res, new int[] { 2, 0 });
             }
@@ -112,6 +112,31 @@ namespace ResistileServer
             {
                 boardManager.AddTile(tile3, new int[] { 0, 1 });
             }
+        }
+        [TestMethod]
+        public void PlaceOutOfBounds() //Point end towards perimeter
+        {
+            var boardManager = new BoardManager();
+            var tile = new GameTile(GameTileTypes.Wire.typeII, -1);
+            tile.Rotate();
+            var check = boardManager.IsValidMove(tile, new int[] { 0, 1 });
+            Assert.IsFalse(check, "Does tile point to end of board");
+            if(check)
+            {
+                boardManager.AddTile(tile, new int[] { 0, 1 });
+            }
+        }
+
+        [TestMethod]
+        public void TestSolderValidation()
+        {
+            var boardManager = new BoardManager();
+
+            var tile = new GameTile(GameTileTypes.Wire.typeT, -1);
+            boardManager.AddTile(tile, new int[] { 1, 0 });
+            var tileReplace = new GameTile(GameTileTypes.Resistor.typeI, 0, 4);
+            var check = boardManager.IsValidSolder(tileReplace, new Coordinates(1, 0));
+            Assert.IsTrue(check, "is valid solder spot");
         }
     }
 }
