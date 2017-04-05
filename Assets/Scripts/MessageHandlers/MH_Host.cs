@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using ResistileClient;
 using System;
+using UnityEngine.SceneManagement;
 
 public class MH_Host : MonoBehaviour, MessageHanderInterface {
     public GameObject panelManager;
@@ -19,45 +20,53 @@ public class MH_Host : MonoBehaviour, MessageHanderInterface {
         switch (message.messageCode)
         {
             case ResistileMessageTypes.opponentFound:
-                opponentFound(message.gameID, message.message);
+                opponentFound(message);
                 break;
             case ResistileMessageTypes.opponentCanceled:
-                opponentCanceled(message.gameID, message.message);
+                opponentCanceled(message);
                 break;
             case ResistileMessageTypes.startGame:
+                startGame(message);
                 break;
-            default: break;
+            default:
+                Debug.Log("Unrecognized Message Type: " + message.messageCode + " --- " + message.message);
+                break;
         }
     }
 
     //RECEIVE MESSAGES FROM SERVER
-    private void opponentCanceled(int gameID, string data)
+    private void opponentFound(ResistileMessage message)
     {
-        throw new NotImplementedException();
+        panelManager.GetComponent<HostScreenPanelAdapter>().isWaiting = false;
     }
 
-    private void opponentFound(int gameID, string data)
+    private void opponentCanceled(ResistileMessage message)
     {
-        throw new NotImplementedException();
+        panelManager.GetComponent<HostScreenPanelAdapter>().isWaiting = true;
+    }
+
+    private void startGame(ResistileMessage message)
+    {
+        SceneManager.LoadScene("Board");
     }
 
     //SEND MESSAGES TO SERVER
-    public void decline()
+    public void declineOpponent()
     {
-        NetworkManager.networkManager.sendMessage(ResistileMessageTypes.hostDecline, "HostDecline");
+        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.declineOpponent, ""));
         panelManager.GetComponent<HostScreenPanelAdapter>().isWaiting = true;
     }
 
     public void cancelSearch()
     {
-        NetworkManager.networkManager.sendMessage(ResistileMessageTypes.cancelHost, "HostCancel");
-        LoadLevel.LoadScene("MainMenu");
+        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.cancelSearch, ""));
+        SceneManager.LoadScene("MainMenu");
     }
 
-    public void accept()
+    public void acceptOpponent()
     {
-        NetworkManager.networkManager.sendMessage(ResistileMessageTypes.startGame, "HostAccept");
-        LoadLevel.LoadScene("Board");
+        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.acceptOpponent, ""));
+        SceneManager.LoadScene("Board");
     }
 
 

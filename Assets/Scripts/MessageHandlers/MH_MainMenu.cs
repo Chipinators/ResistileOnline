@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using ResistileClient;
+using UnityEngine.SceneManagement;
 
 public class MH_MainMenu : MonoBehaviour, MessageHanderInterface {
 
@@ -15,7 +16,9 @@ public class MH_MainMenu : MonoBehaviour, MessageHanderInterface {
     {
         switch (message.messageCode)
         {
-            default: break;
+            default:
+                Debug.Log("Unrecognized Message Type: " + message.messageCode + " --- " + message.message);
+                break;
         }
     }
 
@@ -24,31 +27,30 @@ public class MH_MainMenu : MonoBehaviour, MessageHanderInterface {
     //SEND MESSAGES TO SERVER
     public void startHosting()
     {
-        NetworkManager.networkManager.sendMessage(ResistileMessageTypes.host, "StartHosting");
-        LoadLevel.LoadScene("HostWaitingScreen");
+        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.startHosting, NetworkManager.networkManager.username));
+        SceneManager.LoadScene("HostWaitingScreen");
     }
 
     public void serverBrowser()
     {
-        NetworkManager.networkManager.sendMessage(ResistileMessageTypes.serverList, "serverList");
-        LoadLevel.LoadScene("ServerBrowser");
+        SceneManager.LoadScene("ServerBrowser");
     }
 
     public void tutorial()
     {
         ping();
-        LoadLevel.LoadScene("Tutorial");
+        SceneManager.LoadScene("Tutorial");
     }
 
     public void settings()
     {
         ping();
-        LoadLevel.LoadScene("SettingsMenu");
+        SceneManager.LoadScene("SettingsMenu");
     }
 
-    public void ping()
+    private void ping()
     {
-        NetworkManager.networkManager.sendMessage(ResistileMessageTypes.ping, "Ping");
+        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.ping, ""));
     }
 
 }

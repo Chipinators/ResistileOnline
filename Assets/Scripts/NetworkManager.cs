@@ -13,6 +13,7 @@ public class NetworkManager : MonoBehaviour {
     public TcpClient dest;
     public NetworkStream destStream;
     public int gameID;
+    public string username;
     private static XmlSerializer serializer;
     public GameObject messageHandler;
     private MessageHanderInterface messageInterface;
@@ -42,13 +43,13 @@ public class NetworkManager : MonoBehaviour {
         DontDestroyOnLoad(this);
     }
 
-    public void sendMessage(int messageType, string data)
-    {
-        var finalMsg = new ResistileClient.ResistileMessage(gameID, messageType, data);
-        transmitMessage(finalMsg);
-    }
+    //public void sendMessage(ResistileClient.ResistileMessage message)
+    //{
+    //    var finalMsg = new ResistileClient.ResistileMessage(gameID, messageType, data);
+    //    transmitMessage(message);
+    //}
 
-    private void transmitMessage(ResistileClient.ResistileMessage message)
+    public void sendMessage(ResistileClient.ResistileMessage message)
     {
         using (StringWriter textWriter = new StringWriter())
         {
