@@ -10,8 +10,8 @@ namespace ResistileClient
     {
         public ArrayList hand;
         public string userName;
-        private double primaryObjective;
-        private int[] secondaryObjective = new int[2];
+        public double primaryObjective;
+        public int[] secondaryObjective;
         private const int MAXHAND = 5;
 
         public ResistilePlayer()

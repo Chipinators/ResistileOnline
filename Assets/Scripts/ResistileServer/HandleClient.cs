@@ -153,12 +153,23 @@ namespace ResistileServer
                     var player = gameManager.getPlayer(clName);
                     var playersOpponent = gameManager.getOpponent(clName);
                     var initializeGameMessage = new ResistileMessage(gameID, ResistileMessageTypes.initializeGame, playersOpponent.userName);
-                    initializeGameMessage.ResistilePlayer = player;
                     initializeGameMessage.turn = gameManager.currentTurnPlayer == player;
-                    initializeGameMessage.messageArray = gameManager.wireHand;
-
+                    ArrayList playerHand = new ArrayList();
+                    foreach (GameTile tile in player.hand)
+                    {
+                        playerHand.Add(tile.id);
+                    }
+                    ArrayList wirehand = new ArrayList();
+                    foreach (GameTile tile in gameManager.wireHand)
+                    {
+                        wirehand.Add(tile.id);
+                    }
+                    initializeGameMessage.messageArray = new ArrayList();
+                    initializeGameMessage.messageArray.Add(playerHand);
+                    initializeGameMessage.messageArray.Add(wirehand);
+                    initializeGameMessage.messageArray.Add(player.primaryObjective);
+                    initializeGameMessage.messageArray.Add(player.secondaryObjective);
                     writeClient(initializeGameMessage);
-
                     break;
                 
                 // In Game

@@ -9,7 +9,6 @@ namespace ResistileClient
         public string message;
         public int tileID;
         public bool turn;
-        public ResistilePlayer ResistilePlayer;
         public ArrayList messageArray;
 
         ResistileMessage()
