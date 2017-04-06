@@ -16,8 +16,14 @@ public class MH_Login : MonoBehaviour, MessageHanderInterface {
 
     void Update()
     {
-        if (inputField.text == "") submitButton.GetComponent<Button>().interactable = false;
-        if (inputField.text != "") submitButton.GetComponent<Button>().interactable = true;
+        if (inputField.text == "")
+        {
+            submitButton.GetComponent<Button>().interactable = false;
+        }
+        else
+        {
+            submitButton.GetComponent<Button>().interactable = true;
+        }
     }
 
     public void doAction(ResistileMessage message)

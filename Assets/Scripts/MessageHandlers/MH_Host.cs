@@ -39,17 +39,15 @@ public class MH_Host : MonoBehaviour, MessageHanderInterface {
 
     void Update()
     {
-        switch (msgFromThread)
+        if (msgFromThread == ResistileMessageTypes.opponentFound)
+            opponentFound(messageFromThread);
+        else if (msgFromThread == ResistileMessageTypes.opponentCanceled)
         {
-            case ResistileMessageTypes.opponentFound:
-                opponentFound(messageFromThread);
-                break;
-            case ResistileMessageTypes.opponentCanceled:
-                opponentCanceled(messageFromThread);
-                break;
-            case ResistileMessageTypes.startGame:
-                startGame(messageFromThread);
-                break;
+            opponentCanceled(messageFromThread);
+        }
+        else if (msgFromThread == ResistileMessageTypes.startGame)
+        {
+            startGame(messageFromThread);
         }
         msgFromThread = -1;
     }

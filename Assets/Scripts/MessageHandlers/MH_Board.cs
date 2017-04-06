@@ -55,34 +55,37 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
 
     void Update()
     {
-        switch (msgFromThread)
+        if (msgFromThread == ResistileMessageTypes.initializeGame)
         {
-            case ResistileMessageTypes.initializeGame:
-                initializeGame(messageFromThread);
-                break;
-            case ResistileMessageTypes.tilePlaced:
-                tilePlaced(messageFromThread);
-                break;
-            case ResistileMessageTypes.drawTile:
-                drawTile(messageFromThread);
-                break;
-            case ResistileMessageTypes.validMove:
-                validMove(messageFromThread);
-                break;
-            case ResistileMessageTypes.invalidMove:
-                invalidMove(messageFromThread);
-                break;
-            case ResistileMessageTypes.gameResults:
-                gameResults(messageFromThread);
-                break;
-            case ResistileMessageTypes.replay:
-                replay(messageFromThread);
-                break;
-            case ResistileMessageTypes.opponentQuit:
-                opponentQuit(messageFromThread);
-                break;
-            default:
-                break;
+            initializeGame(messageFromThread);
+        }
+        else if (msgFromThread == ResistileMessageTypes.tilePlaced)
+        {
+            tilePlaced(messageFromThread);
+        }
+        else if (msgFromThread == ResistileMessageTypes.drawTile)
+        {
+            drawTile(messageFromThread);
+        }
+        else if (msgFromThread == ResistileMessageTypes.validMove)
+        {
+            validMove(messageFromThread);
+        }
+        else if (msgFromThread == ResistileMessageTypes.invalidMove)
+        {
+            invalidMove(messageFromThread);
+        }
+        else if (msgFromThread == ResistileMessageTypes.gameResults)
+        {
+            gameResults(messageFromThread);
+        }
+        else if (msgFromThread == ResistileMessageTypes.replay)
+        {
+            replay(messageFromThread);
+        }
+        else if (msgFromThread == ResistileMessageTypes.opponentQuit)
+        {
+            opponentQuit(messageFromThread);
         }
         msgFromThread = -1;
     }

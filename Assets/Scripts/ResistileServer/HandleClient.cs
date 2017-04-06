@@ -70,14 +70,6 @@ namespace ResistileServer
                     Console.WriteLine(dataFromClient);
                     networkStream.Flush();
 
-                    //for (var index = 0; index < handleClients.Count; index++)
-                    //{
-                    //    var client = handleClients[index];
-                    //    if (client == this)
-                    //        client.writeClient("Success");
-                    //    else
-                    //        client.writeClient(dataFromClient);
-                    //}
                 }
                 catch (Exception ex)
                 {
@@ -138,20 +130,22 @@ namespace ResistileServer
                 case ResistileMessageTypes.endTurn:
                     handleEndTurn(message);
                     break;
-                //case ResistileMessageTypes.solderPlaced:
+                //case ResistileMessageTypes.guessResistance:
                 //    break;
                 //case ResistileMessageTypes.gameResults:
                 //    break;
                 //case ResistileMessageTypes.replay:
                 //    break;
-
                 //case ResistileMessageTypes.quitGame:
                 //    break;
-
-                //case ResistileMessageTypes.rotateTile:
-                //    break;
-                //case ResistileMessageTypes.guessResistance:
-                //    break;
+                case ResistileMessageTypes.applicationQuit:
+                    if (availableHosts.Contains(clName))
+                    {
+                        availableHosts.Remove(clName);
+                    }
+                    handleClients.Remove(this);
+                    clientSocket.Close();
+                    break;
                 default:
                     break;
             }
@@ -170,7 +164,7 @@ namespace ResistileServer
             //check if solder placed
             bool validMove = false;
             bool isSolder = message.solderId > 0;
-            int[] coords = (int[]) message.coordinates.ToArray(typeof(int));
+            int[] coords = (int[])message.coordinates.ToArray(typeof(int));
 
             if (isSolder) //soldermove
             {
@@ -198,17 +192,17 @@ namespace ResistileServer
                     //AddTileWithSolder
                     solder = gameManager.deck.allTiles[message.solderId];
                     isGameOver = gameManager.AddTileWithSolder(player, tile, solder, coords);
-                    writeClientOnValidMove(isGameOver, isSolder, tile, player,opponent, solder);
+                    writeClientOnValidMove(isGameOver, isSolder, tile, coords, player, opponent, solder);
                 }
                 else
                 {
                     isGameOver = gameManager.AddTile(player, tile, coords);
-                    writeClientOnValidMove(isGameOver, isSolder, tile, player, opponent, null);
+                    writeClientOnValidMove(isGameOver, isSolder, tile, coords, player, opponent, null);
                 }
             }
         }
 
-        private void writeClientOnValidMove(bool isGameOver, bool isSolder, GameTile tile, ResistilePlayer player, ResistilePlayer opponent,
+        private void writeClientOnValidMove(bool isGameOver, bool isSolder, GameTile tile, int[] coords, ResistilePlayer player, ResistilePlayer opponent,
             GameTile solder)
         {
             if (isGameOver)
@@ -217,20 +211,29 @@ namespace ResistileServer
             }
             else
             {
-                writeClient(gameID, ResistileMessageTypes.validMove, "");
+                //Sent opponent placed tile data
+                var opponentHandle = handleClients.Find(handle => handle.clName == opponent.userName);
 
+                var oppMsg1 = new ResistileMessage(gameID, ResistileMessageTypes.tilePlaced);
+                oppMsg1.tileID = tile.id;
+                oppMsg1.turn = true;
+                oppMsg1.coordinates = new ArrayList(coords);
+                opponentHandle.writeClient(oppMsg1);
+
+                //Sent player new tile data
+                writeClient(gameID, ResistileMessageTypes.validMove, "");
                 var messageToBeSent = new ResistileMessage(gameID, ResistileMessageTypes.drawTile);
                 var card = gameManager.draw(tile, player);
                 messageToBeSent.turn = false;
                 messageToBeSent.tileID = card.id;
-
                 writeClient(messageToBeSent);
+
                 if (card.type.Contains("Wire"))
                 {
-                    var opponentHandle = handleClients.Find(handle => handle.clName == opponent.userName);
-                    var opponentMessage = new ResistileMessage(gameID, ResistileMessageTypes.drawTile);
-                    opponentMessage.turn = true;
-                    opponentHandle.writeClient(opponentMessage);
+                    var oppMsg2 = new ResistileMessage(gameID, ResistileMessageTypes.drawTile);
+                    oppMsg2.turn = true;
+                    oppMsg2.tileID = card.id;
+                    opponentHandle.writeClient(oppMsg2);
                 }
                 if (isSolder)
                 {

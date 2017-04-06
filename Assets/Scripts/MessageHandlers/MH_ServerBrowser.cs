@@ -44,20 +44,19 @@ public class MH_ServerBrowser : MonoBehaviour, MessageHanderInterface {
 
     void Update()
     {
-        switch (msgFromThread)
+        if (msgFromThread == ResistileMessageTypes.hostList)
+            hostList(messageFromThread);
+        else if (msgFromThread == ResistileMessageTypes.hostDeclined)
         {
-            case ResistileMessageTypes.hostList:
-                hostList(messageFromThread);
-                break;
-            case ResistileMessageTypes.hostDeclined:
-                hostDeclined(messageFromThread);
-                break;
-            case ResistileMessageTypes.startGame:
-                startGame(messageFromThread);
-                break;
-            case ResistileMessageTypes.hostNotFound:
-                hostNotFound(messageFromThread);
-                break;
+            hostDeclined(messageFromThread);
+        }
+        else if (msgFromThread == ResistileMessageTypes.startGame)
+        {
+            startGame(messageFromThread);
+        }
+        else if (msgFromThread == ResistileMessageTypes.hostNotFound)
+        {
+            hostNotFound(messageFromThread);
         }
         msgFromThread = -1;
     }
