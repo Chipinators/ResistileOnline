@@ -20,37 +20,43 @@ public class MH_Host : MonoBehaviour, MessageHanderInterface {
 
     public void doAction(ResistileMessage message)
     {
-        messageFromThread = message;
-        switch (message.messageCode)
+        lock (thisLock)
         {
-            case ResistileMessageTypes.opponentFound:
-                msgFromThread = message.messageCode;
-                break;
-            case ResistileMessageTypes.opponentCanceled:
-                msgFromThread = message.messageCode;
-                break;
-            case ResistileMessageTypes.startGame:
-                msgFromThread = message.messageCode;
-                break;
-            default:
-                Debug.Log("Unrecognized Message Type: " + message.messageCode + " --- " + message.message);
-                break;
+            messageFromThread = message;
+            switch (message.messageCode)
+            {
+                case ResistileMessageTypes.opponentFound:
+                    msgFromThread = message.messageCode;
+                    break;
+                case ResistileMessageTypes.opponentCanceled:
+                    msgFromThread = message.messageCode;
+                    break;
+                case ResistileMessageTypes.startGame:
+                    msgFromThread = message.messageCode;
+                    break;
+                default:
+                    Debug.Log("Unrecognized Message Type: " + message.messageCode + " --- " + message.message);
+                    break;
+            }
         }
     }
 
     void Update()
     {
-        if (msgFromThread == ResistileMessageTypes.opponentFound)
-            opponentFound(messageFromThread);
-        else if (msgFromThread == ResistileMessageTypes.opponentCanceled)
+        lock (thisLock)
         {
-            opponentCanceled(messageFromThread);
+            if (msgFromThread == ResistileMessageTypes.opponentFound)
+                opponentFound(messageFromThread);
+            else if (msgFromThread == ResistileMessageTypes.opponentCanceled)
+            {
+                opponentCanceled(messageFromThread);
+            }
+            else if (msgFromThread == ResistileMessageTypes.startGame)
+            {
+                startGame(messageFromThread);
+            }
+            msgFromThread = -1;
         }
-        else if (msgFromThread == ResistileMessageTypes.startGame)
-        {
-            startGame(messageFromThread);
-        }
-        msgFromThread = -1;
     }
 
     //RECEIVE MESSAGES FROM SERVER
