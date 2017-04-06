@@ -20,6 +20,11 @@ namespace ResistileServer
         private int currentIndex = -1;
         public string type;
 
+        public GameTile()
+        {
+            
+        }
+
         public GameTile(string type, int id = 0, double resistance = double.Epsilon)
         {
             this.type = type;
