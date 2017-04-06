@@ -39,7 +39,7 @@ namespace ResistileServer
             ArrayList tempHand = new ArrayList();
             for (int i = 0; i < MAXHAND; i++)
             {
-                tempHand.Add(deck.draw());
+                tempHand.Add(deck.drawResistorSolder());
             }
             playerOne = new ResistilePlayer(playerOneUsername, tempHand, GetRandomPrimary(primaryMIN, primaryMAX), CreateSecondaryObj());
             /*
@@ -48,7 +48,7 @@ namespace ResistileServer
             tempHand = new ArrayList();
             for (int i = 0; i < MAXHAND; i++)
             {
-                tempHand.Add(deck.draw());
+                tempHand.Add(deck.drawResistorSolder());
             }
             playerTwo = new ResistilePlayer(playerTwoUsername, tempHand, GetRandomPrimary(primaryMIN, primaryMAX), CreateSecondaryObj());
 
@@ -89,6 +89,47 @@ namespace ResistileServer
         public ResistilePlayer getOpponent(string clName)
         {
             return playerOne.userName == clName ? playerTwo : playerOne;
+        }
+
+        public bool AddTile(ResistilePlayer player, GameTile tile, int[] coords)
+        {
+            board.AddTile(tile, coords);
+            GameTile newTile;
+            if (tile.type.Contains("Wire"))
+            {
+                wireHand.Remove(tile);
+            }
+            else if (tile.type.Contains("Resistor"))
+            {
+                player.hand.Remove(tile);
+            }
+            return board.isGameOver;
+        }
+
+        public bool AddTileWithSolder(ResistilePlayer player, GameTile tile, GameTile solder, int[] coords)
+        {
+            player.hand.Remove(solder);
+            AddTile(player, tile, coords);
+            return false;
+        }
+
+        public GameTile drawWire()
+        {
+            var wire = deck.drawWire();
+            wireHand.Add(wire);
+            return wire;
+        }
+
+        public GameTile drawResistorSolder(ResistilePlayer player)
+        {
+            var resistorSolder = deck.drawResistorSolder();
+            player.hand.Add(resistorSolder);
+            return resistorSolder;
+        }
+
+        public GameTile draw(GameTile tile, ResistilePlayer player)
+        {
+            return tile.type.Contains("Wire") ? drawWire() : drawResistorSolder(player);
         }
     }
 }

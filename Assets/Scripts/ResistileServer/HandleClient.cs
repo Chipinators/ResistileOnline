@@ -100,84 +100,43 @@ namespace ResistileServer
             {
                 //General
                 case ResistileMessageTypes.ping:
-                    //TODO: reset timeout thing
-                    writeClient(0, ResistileMessageTypes.ping, "Ack");
+                    handlePing();
                     break;
                 //Login Scene
                 case ResistileMessageTypes.login:
-                    // create a player object with username
-                    clName = message.message;
+                    handleLogin(message);
                     break;
                 //MainMenu
                 case ResistileMessageTypes.startHosting:
-                    // put player to host list
-                    availableHosts.Add(clName);
+                    handleStartHosting();
                     break;
                 //Host Scene
                 case ResistileMessageTypes.cancelSearch:
-                    availableHosts.Remove(clName);
+                    handleCancelSearch();
                     break;
                 case ResistileMessageTypes.declineOpponent:
-                    //in message client name
-                    var opponentToBeDeclined = handleClients.Find(client => client.clName == message.message);
-                    opponentToBeDeclined.writeClient(0, ResistileMessageTypes.hostDeclined, clName);
-                    availableHosts.Add(clName);
+                    handleDeclineOpponent(message);
                     break;
                 case ResistileMessageTypes.acceptOpponent:
-                    var opponentToBeAccepted = handleClients.Find(client => client.clName == message.message);
-                    gameID = generateGameId();
-                    opponentToBeAccepted.gameID = gameID;
-                    opponentToBeAccepted.writeClient(gameID, ResistileMessageTypes.startGame, "");
-                    gameManager = new GameManager(clName, opponentToBeAccepted.clName);
-                    opponentToBeAccepted.gameManager = gameManager;
+                    handleAcceptOpponent(message);
                     break;
                 //Server Browser
                 case ResistileMessageTypes.getHostList:
-                    var newMessage = new ResistileMessage(0, ResistileMessageTypes.hostList, "");
-                    newMessage.messageArray = new ArrayList(availableHosts.ToArray());
-                    writeClient(newMessage);
+                    handleGetHostList();
                     break;
                 case ResistileMessageTypes.requestJoinGame:
-                    var theHost = handleClients.Find(client => client.clName == message.message);
-                    if (theHost != null)
-                        theHost.writeClient(0, ResistileMessageTypes.opponentFound, this.clName);
-                    else
-                        writeClient(0, ResistileMessageTypes.hostNotFound, message.message);
-                    availableHosts.Remove(theHost.clName);
+                    handleRequestJoinGame(message);
                     break;
                 case ResistileMessageTypes.cancelJoinRequest:
-                    var theHost2 = handleClients.Find(client => client.clName == message.message);
-                    theHost2.writeClient(0, ResistileMessageTypes.opponentCanceled, "");
+                    handleCancelJoinRequest(message);
                     break;
                 case ResistileMessageTypes.gameLoaded:
-                    var player = gameManager.getPlayer(clName);
-                    var playersOpponent = gameManager.getOpponent(clName);
-                    var initializeGameMessage = new ResistileMessage(gameID, ResistileMessageTypes.initializeGame, playersOpponent.userName);
-                    initializeGameMessage.turn = gameManager.currentTurnPlayer == player;
-                    ArrayList playerHand = new ArrayList();
-                    foreach (GameTile tile in player.hand)
-                    {
-                        playerHand.Add(tile.id);
-                    }
-                    initializeGameMessage.PlayerHand = playerHand;
-
-                   
-                    ArrayList wirehand = new ArrayList();
-                    foreach (GameTile tile in gameManager.wireHand)
-                    {
-                        wirehand.Add(tile.id);
-                    }
-                    initializeGameMessage.WireHand = wirehand;
-                    initializeGameMessage.PrimaryObjective = player.primaryObjective;
-                    initializeGameMessage.secondaryObjectives = new ArrayList(player.secondaryObjective);
-                    writeClient(initializeGameMessage);
+                    handleGameLoaded();
                     break;
-                
+
                 // In Game
                 case ResistileMessageTypes.endTurn:
-                    //if invalid move MessageType is ResistileMessageTypes.invalidMove
-                    //if valid move MessageType is drawTile to this client, tileplaced to other client. to be written....
-                    
+                    handleEndTurn(message);
                     break;
                 //case ResistileMessageTypes.solderPlaced:
                 //    break;
@@ -198,6 +157,182 @@ namespace ResistileServer
             }
         }
 
+        private void handleEndTurn(ResistileMessage message)
+        {
+            //if invalid move MessageType is ResistileMessageTypes.invalidMove
+            //if valid move MessageType is drawTile to this client, tileplaced to other client. to be written....
+            var tile = gameManager.deck.allTiles[message.tileID];
+            var tileToBeCheckedClone = tile.Clone();
+            for (int i = 0; i < message.rotation; i++)
+            {
+                tileToBeCheckedClone.Rotate();
+            }
+            //check if solder placed
+            bool validMove = false;
+            bool isSolder = message.solderId > 0;
+            int[] coords = (int[]) message.coordinates.ToArray(typeof(int));
+
+            if (isSolder) //soldermove
+            {
+                validMove = gameManager.board.IsValidSolder(tileToBeCheckedClone, coords);
+            }
+            else
+            {
+                validMove = gameManager.board.IsValidMove(tileToBeCheckedClone, coords);
+            }
+
+            if (!validMove)
+            {
+                writeClient(gameID, ResistileMessageTypes.invalidMove, "");
+            }
+            else
+            {
+                var player = gameManager.getPlayer(clName);
+                var opponent = gameManager.getOpponent(clName);
+                tile = tileToBeCheckedClone;
+                GameTile solder;
+                bool isGameOver;
+
+                if (isSolder)
+                {
+                    //AddTileWithSolder
+                    solder = gameManager.deck.allTiles[message.solderId];
+                    isGameOver = gameManager.AddTileWithSolder(player, tile, solder, coords);
+                    writeClientOnValidMove(isGameOver, isSolder, tile, player,opponent, solder);
+                }
+                else
+                {
+                    isGameOver = gameManager.AddTile(player, tile, coords);
+                    writeClientOnValidMove(isGameOver, isSolder, tile, player, opponent, null);
+                }
+            }
+        }
+
+        private void writeClientOnValidMove(bool isGameOver, bool isSolder, GameTile tile, ResistilePlayer player, ResistilePlayer opponent,
+            GameTile solder)
+        {
+            if (isGameOver)
+            {
+                writeClient(gameID, ResistileMessageTypes.gameOver);
+            }
+            else
+            {
+                writeClient(gameID, ResistileMessageTypes.validMove, "");
+
+                var messageToBeSent = new ResistileMessage(gameID, ResistileMessageTypes.drawTile);
+                var card = gameManager.draw(tile, player);
+                messageToBeSent.turn = false;
+                messageToBeSent.tileID = card.id;
+
+                writeClient(messageToBeSent);
+                if (card.type.Contains("Wire"))
+                {
+                    var opponentHandle = handleClients.Find(handle => handle.clName == opponent.userName);
+                    var opponentMessage = new ResistileMessage(gameID, ResistileMessageTypes.drawTile);
+                    opponentMessage.turn = true;
+                    opponentHandle.writeClient(opponentMessage);
+                }
+                if (isSolder)
+                {
+                    var messageToBeSent2 = new ResistileMessage(gameID, ResistileMessageTypes.drawTile);
+                    var cardID2 = gameManager.draw(solder, player);
+                    messageToBeSent2.tileID = cardID2.id;
+                    messageToBeSent2.turn = false;
+                    writeClient(messageToBeSent2);
+                }
+            }
+        }
+
+        private void handleGameLoaded()
+        {
+            var player = gameManager.getPlayer(clName);
+            var playersOpponent = gameManager.getOpponent(clName);
+            var initializeGameMessage = new ResistileMessage(gameID, ResistileMessageTypes.initializeGame,
+                playersOpponent.userName);
+            initializeGameMessage.turn = gameManager.currentTurnPlayer == player;
+            ArrayList playerHand = new ArrayList();
+            foreach (GameTile tile in player.hand)
+            {
+                playerHand.Add(tile.id);
+            }
+            initializeGameMessage.PlayerHand = playerHand;
+
+
+            ArrayList wirehand = new ArrayList();
+            foreach (GameTile tile in gameManager.wireHand)
+            {
+                wirehand.Add(tile.id);
+            }
+            initializeGameMessage.WireHand = wirehand;
+            initializeGameMessage.PrimaryObjective = player.primaryObjective;
+            initializeGameMessage.secondaryObjectives = new ArrayList(player.secondaryObjective);
+            writeClient(initializeGameMessage);
+        }
+
+        private static void handleCancelJoinRequest(ResistileMessage message)
+        {
+            var theHost2 = handleClients.Find(client => client.clName == message.message);
+            theHost2.writeClient(0, ResistileMessageTypes.opponentCanceled, "");
+        }
+
+        private void handleRequestJoinGame(ResistileMessage message)
+        {
+            var theHost = handleClients.Find(client => client.clName == message.message);
+            if (theHost != null)
+                theHost.writeClient(0, ResistileMessageTypes.opponentFound, this.clName);
+            else
+                writeClient(0, ResistileMessageTypes.hostNotFound, message.message);
+            availableHosts.Remove(theHost.clName);
+        }
+
+        private void handleGetHostList()
+        {
+            var newMessage = new ResistileMessage(0, ResistileMessageTypes.hostList, "");
+            newMessage.messageArray = new ArrayList(availableHosts.ToArray());
+            writeClient(newMessage);
+        }
+
+        private void handleAcceptOpponent(ResistileMessage message)
+        {
+            var opponentToBeAccepted = handleClients.Find(client => client.clName == message.message);
+            gameID = generateGameId();
+            opponentToBeAccepted.gameID = gameID;
+            opponentToBeAccepted.writeClient(gameID, ResistileMessageTypes.startGame, "");
+            gameManager = new GameManager(clName, opponentToBeAccepted.clName);
+            opponentToBeAccepted.gameManager = gameManager;
+        }
+
+        private void handleDeclineOpponent(ResistileMessage message)
+        {
+            //in message client name
+            var opponentToBeDeclined = handleClients.Find(client => client.clName == message.message);
+            opponentToBeDeclined.writeClient(0, ResistileMessageTypes.hostDeclined, clName);
+            availableHosts.Add(clName);
+        }
+
+        private void handleCancelSearch()
+        {
+            availableHosts.Remove(clName);
+        }
+
+        private void handleStartHosting()
+        {
+            // put player to host list
+            availableHosts.Add(clName);
+        }
+
+        private void handleLogin(ResistileMessage message)
+        {
+            // create a player object with username
+            clName = message.message;
+        }
+
+        private void handlePing()
+        {
+            //TODO: reset timeout thing
+            writeClient(0, ResistileMessageTypes.ping, "Ack");
+        }
+
         private static int gameIdCount = 1;
         private static int generateGameId()
         {
@@ -208,30 +343,19 @@ namespace ResistileServer
         {
             string serverResponse = "Server to clinet(" + clNo + ") " + msg;
             var message = new ResistileMessage(0, 0, serverResponse);
-            Console.WriteLine("Message sent to client: " + msg);
-            using (StringWriter textWriter = new StringWriter())
-            {
-                NetworkStream serverStream = clientSocket.GetStream();
-                serializer.Serialize(textWriter, message);
-                var line = textWriter.ToString();
-                byte[] outStream = Encoding.ASCII.GetBytes(line + "$");
-                serverStream.Write(outStream, 0, outStream.Length);
-                serverStream.Flush();
-            }
+            writeClient(message);
         }
 
         private void writeClient(int gameID, int msgType, string msg)
         {
             var message = new ResistileMessage(gameID, msgType, msg);
-            using (StringWriter textWriter = new StringWriter())
-            {
-                NetworkStream serverStream = clientSocket.GetStream();
-                serializer.Serialize(textWriter, message);
-                var line = textWriter.ToString();
-                byte[] outStream = Encoding.ASCII.GetBytes(line + "$");
-                serverStream.Write(outStream, 0, outStream.Length);
-                serverStream.Flush();
-            }
+            writeClient(message);
+        }
+
+        private void writeClient(int gameID, int msgType)
+        {
+            var message = new ResistileMessage(gameID, msgType);
+            writeClient(message);
         }
 
         private void writeClient(ResistileMessage msg)

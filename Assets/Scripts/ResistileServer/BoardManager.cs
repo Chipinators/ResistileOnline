@@ -14,6 +14,7 @@ namespace ResistileServer
         public const int yUpTerminal = 7;
         public const int xLeftTerminal = 7;
         public const int yLeftTerminal = 8;
+        public bool isGameOver = false;
         public GameTile[,] board = new GameTile[xlength, ylength];
 
         private GameTile startTile, endTile;
@@ -233,7 +234,7 @@ namespace ResistileServer
             }
 
             // Case 2, 3.1, 3.2
-            neighborCount = 0;
+            neighborCount = 0; //incremented by happyNeighbor
             foreach (var neighbor in tile.neighbors)
             {
                 if (neighbor.Value == null)
@@ -275,6 +276,7 @@ namespace ResistileServer
                 if (neighborCount > 1)
                 {
                     isValid = true;
+                    isGameOver = true;
                 }
                 else
                 {
@@ -285,6 +287,11 @@ namespace ResistileServer
             
             return isValid;
 
+        }
+
+        public bool IsValidSolder(GameTile newtile, int[] coordinates)
+        {
+            return IsValidSolder(newtile, new Coordinates(coordinates[0], coordinates[1]));
         }
 
         public bool IsValidSolder(GameTile newtile, Coordinates coordinates)
@@ -328,7 +335,7 @@ namespace ResistileServer
 
         // Check if tile has an end looking to a tile that doesn't look back
         // Not right
-        private static int neighborCount;
+        private int neighborCount;
 
         private bool HappyNeighbor(GameTile tile, string direction)
         {

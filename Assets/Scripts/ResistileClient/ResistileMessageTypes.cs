@@ -32,14 +32,15 @@ namespace ResistileClient
         public const int drawTile = 17;
         public const int validMove = 18;
         public const int invalidMove = 19;
-        public const int gameResults = 20;
-        public const int replay = 21;
-        public const int opponentQuit = 22;
         public const int gameLoaded = 23;
         public const int quitGame = 24;
         public const int endTurn = 25;
         public const int rotateTile = 26;
+        public const int gameOver = 29;
         public const int guessResistance = 27;
+        public const int gameResults = 20;
+        public const int replay = 21;
+        public const int opponentQuit = 22;
 
         //Exceptional Case
         public const int hostNotFound = 28;

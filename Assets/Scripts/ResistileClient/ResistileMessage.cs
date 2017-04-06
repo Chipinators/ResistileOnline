@@ -8,7 +8,7 @@ namespace ResistileClient
         public int messageCode;
         public string message;
         public int tileID;
-        public int solderId;
+        public int solderId = 0;
         public bool turn;
         public int rotation;
         public ArrayList messageArray;
@@ -22,6 +22,11 @@ namespace ResistileClient
             gameID = -1;
             messageCode = -1;
             message = "";
+        }
+        public ResistileMessage(int gameID, int messageCode)
+        {
+            this.gameID = gameID;
+            this.messageCode = messageCode;
         }
         public ResistileMessage(int gameID, int messageCode, string message)
         {
