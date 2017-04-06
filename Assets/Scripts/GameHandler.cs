@@ -66,11 +66,11 @@ public class GameHandler : MonoBehaviour {
         ResistileServer.GameTile gameTile = getGameTile(tileID);
         if(gameTile.type.Contains("Wire"))
         {
-            foreach(GameObject wireTile in wireHand.transform)
+            foreach(Transform wireTile in wireHand.transform)
             {
-                if(wireTile.GetComponent<TileData>().tileID == tileID)
+                if(wireTile.gameObject.GetComponent<TileData>().tileID == tileID)
                 {
-                    Destroy(wireTile);
+                    Destroy(wireTile.gameObject);
                 }
             }
         }
@@ -106,7 +106,7 @@ public class GameHandler : MonoBehaviour {
                 tile.transform.FindChild("Background").GetComponent<Image>().sprite = resII;
                 tileData.type = ResistileServer.GameTileTypes.Resistor.typeII;
             }
-            tileData.tileID = gameTile.id;
+            
 
         }
         else
@@ -138,7 +138,7 @@ public class GameHandler : MonoBehaviour {
                 tileData.type = ResistileServer.GameTileTypes.solder;
             }
         }
-
+        tileData.tileID = gameTile.id;
         return tile;
     }
 

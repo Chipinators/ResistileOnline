@@ -132,6 +132,8 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
         GameHandler.gameHandler.currentTile.transform.FindChild("RotateButton").gameObject.SetActive(false);
         GameHandler.gameHandler.changeTurn();
         GameHandler.gameHandler.setTurn();
+        GameHandler.gameHandler.solderTile = null;
+        GameHandler.gameHandler.currentTile = null;
     }
 
     private void invalidMove(ResistileMessage message)
@@ -214,8 +216,6 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
         message.coordinates = new ArrayList(BoardHandler.CoordinatesOf(parent));
         NetworkManager.networkManager.sendMessage(message);
         GameHandler.gameHandler.currentTile.GetComponent<Draggable>().enabled = false;
-        GameHandler.gameHandler.solderTile = null;
-        GameHandler.gameHandler.currentTile = null;
     }
 
     //TODO:
