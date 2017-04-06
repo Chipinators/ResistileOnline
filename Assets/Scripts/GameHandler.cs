@@ -29,7 +29,6 @@ public class GameHandler : MonoBehaviour {
     {
         gameHandler = this;
         fillObjectives();
-        Draw(5);
         alertTimer = 0.0f;
     }
 
@@ -40,7 +39,7 @@ public class GameHandler : MonoBehaviour {
             alertTimer -= Time.deltaTime;
             alertPanel.SetActive(true);
         }
-        if (alertTimer < 0)
+        else if (alertTimer <= 0)
         {
             alertPanel.SetActive(false);
         }
@@ -107,7 +106,8 @@ public class GameHandler : MonoBehaviour {
                 tile.transform.FindChild("Background").GetComponent<Image>().sprite = resII;
                 tileData.type = ResistileServer.GameTileTypes.Resistor.typeII;
             }
-            
+            tileData.tileID = gameTile.id;
+
         }
         else
         {

@@ -16,7 +16,7 @@ public class NetworkManager : MonoBehaviour {
     public int gameID;
     public string username;
     private static XmlSerializer serializer;
-    private Thread readDataThread;
+    public Thread readDataThread;
     public MessageHanderInterface messageInterface;
 
     // Use this for initialization
