@@ -5,7 +5,7 @@ namespace Assets.Scripts
 {
     public class DropArea : MonoBehaviour, IDropHandler, IPointerEnterHandler, IPointerExitHandler
     {
-    
+
 
         public void OnDrop(PointerEventData eventData)
         {
@@ -16,7 +16,21 @@ namespace Assets.Scripts
                 int[] coord = BoardHandler.CoordinatesOf(gameObject);
 
             }
-
+            if (gameObject != GameHandler.gameHandler.resHand && gameObject != GameHandler.gameHandler.wireHand)
+            {
+                if (d.GetComponent<TileData>().type == ResistileServer.GameTileTypes.solder)
+                {
+                    GameHandler.gameHandler.solderTile = d.gameObject;
+                }
+                else
+                {
+                    GameHandler.gameHandler.currentTile = d.gameObject;
+                }
+            }
+            else if(gameObject == GameHandler.gameHandler.resHand || gameObject == GameHandler.gameHandler.wireHand)
+            {
+                GameHandler.gameHandler.currentTile = null;
+            }
 
         }
 

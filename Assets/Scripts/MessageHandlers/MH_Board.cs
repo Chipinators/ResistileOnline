@@ -113,35 +113,44 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
 
     private void tilePlaced(ResistileMessage message) //Opponent Ends Turn
     {
-        //TODO: handleTile
+        GameHandler.gameHandler.placeTile(message.tileID, (int)message.coordinates[0], (int)message.coordinates[1], message.rotation);
         GameHandler.gameHandler.changeTurn();
         GameHandler.gameHandler.setTurn();
     }
 
-    private void drawTile(ResistileMessage message) //You End Turn
+    private void drawTile(ResistileMessage message) //Draw a tile to your hands
     {
-        //TODO:
-        //GameHandler.gameHandler.DrawResistor(1, 2);
-        GameHandler.gameHandler.changeTurn();
-        GameHandler.gameHandler.setTurn();
+        GameHandler.gameHandler.Draw(message.tileID);
     }
 
-    private void validMove(ResistileMessage message)
+    private void validMove(ResistileMessage message) //You End Turn
     {
-        //TODO:
-        //GameHandler.gameHandler.DrawWire(1);
+        GameHandler.gameHandler.currentTile.GetComponent<Draggable>().enabled = false;
         GameHandler.gameHandler.changeTurn();
         GameHandler.gameHandler.setTurn();
     }
 
     private void invalidMove(ResistileMessage message)
     {
-        GameHandler.gameHandler.alert("Not OKAY!");
+        GameHandler.gameHandler.alert("Invalid Move, Please Select a Valid Placement");
+        if (GameHandler.gameHandler.currentTile.GetComponent<TileData>().type.Contains("Resistor") || GameHandler.gameHandler.currentTile.GetComponent<TileData>().type == ResistileServer.GameTileTypes.solder)
+        {
+            GameHandler.gameHandler.currentTile.transform.SetParent(GameHandler.gameHandler.resHand.transform, false);
+        }
+        else if (GameHandler.gameHandler.currentTile.GetComponent<TileData>().type.Contains("Wire"))
+        {
+            GameHandler.gameHandler.currentTile.transform.SetParent(GameHandler.gameHandler.wireHand.transform, false);
+        }
+        if(GameHandler.gameHandler.solderTile != null)
+        {
+            GameHandler.gameHandler.solderTile.transform.SetParent(GameHandler.gameHandler.resDeck.transform, false);
+        }
+        
     }
 
+    //TODO:
     private void gameResults(ResistileMessage message)
     {
-        //TODO:
         //GameHandler.gameHandler.gameOver(isWinner, pScore, s1Score, s2Score, gScore, tScore);
     }
 
@@ -184,7 +193,6 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
 
     public void endTurn()
     {
-        //TODO: Send server tile, coordinates, 
         ResistileMessage message = new ResistileMessage(GameHandler.gameHandler.gameID, ResistileMessageTypes.endTurn, "");
         if(GameHandler.gameHandler.solderTile != null)  //If solder was placed
         {
@@ -192,28 +200,28 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
             message.solderId = solderTile.tileID;
             message.message = ResistileServer.GameTileTypes.solder;
         }
+        else
+        {
+            message.solderId = 0;
+        }
         message.tileID = GameHandler.gameHandler.currentTile.GetComponent<TileData>().tileID;
+        message.rotation = GameHandler.gameHandler.currentTile.GetComponent<TileData>().rotation;
         GameObject parent = GameHandler.gameHandler.currentTile.transform.parent.gameObject;
         message.coordinates = new ArrayList(BoardHandler.CoordinatesOf(parent));
         NetworkManager.networkManager.sendMessage(message);
-        
+        GameHandler.gameHandler.solderTile = null;
+        GameHandler.gameHandler.currentTile = null;
     }
 
-    public void rotate()
-    {
-        //TODO:
-        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.rotateTile, ""));
-    }
-
+    //TODO:
     public void guessResistance()
     {
-        //TODO:
-        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.guessResistance, ""));
+       NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.guessResistance, ""));
     }
 
+    //TODO:
     public void replay()
-    {
-        //TODO:
+    { 
         NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.replay, ""));
     }
 }

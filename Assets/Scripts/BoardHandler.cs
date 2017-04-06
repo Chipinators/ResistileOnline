@@ -45,6 +45,11 @@ namespace Assets.Scripts
 
         }
 
+        public static GameObject GetNodeAt(int x, int y)
+        {
+            return BoardArray[x, y];
+        }
+
         public static int[] CoordinatesOf(GameObject value)
         {
             for (var x = 0; x < ColumnsStat; x++)

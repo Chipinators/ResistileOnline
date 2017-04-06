@@ -44,5 +44,6 @@ namespace ResistileClient
 
         //Exceptional Case
         public const int hostNotFound = 28;
+        public const int applicationQuit = 29;
     }
 }

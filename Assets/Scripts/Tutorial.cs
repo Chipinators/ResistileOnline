@@ -21,7 +21,7 @@ public class Tutorial : MonoBehaviour {
     public void onRightDown()
     {
         currentImage++;
-        if (currentImage >= imageArray.Length) currentImage = 0;
+        if (currentImage >= imageArray.Length) currentImage = imageArray.Length;
         updateImagePanel();
         updateTextPanel();
     }

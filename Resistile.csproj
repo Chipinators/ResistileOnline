@@ -111,6 +111,7 @@
     <Compile Include="Assets\Scripts\MessageHandlers\MH_SettingTutorial.cs" />
     <Compile Include="Assets\Scripts\MessageHandlers\MessageHanderInterface.cs" />
     <Compile Include="Assets\Scripts\NetworkManager.cs" />
+    <Compile Include="Assets\Scripts\QuitGame.cs" />
     <Compile Include="Assets\Scripts\ResistileClient\Program.cs" />
     <Compile Include="Assets\Scripts\ResistileClient\ResistileMessage.cs" />
     <Compile Include="Assets\Scripts\ResistileClient\ResistileMessageTypes.cs" />

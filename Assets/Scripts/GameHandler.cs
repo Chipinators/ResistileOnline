@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Assets.Scripts;
 
 public class GameHandler : MonoBehaviour {
     public static GameHandler gameHandler;
@@ -43,76 +44,102 @@ public class GameHandler : MonoBehaviour {
         {
             alertPanel.SetActive(false);
         }
+        if (currentTile == null) endTurn.GetComponent<Button>().interactable = false;
+        else if (currentTile != null && currentTile.GetComponent<TileData>().type != ResistileServer.GameTileTypes.solder) endTurn.GetComponent<Button>().interactable = true;
     }
 
     public void Draw(int tileID)
     {
-        ResistileServer.GameTile tile = getGameTile(tileID);
-        if (tile.type.Contains("Resistor")){
-            DrawResistor(tileID, tile.resistance, tile.type);
-        }
-        else if (tile.type.Contains("Wire"))
+        ResistileServer.GameTile gameTile = getGameTile(tileID);
+        GameObject tile = createGameTile(tileID);
+        if (gameTile.type.Contains("Resistor") || gameTile.type == ResistileServer.GameTileTypes.solder)
         {
-            DrawWire(tileID, tile.type);
+            tile.transform.SetParent(resHand.transform, false);
+        }
+        else if (gameTile.type.Contains("Wire"))
+        {
+            tile.transform.SetParent(wireHand.transform, false);
         }
     }
 
-    public void DrawResistor(int id, double res, string type)
+    public void placeTile(int tileID, int x, int y, int rotate)
     {
-        if (resHand.transform.childCount >= 5) return;
-        var tile = Instantiate(tilePrefab);
-        tile.transform.SetParent(resHand.transform, false);
-        tile.GetComponentInChildren<Text>().text = res.ToString();
-        TileData tileData = tile.GetComponent<TileData>();
-        if (res == -1)
+        ResistileServer.GameTile gameTile = getGameTile(tileID);
+        if(gameTile.type.Contains("Wire"))
         {
-            tile.transform.FindChild("OhmIcon").gameObject.SetActive(false);
-            tile.transform.FindChild("Resistance").gameObject.SetActive(false);
-            tile.transform.FindChild("Background").GetComponent<Image>().sprite = solder;
-            tileData.type = ResistileServer.GameTileTypes.solder;
+            foreach(GameObject wireTile in wireHand.transform)
+            {
+                if(wireTile.GetComponent<TileData>().tileID == tileID)
+                {
+                    Destroy(wireTile);
+                }
+            }
         }
-        else
+
+        GameObject boardNode = BoardHandler.GetNodeAt(x, y);
+        
+        var tile = createGameTile(tileID);
+        for(int i = 0; i < rotate; i++)
         {
-            tile.GetComponentInChildren<Text>().text = res.ToString();
-            if (type.Equals(ResistileServer.GameTileTypes.Resistor.typeI))
+            tile.GetComponent<RotateTile>().TaskOnClick();
+        }
+        tile.transform.SetParent(boardNode.transform, false);
+        tile.GetComponent<Draggable>().enabled = false;
+
+    }
+
+    public GameObject createGameTile(int id) //Created the game tile object
+    {
+        ResistileServer.GameTile gameTile = getGameTile(id);    //Tile data
+        var tile = Instantiate(tilePrefab);                     //Tile Object
+        TileData tileData = tile.GetComponent<TileData>();
+        if (gameTile.type.Contains("Resistor"))
+        {
+            tile.GetComponentInChildren<Text>().text = gameTile.resistance.ToString();  //Set Resistance text on tile
+            tileData.resistance = gameTile.resistance;                                  //Set Resistance data on TileData
+            if (gameTile.type.Equals(ResistileServer.GameTileTypes.Resistor.typeI))
             {
                 tile.transform.FindChild("Background").GetComponent<Image>().sprite = resI;
                 tileData.type = ResistileServer.GameTileTypes.Resistor.typeI;
-            }   
-            else if (type.Equals(ResistileServer.GameTileTypes.Resistor.typeII))
+            }
+            else if (gameTile.type.Equals(ResistileServer.GameTileTypes.Resistor.typeII))
             {
                 tile.transform.FindChild("Background").GetComponent<Image>().sprite = resII;
                 tileData.type = ResistileServer.GameTileTypes.Resistor.typeII;
             }
-            tileData.tileID = id;
-            tileData.resistance = res;
+            
         }
-    }
+        else
+        {
+            tile.transform.FindChild("OhmIcon").gameObject.SetActive(false);    //Disable Ohm Icon
+            tile.transform.FindChild("Resistance").gameObject.SetActive(false); //Disable resistance text
 
-    public void DrawWire(int id,string type)
-    {
-        if (wireHand.transform.childCount >= 5) return;
-        var tile = Instantiate(tilePrefab);
-        tile.transform.SetParent(wireHand.transform, false);
-        tile.transform.FindChild("OhmIcon").gameObject.SetActive(false);
-        tile.transform.FindChild("Resistance").gameObject.SetActive(false);
-        TileData tileData = tile.GetComponent<TileData>();
-        if (type.Equals(ResistileServer.GameTileTypes.Wire.typeI)) //Wire Straight
-        {
-            tile.transform.FindChild("Background").GetComponent<Image>().sprite = wireI;
-            tileData.type = ResistileServer.GameTileTypes.Wire.typeI;
+            if (gameTile.type.Contains("Wire"))
+            {
+                if (gameTile.type.Equals(ResistileServer.GameTileTypes.Wire.typeI)) //Wire Straight
+                {
+                    tile.transform.FindChild("Background").GetComponent<Image>().sprite = wireI;
+                    tileData.type = ResistileServer.GameTileTypes.Wire.typeI;
+                }
+                else if (gameTile.type.Equals(ResistileServer.GameTileTypes.Wire.typeII)) //Wire Bend
+                {
+                    tile.transform.FindChild("Background").GetComponent<Image>().sprite = wireII;
+                    tileData.type = ResistileServer.GameTileTypes.Wire.typeII;
+                }
+                else if (gameTile.type.Equals(ResistileServer.GameTileTypes.Wire.typeT)) //Wire T
+                {
+                    tile.transform.FindChild("Background").GetComponent<Image>().sprite = wireIII;
+                    tileData.type = ResistileServer.GameTileTypes.Wire.typeT;
+                }
+            }
+            else if (gameTile.type == ResistileServer.GameTileTypes.solder)
+            {
+                tile.transform.FindChild("Background").GetComponent<Image>().sprite = solder;
+                tileData.type = ResistileServer.GameTileTypes.solder;
+            }
         }
-        else if (type.Equals(ResistileServer.GameTileTypes.Wire.typeII)) //Wire Bend
-        {
-            tile.transform.FindChild("Background").GetComponent<Image>().sprite = wireII;
-            tileData.type = ResistileServer.GameTileTypes.Wire.typeII;
-        }
-        else if (type.Equals(ResistileServer.GameTileTypes.Wire.typeT)) //Wire T
-        {
-            tile.transform.FindChild("Background").GetComponent<Image>().sprite = wireIII;
-            tileData.type = ResistileServer.GameTileTypes.Wire.typeT;
-        }
-        tileData.tileID = id;
+
+        return tile;
     }
 
     public void setPrimaryObj(double obj)
@@ -135,11 +162,6 @@ public class GameHandler : MonoBehaviour {
     public void setSecondaryII(int obj)
     {
         secondaryObjII.GetComponent<Text>().text = secondaryObjs[obj];
-    }
-
-    public void placeTile(int tileID, int xCoord, int yCoord, int rotation)
-    {
-
     }
 
     public void initializeTurn(bool turn)
