@@ -8,8 +8,10 @@ namespace ResistileClient
         public int messageCode;
         public string message;
         public int tileID;
+        public int solderId;
         public bool turn;
         public ArrayList messageArray;
+        public ArrayList coordinates;
         public ArrayList PlayerHand;
         public ArrayList WireHand;
         public double PrimaryObjective;

@@ -14,7 +14,7 @@ namespace ResistileServer
         private const double primaryMAX = 17.0;
         private const int secondaryMIN = 1;
         private const int secondaryMAX = 6;
-        int[] secondaryObj = new int[2];
+        
         Random random = new Random();
 
         public ResistilePlayer playerOne;
@@ -45,6 +45,7 @@ namespace ResistileServer
             /*
             Initialize playerTwo
             */
+            tempHand = new ArrayList();
             for (int i = 0; i < MAXHAND; i++)
             {
                 tempHand.Add(deck.draw());
@@ -71,6 +72,7 @@ namespace ResistileServer
 
         private int[] CreateSecondaryObj()
         {
+            int[] secondaryObj = new int[2];
             secondaryObj[0] = GetRandomSecondary();
             do
             {
