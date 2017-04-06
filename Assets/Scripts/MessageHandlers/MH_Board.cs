@@ -9,7 +9,7 @@ using Assets.Scripts;
 public class MH_Board : MonoBehaviour, MessageHanderInterface {
     private int msgFromThread = -1;
     private ResistileMessage messageFromThread;
-
+    private System.Object thisLock = new System.Object();
 
     // Use this for initialization
     void Start () {
@@ -20,74 +20,83 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
     public void doAction(ResistileMessage message)
     {
         messageFromThread = message;
-        switch (message.messageCode)
+        lock (thisLock)
         {
-            case ResistileMessageTypes.initializeGame:
-                msgFromThread = message.messageCode;
-                break;
-            case ResistileMessageTypes.tilePlaced:
-                msgFromThread = message.messageCode;
-                break;
-            case ResistileMessageTypes.drawTile:
-                msgFromThread = message.messageCode;
-                break;
-            case ResistileMessageTypes.validMove:
-                msgFromThread = message.messageCode;
-                break;
-            case ResistileMessageTypes.invalidMove:
-                msgFromThread = message.messageCode;
-                break;
-            case ResistileMessageTypes.gameResults:
-                msgFromThread = message.messageCode;
-                break;
-            case ResistileMessageTypes.replay:
-                msgFromThread = message.messageCode;
-                break;
-            case ResistileMessageTypes.opponentQuit:
-                msgFromThread = message.messageCode;
-                break;
-            default:
-                Debug.Log("Unrecognized Message Type: " + message.messageCode + " --- " + message.message);
-                break;
+            switch (message.messageCode)
+            {
+                case ResistileMessageTypes.initializeGame:
+                    msgFromThread = message.messageCode;
+                    break;
+                case ResistileMessageTypes.tilePlaced:
+                    msgFromThread = message.messageCode;
+                    break;
+                case ResistileMessageTypes.drawTile:
+                    msgFromThread = message.messageCode;
+                    break;
+                case ResistileMessageTypes.validMove:
+                    msgFromThread = message.messageCode;
+                    break;
+                case ResistileMessageTypes.invalidMove:
+                    msgFromThread = message.messageCode;
+                    break;
+                case ResistileMessageTypes.gameResults:
+                    msgFromThread = message.messageCode;
+                    break;
+                case ResistileMessageTypes.replay:
+                    msgFromThread = message.messageCode;
+                    break;
+                case ResistileMessageTypes.opponentQuit:
+                    msgFromThread = message.messageCode;
+                    break;
+                default:
+                    Debug.Log("Unrecognized Message Type: " + message.messageCode + " --- " + message.message);
+                    break;
 
+            }
         }
+        
     }
 
     void Update()
     {
-        if (msgFromThread == ResistileMessageTypes.initializeGame)
+        lock (thisLock)
         {
-            initializeGame(messageFromThread);
+            if (msgFromThread == ResistileMessageTypes.initializeGame)
+            {
+                initializeGame(messageFromThread);
+            }
+            else if (msgFromThread == ResistileMessageTypes.tilePlaced)
+            {
+                tilePlaced(messageFromThread);
+            }
+            else if (msgFromThread == ResistileMessageTypes.drawTile)
+            {
+                drawTile(messageFromThread);
+            }
+            else if (msgFromThread == ResistileMessageTypes.validMove)
+            {
+                validMove(messageFromThread);
+            }
+            else if (msgFromThread == ResistileMessageTypes.invalidMove)
+            {
+                invalidMove(messageFromThread);
+            }
+            else if (msgFromThread == ResistileMessageTypes.gameResults)
+            {
+                gameResults(messageFromThread);
+            }
+            else if (msgFromThread == ResistileMessageTypes.replay)
+            {
+                replay(messageFromThread);
+            }
+            else if (msgFromThread == ResistileMessageTypes.opponentQuit)
+            {
+                opponentQuit(messageFromThread);
+            }
+            msgFromThread = -1;
+
         }
-        else if (msgFromThread == ResistileMessageTypes.tilePlaced)
-        {
-            tilePlaced(messageFromThread);
-        }
-        else if (msgFromThread == ResistileMessageTypes.drawTile)
-        {
-            drawTile(messageFromThread);
-        }
-        else if (msgFromThread == ResistileMessageTypes.validMove)
-        {
-            validMove(messageFromThread);
-        }
-        else if (msgFromThread == ResistileMessageTypes.invalidMove)
-        {
-            invalidMove(messageFromThread);
-        }
-        else if (msgFromThread == ResistileMessageTypes.gameResults)
-        {
-            gameResults(messageFromThread);
-        }
-        else if (msgFromThread == ResistileMessageTypes.replay)
-        {
-            replay(messageFromThread);
-        }
-        else if (msgFromThread == ResistileMessageTypes.opponentQuit)
-        {
-            opponentQuit(messageFromThread);
-        }
-        msgFromThread = -1;
+        
     }
 
     //RECEIVE MESSAGES FROM SERVER

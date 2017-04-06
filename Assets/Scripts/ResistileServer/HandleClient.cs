@@ -192,17 +192,17 @@ namespace ResistileServer
                     //AddTileWithSolder
                     solder = gameManager.deck.allTiles[message.solderId];
                     isGameOver = gameManager.AddTileWithSolder(player, tile, solder, coords);
-                    writeClientOnValidMove(isGameOver, isSolder, tile, coords, player, opponent, solder);
+                    writeClientOnValidMove(isGameOver, isSolder, tile, message.rotation, coords, player, opponent, solder);
                 }
                 else
                 {
                     isGameOver = gameManager.AddTile(player, tile, coords);
-                    writeClientOnValidMove(isGameOver, isSolder, tile, coords, player, opponent, null);
+                    writeClientOnValidMove(isGameOver, isSolder, tile, message.rotation, coords, player, opponent, null);
                 }
             }
         }
 
-        private void writeClientOnValidMove(bool isGameOver, bool isSolder, GameTile tile, int[] coords, ResistilePlayer player, ResistilePlayer opponent,
+        private void writeClientOnValidMove(bool isGameOver, bool isSolder, GameTile tile, int rotation, int[] coords, ResistilePlayer player, ResistilePlayer opponent,
             GameTile solder)
         {
             if (isGameOver)
@@ -217,6 +217,7 @@ namespace ResistileServer
                 var oppMsg1 = new ResistileMessage(gameID, ResistileMessageTypes.tilePlaced);
                 oppMsg1.tileID = tile.id;
                 oppMsg1.turn = true;
+                oppMsg1.rotation = rotation;
                 oppMsg1.coordinates = new ArrayList(coords);
                 opponentHandle.writeClient(oppMsg1);
 

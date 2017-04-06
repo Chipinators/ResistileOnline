@@ -10,7 +10,7 @@ public class MH_ServerBrowser : MonoBehaviour, MessageHanderInterface {
     public GameObject serverInfoPrefab;
     private int msgFromThread = -1;
     private ResistileMessage messageFromThread;
-
+    private System.Object thisLock = new System.Object();
     void Start()
     {
         GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<NetworkManager>().messageInterface = this;
@@ -20,45 +20,51 @@ public class MH_ServerBrowser : MonoBehaviour, MessageHanderInterface {
 
     public void doAction(ResistileMessage message)
     {
-        messageFromThread = message;
-        switch (message.messageCode)
+        lock (thisLock)
         {
-            case ResistileMessageTypes.hostList:
-                msgFromThread = message.messageCode;
-                break;
-            case ResistileMessageTypes.hostDeclined:
-                msgFromThread = message.messageCode;
-                break;
-            case ResistileMessageTypes.startGame:
-                msgFromThread = message.messageCode;
-                break;
-            case ResistileMessageTypes.hostNotFound:
-                msgFromThread = message.messageCode;
-                break;
-            default:
-                Debug.Log("Unrecognized Message Type: " + message.messageCode + " --- " + message.message);
-                break;
-
+            messageFromThread = message;
+            switch (message.messageCode)
+            {
+                case ResistileMessageTypes.hostList:
+                    msgFromThread = message.messageCode;
+                    break;
+                case ResistileMessageTypes.hostDeclined:
+                    msgFromThread = message.messageCode;
+                    break;
+                case ResistileMessageTypes.startGame:
+                    msgFromThread = message.messageCode;
+                    break;
+                case ResistileMessageTypes.hostNotFound:
+                    msgFromThread = message.messageCode;
+                    break;
+                default:
+                    Debug.Log("Unrecognized Message Type: " + message.messageCode + " --- " + message.message);
+                    break;
+            }
         }
+        
     }
 
     void Update()
     {
-        if (msgFromThread == ResistileMessageTypes.hostList)
-            hostList(messageFromThread);
-        else if (msgFromThread == ResistileMessageTypes.hostDeclined)
+        lock (thisLock)
         {
-            hostDeclined(messageFromThread);
+            if (msgFromThread == ResistileMessageTypes.hostList)
+                hostList(messageFromThread);
+            else if (msgFromThread == ResistileMessageTypes.hostDeclined)
+            {
+                hostDeclined(messageFromThread);
+            }
+            else if (msgFromThread == ResistileMessageTypes.startGame)
+            {
+                startGame(messageFromThread);
+            }
+            else if (msgFromThread == ResistileMessageTypes.hostNotFound)
+            {
+                hostNotFound(messageFromThread);
+            }
+            msgFromThread = -1;
         }
-        else if (msgFromThread == ResistileMessageTypes.startGame)
-        {
-            startGame(messageFromThread);
-        }
-        else if (msgFromThread == ResistileMessageTypes.hostNotFound)
-        {
-            hostNotFound(messageFromThread);
-        }
-        msgFromThread = -1;
     }
 
     //RECEIVE MESSAGES FROM SERVER

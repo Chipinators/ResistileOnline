@@ -5,7 +5,6 @@ using ResistileClient;
 using UnityEngine.SceneManagement;
 
 public class MH_SettingTutorial : MonoBehaviour, MessageHanderInterface {
-
     void Start()
     {
         GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<NetworkManager>().messageInterface = this;

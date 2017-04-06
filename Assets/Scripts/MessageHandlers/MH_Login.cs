@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 public class MH_Login : MonoBehaviour, MessageHanderInterface {
     public Text inputField;
     public Button submitButton;
-
+    private System.Object thisLock = new System.Object();
     void Start()
     {
         GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<NetworkManager>().messageInterface = this;
@@ -16,13 +16,16 @@ public class MH_Login : MonoBehaviour, MessageHanderInterface {
 
     void Update()
     {
-        if (inputField.text == "")
+        lock (thisLock)
         {
-            submitButton.GetComponent<Button>().interactable = false;
-        }
-        else
-        {
-            submitButton.GetComponent<Button>().interactable = true;
+            if (inputField.text == "")
+            {
+                submitButton.GetComponent<Button>().interactable = false;
+            }
+            else
+            {
+                submitButton.GetComponent<Button>().interactable = true;
+            }
         }
     }
 

@@ -10,6 +10,7 @@ public class MH_Host : MonoBehaviour, MessageHanderInterface {
     public GameObject panelManager, opponentName;
     private int msgFromThread = -1;
     private ResistileMessage messageFromThread;
+    private System.Object thisLock = new System.Object();
 
     void Start()
     {
