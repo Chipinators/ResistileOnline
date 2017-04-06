@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
@@ -127,11 +128,10 @@ namespace ResistileServer
                     gameID = generateGameId();
                     opponentToBeAccepted.gameID = gameID;
                     opponentToBeAccepted.writeClient(gameID, ResistileMessageTypes.startGame, "");
-                    //create GameManager
                     gameManager = new GameManager(clName, opponentToBeAccepted.clName);
                     opponentToBeAccepted.gameManager = gameManager;
                     break;
-                ////Server Browser
+                //Server Browser
                 case ResistileMessageTypes.getHostList:
                     var newMessage = new ResistileMessage(0, ResistileMessageTypes.hostList, "");
                     newMessage.messageArray = new ArrayList(availableHosts.ToArray());
@@ -155,9 +155,13 @@ namespace ResistileServer
                     var initializeGameMessage = new ResistileMessage(gameID, ResistileMessageTypes.initializeGame, playersOpponent.userName);
                     initializeGameMessage.ResistilePlayer = player;
                     initializeGameMessage.turn = gameManager.currentTurnPlayer == player;
+                    initializeGameMessage.messageArray = gameManager.wireHand;
+
                     writeClient(initializeGameMessage);
+
                     break;
-                ////In Game
+                
+                // In Game
                 // case ResistileMessageTypes.endTurn:
                 //    break;
                 //case ResistileMessageTypes.solderPlaced:

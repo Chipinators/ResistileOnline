@@ -11,8 +11,6 @@ namespace ResistileServer
         private const int MAX = 92;
         private int currId = -1;
         private static Random rng = new Random();
-        public Stack<GameTile> wireHand = new Stack<GameTile>();
-        public Stack<GameTile> tileHand = new Stack<GameTile>();
         private Stack<GameTile> wireDeck = new Stack<GameTile>();
         private Stack<GameTile> resistorSolderDeck = new Stack<GameTile>();
         public Dictionary<int, GameTile> allTiles = new Dictionary<int, GameTile>();
@@ -160,6 +158,11 @@ namespace ResistileServer
         public GameTile draw()
         {
             return resistorSolderDeck.Pop();
+        }
+
+        public GameTile drawWire()
+        {
+            return wireDeck.Pop();
         }
         public Dictionary<int, GameTile> returnAllTileDict()
         {

@@ -22,6 +22,7 @@ namespace ResistileServer
         public DeckManager deck;
         public BoardManager board;
         public ResistilePlayer currentTurnPlayer;
+        public ArrayList wireHand = new ArrayList();
         public GameManager(string playerOneUsername, string playerTwoUsername)
         {
             /*
@@ -51,6 +52,10 @@ namespace ResistileServer
             playerTwo = new ResistilePlayer(playerTwoUsername, tempHand, GetRandomPrimary(primaryMIN, primaryMAX), CreateSecondaryObj());
 
             currentTurnPlayer = random.Next(0, 2) == 1 ? playerOne : playerTwo;
+            for (int i = 0; i < MAXHAND; i++)
+            {
+                wireHand.Add(deck.drawWire());
+            }
         }
 
         private double GetRandomPrimary(double minimum, double maximum)
