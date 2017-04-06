@@ -14,16 +14,6 @@ namespace Assets.Scripts
             {
                 d._returnParent = transform;
 
-                //GameObject coord = BoardHandler.CoordinatesOf(gameObject);
-                ////Debug.Log("Coordinates: " + "X - " + coord[0] + " Y - " + coord[1]); 
-                //d._returnParent = transform;
-                ////Debug.Log(d.tag); 
-                //var node = d.GetComponent<GameNodeAdapter>();
-                //success = BoardHandler.myGame.AddGameNodeToBoard(node.gameNode, new Coordinates(coord[0], coord[1]));
-                //if (success)
-                //{
-                //    Debug.Log("Successfully added to x " + coord[0] + " y " + coord[1]);
-                //}
             }
 
 

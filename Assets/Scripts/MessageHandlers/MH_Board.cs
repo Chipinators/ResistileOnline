@@ -92,20 +92,22 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
         //Fill player hand
         for(int i = 0; i < 5; i++)
         {
-            GameHandler.gameHandler.Draw(((int[])message.messageArray[0])[i]);
+            GameHandler.gameHandler.Draw((int)message.PlayerHand[i]);
         }
         for (int j = 0; j < 5; j++)
         {
-            GameHandler.gameHandler.Draw(((int[])message.messageArray[1])[j]);
+            GameHandler.gameHandler.Draw((int)message.WireHand[j]);
         }
         //Set Objectives
-        GameHandler.gameHandler.setPrimaryObj(((int[])message.messageArray[2])[0]);
-        GameHandler.gameHandler.setSecondaryObjs(((int[])message.messageArray[2])[1], ((int[])message.messageArray[2])[2]);
+        GameHandler.gameHandler.setPrimaryObj((double)message.PrimaryObjective);
+        Debug.Log("Secondary Objectives = " + (int)message.secondaryObjectives[0] + ", " + (int)message.secondaryObjectives[1]);
+        GameHandler.gameHandler.setSecondaryObjs((int)message.secondaryObjectives[0], (int)message.secondaryObjectives[1]);
         //Opponent Name
         GameHandler.gameHandler.opponentName = message.message;
         //Set Turn
         GameHandler.gameHandler.initializeTurn(message.turn);
         GameHandler.gameHandler.setTurn();
+        GameHandler.gameHandler.gameID = message.gameID;
     }
 
     private void tilePlaced(ResistileMessage message) //Opponent Ends Turn
@@ -175,16 +177,23 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
 
     public void quitGame()
     {
-        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.quitGame, ""));
+        NetworkManager.networkManager.sendMessage(new ResistileMessage(GameHandler.gameHandler.gameID, ResistileMessageTypes.quitGame, ""));
         SceneManager.LoadScene("MainMenu");
     }
 
     public void endTurn()
     {
         //TODO: Send server tile, coordinates, 
-        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.endTurn, ""));
-        //GameHandler.gameHandler.DrawResistor(Random.Range(1,6), Random.Range(1, 3));
-        //GameHandler.gameHandler.DrawWire(Random.Range(1, 4));
+        ResistileMessage message = new ResistileMessage(GameHandler.gameHandler.gameID, ResistileMessageTypes.endTurn, "");
+        if(GameHandler.gameHandler.solderTile != null)  //If solder was placed
+        {
+            TileData solderTile = GameHandler.gameHandler.solderTile.GetComponent<TileData>();
+            message.solderId = solderTile.tileID;
+            message.message = ResistileServer.GameTileTypes.solder;
+        }
+        message.tileID = GameHandler.gameHandler.currentTile.GetComponent<TileData>().tileID;
+        NetworkManager.networkManager.sendMessage(message);
+        
     }
 
     public void rotate()

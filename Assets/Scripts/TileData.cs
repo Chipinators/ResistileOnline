@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class TileData : MonoBehaviour {
 
-    public int tileID, resistance, type; 
-
-
+    public int tileID;
+    public double resistance;
+    public string type;
+    public int rotation;
 }

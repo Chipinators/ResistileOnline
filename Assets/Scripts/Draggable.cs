@@ -19,6 +19,14 @@ namespace Assets.Scripts
             _returnParent = _draggedGameObject.transform.parent;
             _draggedGameObject.transform.SetParent(GameObject.Find("Canvas").transform);
             _draggedGameObject.GetComponent<CanvasGroup>().blocksRaycasts = false;
+            if(gameObject.GetComponent<TileData>().type == ResistileServer.GameTileTypes.solder)
+            {
+                GameHandler.gameHandler.solderTile = gameObject;
+            }
+            else
+            {
+                GameHandler.gameHandler.currentTile = gameObject;
+            }
         }
 
         public void OnDrag(PointerEventData eventData)
