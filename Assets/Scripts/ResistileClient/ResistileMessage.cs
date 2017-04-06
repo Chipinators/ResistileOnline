@@ -10,7 +10,10 @@ namespace ResistileClient
         public int tileID;
         public bool turn;
         public ArrayList messageArray;
-
+        public ArrayList PlayerHand;
+        public ArrayList WireHand;
+        public double PrimaryObjective;
+        public ArrayList secondaryObjectives;
         ResistileMessage()
         {
             gameID = -1;

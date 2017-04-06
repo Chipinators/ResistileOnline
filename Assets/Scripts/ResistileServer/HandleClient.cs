@@ -159,16 +159,17 @@ namespace ResistileServer
                     {
                         playerHand.Add(tile.id);
                     }
+                    initializeGameMessage.PlayerHand = playerHand;
+
+                   
                     ArrayList wirehand = new ArrayList();
                     foreach (GameTile tile in gameManager.wireHand)
                     {
                         wirehand.Add(tile.id);
                     }
-                    initializeGameMessage.messageArray = new ArrayList();
-                    initializeGameMessage.messageArray.Add(playerHand);
-                    initializeGameMessage.messageArray.Add(wirehand);
-                    initializeGameMessage.messageArray.Add(player.primaryObjective);
-                    initializeGameMessage.messageArray.Add(player.secondaryObjective);
+                    initializeGameMessage.WireHand = wirehand;
+                    initializeGameMessage.PrimaryObjective = player.primaryObjective;
+                    initializeGameMessage.secondaryObjectives = new ArrayList(player.secondaryObjective);
                     writeClient(initializeGameMessage);
                     break;
                 
