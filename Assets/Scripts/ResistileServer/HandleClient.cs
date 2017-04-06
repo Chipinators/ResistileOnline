@@ -174,8 +174,11 @@ namespace ResistileServer
                     break;
                 
                 // In Game
-                // case ResistileMessageTypes.endTurn:
-                //    break;
+                case ResistileMessageTypes.endTurn:
+                    //if invalid move MessageType is ResistileMessageTypes.invalidMove
+                    //if valid move MessageType is drawTile to this client, tileplaced to other client. to be written....
+                    
+                    break;
                 //case ResistileMessageTypes.solderPlaced:
                 //    break;
                 //case ResistileMessageTypes.gameResults:

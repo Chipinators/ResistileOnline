@@ -29,9 +29,8 @@ namespace ResistileClient
         //In Game
         public const int initializeGame = 14;
         public const int tilePlaced = 15;
-        public const int solderPlaced = 16;
-        public const int drawResistor = 17;
-        public const int drawWire = 18;
+        public const int drawTile = 17;
+        public const int validMove = 18;
         public const int invalidMove = 19;
         public const int gameResults = 20;
         public const int replay = 21;

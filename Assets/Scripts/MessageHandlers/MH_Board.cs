@@ -28,10 +28,10 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
             case ResistileMessageTypes.tilePlaced:
                 msgFromThread = message.messageCode;
                 break;
-            case ResistileMessageTypes.drawResistor:
+            case ResistileMessageTypes.drawTile:
                 msgFromThread = message.messageCode;
                 break;
-            case ResistileMessageTypes.drawWire:
+            case ResistileMessageTypes.validMove:
                 msgFromThread = message.messageCode;
                 break;
             case ResistileMessageTypes.invalidMove:
@@ -63,11 +63,11 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
             case ResistileMessageTypes.tilePlaced:
                 tilePlaced(messageFromThread);
                 break;
-            case ResistileMessageTypes.drawResistor:
-                drawResistor(messageFromThread);
+            case ResistileMessageTypes.drawTile:
+                drawTile(messageFromThread);
                 break;
-            case ResistileMessageTypes.drawWire:
-                drawWire(messageFromThread);
+            case ResistileMessageTypes.validMove:
+                validMove(messageFromThread);
                 break;
             case ResistileMessageTypes.invalidMove:
                 invalidMove(messageFromThread);
@@ -118,7 +118,7 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
         GameHandler.gameHandler.setTurn();
     }
 
-    private void drawResistor(ResistileMessage message) //You End Turn
+    private void drawTile(ResistileMessage message) //You End Turn
     {
         //TODO:
         //GameHandler.gameHandler.DrawResistor(1, 2);
@@ -126,7 +126,7 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
         GameHandler.gameHandler.setTurn();
     }
 
-    private void drawWire(ResistileMessage message)
+    private void validMove(ResistileMessage message)
     {
         //TODO:
         //GameHandler.gameHandler.DrawWire(1);

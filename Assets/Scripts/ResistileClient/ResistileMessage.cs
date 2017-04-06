@@ -10,6 +10,7 @@ namespace ResistileClient
         public int tileID;
         public int solderId;
         public bool turn;
+        public int rotation;
         public ArrayList messageArray;
         public ArrayList coordinates;
         public ArrayList PlayerHand;
