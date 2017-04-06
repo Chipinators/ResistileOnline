@@ -7,10 +7,17 @@ using UnityEngine.SceneManagement;
 
 public class MH_Login : MonoBehaviour, MessageHanderInterface {
     public Text inputField;
+    public Button submitButton;
 
     void Start()
     {
         GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<NetworkManager>().messageInterface = this;
+    }
+
+    void Update()
+    {
+        if (inputField.text == "") submitButton.GetComponent<Button>().interactable = false;
+        if (inputField.text != "") submitButton.GetComponent<Button>().interactable = true;
     }
 
     public void doAction(ResistileMessage message)
