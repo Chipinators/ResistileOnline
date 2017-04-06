@@ -15,29 +15,29 @@ public class GameHandler : MonoBehaviour {
     public Sprite winTrophy, loseTrophy;
     public GameObject alertPanel, alertText;
     public Button playAgain;
+    public string yourName, opponentName;
 
     private Dictionary<int, string> secondaryObjs;
     private Dictionary<int, ResistileServer.GameTile> tileLookup = (new ResistileServer.DeckManager()).allTiles;
-    private string yourName, opponentName;
     private bool isTurn;
     private float alertTimer;
 
     void Start()
     {
         gameHandler = this;
-        fillObjectives();
-        DrawResistor(2, ResistileServer.GameTileTypes.Resistor.typeI);
-        DrawResistor(-1, ResistileServer.GameTileTypes.Resistor.typeI);
-        DrawResistor(5, ResistileServer.GameTileTypes.Resistor.typeII);
-        DrawResistor(3, ResistileServer.GameTileTypes.Resistor.typeI);
-        DrawResistor(1, ResistileServer.GameTileTypes.Resistor.typeII);
-        DrawWire(ResistileServer.GameTileTypes.Wire.typeI);
-        DrawWire(ResistileServer.GameTileTypes.Wire.typeII);
-        DrawWire(ResistileServer.GameTileTypes.Wire.typeT);
-        DrawWire(ResistileServer.GameTileTypes.Wire.typeI);
-        DrawWire(ResistileServer.GameTileTypes.Wire.typeII);
-        setPrimaryObj(10.5);
-        setSecondaryObjs(1, 2);
+        //fillObjectives();
+        //DrawResistor(2, ResistileServer.GameTileTypes.Resistor.typeI);
+        //DrawResistor(-1, ResistileServer.GameTileTypes.Resistor.typeI);
+        //DrawResistor(5, ResistileServer.GameTileTypes.Resistor.typeII);
+        //DrawResistor(3, ResistileServer.GameTileTypes.Resistor.typeI);
+        //DrawResistor(1, ResistileServer.GameTileTypes.Resistor.typeII);
+        //DrawWire(ResistileServer.GameTileTypes.Wire.typeI);
+        //DrawWire(ResistileServer.GameTileTypes.Wire.typeII);
+        //DrawWire(ResistileServer.GameTileTypes.Wire.typeT);
+        //DrawWire(ResistileServer.GameTileTypes.Wire.typeI);
+        //DrawWire(ResistileServer.GameTileTypes.Wire.typeII);
+        //setPrimaryObj(10.5);
+        //setSecondaryObjs(1, 2);
         alertTimer = 0.0f;
     }
 
@@ -54,12 +54,19 @@ public class GameHandler : MonoBehaviour {
         }
     }
 
-    public void Draw()
+    public void Draw(int tileID)
     {
-
+        ResistileServer.GameTile tile = getGameTile(tileID);
+        if (tile.type.Contains("Resistor")){
+            DrawResistor(tile.resistance, tile.type);
+        }
+        else if (tile.type.Contains("Wire"))
+        {
+            DrawWire(tile.type);
+        }
     }
 
-    public void DrawResistor(int res, string type)
+    public void DrawResistor(double res, string type)
     {
         if (resHand.transform.childCount >= 5) return;
         var tile = Instantiate(tilePrefab);
@@ -131,6 +138,11 @@ public class GameHandler : MonoBehaviour {
     public void placeTile(int tileID, int xCoord, int yCoord, int rotation)
     {
 
+    }
+
+    public void initializeTurn(bool turn)
+    {
+        isTurn = turn;
     }
 
     public void setTurn()
@@ -219,6 +231,11 @@ public class GameHandler : MonoBehaviour {
     public void noPlayAgain()
     {
         playAgain.GetComponent<Button>().interactable = false;
+    }
+
+    public ResistileServer.GameTile getGameTile(int i)
+    {
+        return tileLookup[i];
     }
 
     private void fillObjectives()

@@ -13,7 +13,7 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
     // Use this for initialization
     void Start () {
         GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<NetworkManager>().messageInterface = this;
-        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.gameLoaded, ""));
+        gameLoaded();
     }
 
     public void doAction(ResistileMessage message)
@@ -89,8 +89,22 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
     //RECEIVE MESSAGES FROM SERVER
     private void initializeGame(ResistileMessage message)
     {
-        //TODO: initialize hands, player, etc.
-
+        //Fill player hand
+        for(int i = 0; i < 5; i++)
+        {
+            GameHandler.gameHandler.Draw(((int[])message.messageArray[0])[i]);
+        }
+        for (int j = 0; j < 5; j++)
+        {
+            GameHandler.gameHandler.Draw(((int[])message.messageArray[1])[j]);
+        }
+        //Set Objectives
+        GameHandler.gameHandler.setPrimaryObj(((int[])message.messageArray[2])[0]);
+        GameHandler.gameHandler.setSecondaryObjs(((int[])message.messageArray[2])[1], ((int[])message.messageArray[2])[2]);
+        //Opponent Name
+        GameHandler.gameHandler.opponentName = message.message;
+        //Set Turn
+        GameHandler.gameHandler.initializeTurn(message.turn);
         GameHandler.gameHandler.setTurn();
     }
 
@@ -154,6 +168,11 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
     }
 
     //SEND MESSAGES TO SERVER
+    public void gameLoaded()
+    {
+        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.gameLoaded, ""));
+    }
+
     public void quitGame()
     {
         NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.quitGame, ""));
@@ -168,9 +187,21 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
         //GameHandler.gameHandler.DrawWire(Random.Range(1, 4));
     }
 
-    public void guessResistance()
+    public void rotate()
     {
-
+        //TODO:
+        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.rotateTile, ""));
     }
 
+    public void guessResistance()
+    {
+        //TODO:
+        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.guessResistance, ""));
+    }
+
+    public void replay()
+    {
+        //TODO:
+        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.replay, ""));
+    }
 }
