@@ -13,6 +13,7 @@ namespace Assets.Scripts
             if (d != null)
             {
                 d._returnParent = transform;
+                int[] coord = BoardHandler.CoordinatesOf(gameObject);
 
             }
 
