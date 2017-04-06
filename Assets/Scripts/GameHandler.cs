@@ -28,6 +28,7 @@ public class GameHandler : MonoBehaviour {
     {
         gameHandler = this;
         fillObjectives();
+        Draw(5);
         alertTimer = 0.0f;
     }
 

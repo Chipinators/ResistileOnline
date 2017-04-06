@@ -4,6 +4,7 @@ using UnityEngine;
 using ResistileClient;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using Assets.Scripts;
 
 public class MH_Board : MonoBehaviour, MessageHanderInterface {
     private int msgFromThread = -1;
@@ -192,6 +193,8 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
             message.message = ResistileServer.GameTileTypes.solder;
         }
         message.tileID = GameHandler.gameHandler.currentTile.GetComponent<TileData>().tileID;
+        GameObject parent = GameHandler.gameHandler.currentTile.transform.parent.gameObject;
+        message.coordinates = new ArrayList(BoardHandler.CoordinatesOf(parent));
         NetworkManager.networkManager.sendMessage(message);
         
     }
