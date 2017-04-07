@@ -5,6 +5,7 @@ using ResistileClient;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Assets.Scripts;
+using System;
 
 public class MH_Board : MonoBehaviour, MessageHanderInterface {
     private int msgFromThread = -1;
@@ -37,6 +38,9 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
                     msgFromThread = message.messageCode;
                     break;
                 case ResistileMessageTypes.invalidMove:
+                    msgFromThread = message.messageCode;
+                    break;
+                case ResistileMessageTypes.gameOver:
                     msgFromThread = message.messageCode;
                     break;
                 case ResistileMessageTypes.gameResults:
@@ -81,6 +85,10 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
             {
                 invalidMove(messageFromThread);
             }
+            else if (msgFromThread == ResistileMessageTypes.gameOver)
+            {
+                gameOver(messageFromThread);
+            }
             else if (msgFromThread == ResistileMessageTypes.gameResults)
             {
                 gameResults(messageFromThread);
@@ -121,6 +129,7 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
         GameHandler.gameHandler.initializeTurn(message.turn);
         GameHandler.gameHandler.setTurn();
         GameHandler.gameHandler.gameID = message.gameID;
+        GameHandler.gameHandler.setAllTileDrag(GameHandler.gameHandler.isTurn);
     }
 
     private void tilePlaced(ResistileMessage message) //Opponent Ends Turn
@@ -128,6 +137,8 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
         GameHandler.gameHandler.placeTile(message.tileID, (int)message.coordinates[0], (int)message.coordinates[1], message.rotation);
         GameHandler.gameHandler.changeTurn();
         GameHandler.gameHandler.setTurn();
+        GameHandler.gameHandler.setAllTileDrag(true);
+        GameHandler.gameHandler.cleanSolderedBoard();
     }
 
     private void drawTile(ResistileMessage message) //Draw a tile to your hands
@@ -141,7 +152,10 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
         GameHandler.gameHandler.currentTile.transform.FindChild("RotateButton").gameObject.SetActive(false);
         GameHandler.gameHandler.changeTurn();
         GameHandler.gameHandler.setTurn();
-        GameHandler.gameHandler.solderTile = null;
+        GameHandler.gameHandler.setAllTileDrag(false);
+        GameHandler.gameHandler.removeRotate(GameHandler.gameHandler.currentTile);
+        //DestroyObject(GameHandler.gameHandler.solderTile);
+        GameHandler.gameHandler.cleanSolderedBoard();
         GameHandler.gameHandler.currentTile = null;
     }
 
@@ -163,10 +177,20 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
         
     }
 
-    //TODO:
+    private void gameOver(ResistileMessage messageFromThread)
+    {
+        GameHandler.gameHandler.guessScorePanel.SetActive(true);
+    }
+
     private void gameResults(ResistileMessage message)
     {
-        //GameHandler.gameHandler.gameOver(isWinner, pScore, s1Score, s2Score, gScore, tScore);
+        int pScore = 0, s1Score = 0, s2Score = 0, gScore = 0, tScore = 0;
+        if ((bool)message.messageArray[0]) pScore = 2;
+        if ((bool)message.messageArray[1]) s1Score = 1;
+        if ((bool)message.messageArray[2]) s2Score = 1;
+        if ((bool)message.messageArray[3]) gScore = 1;
+        tScore = pScore + s1Score + s2Score + gScore;
+        GameHandler.gameHandler.gameOver(message.win, pScore, s1Score, s2Score, gScore, tScore);
     }
 
     private void replay(ResistileMessage message)
@@ -230,12 +254,24 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
     //TODO:
     public void guessResistance()
     {
-       NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.guessResistance, ""));
+        Debug.Log("Guess Resistence Sent");
+        ResistileMessage message = new ResistileMessage(0, ResistileMessageTypes.guessResistance, "");
+        message.guess = float.Parse(GameHandler.gameHandler.playerResGuess.text);
+        NetworkManager.networkManager.sendMessage(message);
     }
 
     //TODO:
     public void replay()
-    { 
-        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.replay, ""));
+    {
+        ResistileMessage message = new ResistileMessage(0, ResistileMessageTypes.guessResistance, "");
+        message.replay = true;
+        NetworkManager.networkManager.sendMessage(message   );
+    }
+
+    public void noReplay()
+    {
+        ResistileMessage message = new ResistileMessage(0, ResistileMessageTypes.guessResistance, "");
+        message.replay = false;
+        NetworkManager.networkManager.sendMessage(message);
     }
 }

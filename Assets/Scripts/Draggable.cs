@@ -28,6 +28,7 @@ namespace Assets.Scripts
         public void OnEndDrag(PointerEventData eventData)
         {
             _draggedGameObject.transform.SetParent(_returnParent);
+            _draggedGameObject.transform.SetAsFirstSibling();
             GetComponent<CanvasGroup>().blocksRaycasts = true;
         }
 

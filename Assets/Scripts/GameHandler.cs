@@ -12,6 +12,7 @@ public class GameHandler : MonoBehaviour {
     public Button endTurn;
     public Sprite solder, resI, resII, wireI, wireII, wireIII;
     public GameObject primaryObj, secondaryObjI, secondaryObjII;
+    public GameObject guessScorePanel;
     public GameObject gameOverPanelHeader, primaryScore, secondary1Score, secondary2Score, guessScore, totalScore, starPanel, yellowStar, blueStar;
     public Sprite winTrophy, loseTrophy;
     public GameObject alertPanel, alertText;
@@ -19,10 +20,12 @@ public class GameHandler : MonoBehaviour {
     public string yourName, opponentName;
     public GameObject currentTile, solderTile;
     public int gameID;
+    public InputField playerResGuess;
+    public GameObject endGameOverlay;
 
     private Dictionary<int, string> secondaryObjs;
     private Dictionary<int, ResistileServer.GameTile> tileLookup = (new ResistileServer.DeckManager()).allTiles;
-    private bool isTurn;
+    public bool isTurn;
     private float alertTimer;
 
     void Start()
@@ -44,7 +47,7 @@ public class GameHandler : MonoBehaviour {
             alertPanel.SetActive(false);
         }
         if (currentTile == null) endTurn.GetComponent<Button>().interactable = false;
-        else if (currentTile != null && currentTile.GetComponent<TileData>().type != ResistileServer.GameTileTypes.solder) endTurn.GetComponent<Button>().interactable = true;
+        else if (currentTile != null && currentTile.GetComponent<TileData>().type != ResistileServer.GameTileTypes.solder && isTurn) endTurn.GetComponent<Button>().interactable = true;
     }
 
     public void Draw(int tileID)
@@ -64,27 +67,39 @@ public class GameHandler : MonoBehaviour {
     public void placeTile(int tileID, int x, int y, int rotate)
     {
         ResistileServer.GameTile gameTile = getGameTile(tileID);
-        if(gameTile.type.Contains("Wire"))
+        GameObject boardNode = BoardHandler.GetNodeAt(x, y);
+        if (gameTile.type.Contains("Wire"))
         {
-            foreach(Transform wireTile in wireHand.transform)
+            foreach (Transform wireTile in wireHand.transform)
             {
-                if(wireTile.gameObject.GetComponent<TileData>().tileID == tileID)
+                if (wireTile.gameObject.GetComponent<TileData>().tileID == tileID)
                 {
-                    Destroy(wireTile.gameObject);
+                    while( wireTile.GetComponent<TileData>().rotation != 0){
+                        wireTile.GetComponent<RotateTile>().TaskOnClick();
+                    }
+                    wireTile.transform.SetParent(boardNode.transform, false);
+                    wireTile.transform.SetAsFirstSibling();
+                    removeRotate(wireTile.gameObject);
+                    for (int i = 0; i < rotate; i++)
+                    {
+                        wireTile.GetComponent<RotateTile>().TaskOnClick();
+                    }
                 }
             }
-        }
 
-        GameObject boardNode = BoardHandler.GetNodeAt(x, y);
-        
-        var tile = createGameTile(tileID);
-        for(int i = 0; i < rotate; i++)
+        }
+        else
         {
-            tile.GetComponent<RotateTile>().TaskOnClick();
+            var tile = createGameTile(tileID);
+            tile.transform.SetParent(boardNode.transform, false);
+            tile.GetComponent<Draggable>().enabled = false;
+            removeRotate(tile);
+            tile.transform.SetAsFirstSibling();
+            for (int i = 0; i < rotate; i++)
+            {
+                tile.GetComponent<RotateTile>().TaskOnClick();
+            }
         }
-        tile.transform.SetParent(boardNode.transform, false);
-        tile.GetComponent<Draggable>().enabled = false;
-
     }
 
     public GameObject createGameTile(int id) //Created the game tile object
@@ -169,27 +184,69 @@ public class GameHandler : MonoBehaviour {
         isTurn = turn;
     }
 
-    public void setTurn()
+    public void setTurn()   // Sets header text, end turn button enabled, and all tile draggability based on isTurn
     {
-        string header;
         if (isTurn)
         {
-            header = "Your Turn!";
+            headerText.GetComponent<Text>().text = "Your Turn!";
             endTurn.GetComponent<Button>().interactable = true;
+           // setAllTileDrag(true);
 
         }
         else
         {
-            header = opponentName + "'s Turn";
+            headerText.GetComponent<Text>().text = opponentName + "'s Turn";
             endTurn.GetComponent<Button>().interactable = false;
+            //setAllTileDrag(false);
         }
-        headerText.GetComponent<Text>().text = header;
         
     }
 
-    public void changeTurn()
+    public void changeTurn()    //Flips turn boolean
     {
         isTurn = !isTurn;
+    }
+
+    public void removeRotate(GameObject tile)
+    {
+        tile.transform.FindChild("RotateButton").gameObject.SetActive(false);
+    }
+
+    public void setAllTileDrag(bool isDrag)
+    {
+        Draggable[] resDrags = resHand.transform.GetComponentsInChildren<Draggable>();
+        Draggable[] wireDrags = wireHand.transform.GetComponentsInChildren<Draggable>();
+
+        foreach(Draggable drag1 in resDrags)
+        {
+            drag1.enabled = isDrag;
+        }
+        foreach (Draggable drag2 in wireDrags)
+        {
+            drag2.enabled = isDrag;
+        }
+
+        //foreach (Transform wireTile in wireHand.transform)
+        //{
+        //    wireTile.gameObject.GetComponent<Draggable>().enabled = isDrag;
+        //}
+        //foreach (Transform resTile in resHand.transform)
+        //{
+        //    resHand.gameObject.GetComponent<Draggable>().enabled = isDrag;
+        //}
+    }   //Sets draggable on hand tiles based on boolean
+
+    public void cleanSolderedBoard()
+    {
+        foreach(Transform node in gameBoard.transform)
+        {
+            int numTiles = node.childCount;
+            while (numTiles > 1)
+            {
+                DestroyImmediate(node.GetChild(numTiles - 1).gameObject);
+                numTiles = node.childCount;
+            }
+        }
     }
 
     public void alert(string alertStr)
@@ -200,9 +257,10 @@ public class GameHandler : MonoBehaviour {
 
     public void gameOver(bool isWinner, int pScore, int s1Score, int s2Score, int gScore, int tScore)
     {
-        GameObject overlay = GameObject.Find("EndGameOverlay");
+        guessScorePanel.SetActive(false);
+
         setGameOver(isWinner, pScore, s1Score, s2Score, gScore, tScore);
-        overlay.SetActive(true);
+        endGameOverlay.SetActive(true);
     }
 
     private void setGameOver(bool isWinner, int pScore, int s1Score, int s2Score, int gScore, int tScore)

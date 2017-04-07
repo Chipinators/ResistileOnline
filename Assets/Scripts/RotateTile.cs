@@ -15,6 +15,7 @@ namespace Assets.Scripts
 
         public void TaskOnClick()
         {
+            Debug.Log("Rotate called");
             Transform background = this.transform.FindChild("Background");
             background.Rotate(0, 0, -90);
 
