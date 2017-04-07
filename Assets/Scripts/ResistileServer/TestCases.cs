@@ -10,6 +10,17 @@ namespace ResistileServer
     public class TestCases
     {
         [TestMethod]
+        public void testWire()
+        {
+            var boardManager = new BoardManager();
+            var tile = new GameTile(GameTileTypes.Wire.typeI, -1);
+            var tile2 = new GameTile(GameTileTypes.Wire.typeII, -1);
+            tile2.Rotate();
+            boardManager.AddTile(tile, new[] { 1, 0 });
+            var check = boardManager.IsValidMove(tile2, new[] {2, 1});
+            Assert.IsTrue(check, "Weird case returning false");
+        }
+        [TestMethod]
         public void BlockStart()
         {
             var boardManager = new BoardManager();

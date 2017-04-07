@@ -17,6 +17,8 @@ namespace ResistileClient
         public ArrayList WireHand;
         public double PrimaryObjective;
         public ArrayList secondaryObjectives;
+        public double guess;
+
         ResistileMessage()
         {
             gameID = -1;

@@ -230,7 +230,7 @@ namespace ResistileServer
             // Case 1
             if (board[coordinates[0], coordinates[1]] != null)
             {
-                isValid = false;
+                return false;
             }
 
             // Case 2, 3.1, 3.2
@@ -275,7 +275,6 @@ namespace ResistileServer
             {
                 if (neighborCount > 1)
                 {
-                    isValid = true;
                     isGameOver = true;
                 }
                 else

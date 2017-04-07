@@ -88,7 +88,7 @@ namespace ResistileServer
             neighbors[Directions.up] = neighbors[Directions.left];
             neighbors[Directions.left] = neighbors[Directions.down];
             neighbors[Directions.down] = neighbors[Directions.right];
-            neighbors[Directions.down] = temp;
+            neighbors[Directions.right] = temp;
         }
     }
 

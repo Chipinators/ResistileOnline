@@ -131,5 +131,15 @@ namespace ResistileServer
         {
             return tile.type.Contains("Wire") ? drawWire() : drawResistorSolder(player);
         }
+
+        private double resistance = -1;
+        public double calculateResistance()
+        {
+            if (resistance < 0)
+            {
+                resistance = board.Calculate();
+            }
+            return resistance;
+        }
     }
 }

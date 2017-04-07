@@ -23,6 +23,8 @@ namespace ResistileServer
         private static List<HandleClient> handleClients = new List<HandleClient>();
         private static List<string> availableHosts = new List<string>();
         private GameManager gameManager;
+        private Object thisLock = new Object();
+        private Object thisLock2 = new Object();
         public void startClient(TcpClient inClientSocket, string clineNo)
         {
             this.clientSocket = inClientSocket;
@@ -88,66 +90,71 @@ namespace ResistileServer
 
         private void handleMessage(ResistileMessage message)
         {
-            switch (message.messageCode)
+            lock (thisLock)
             {
-                //General
-                case ResistileMessageTypes.ping:
-                    handlePing();
-                    break;
-                //Login Scene
-                case ResistileMessageTypes.login:
-                    handleLogin(message);
-                    break;
-                //MainMenu
-                case ResistileMessageTypes.startHosting:
-                    handleStartHosting();
-                    break;
-                //Host Scene
-                case ResistileMessageTypes.cancelSearch:
-                    handleCancelSearch();
-                    break;
-                case ResistileMessageTypes.declineOpponent:
-                    handleDeclineOpponent(message);
-                    break;
-                case ResistileMessageTypes.acceptOpponent:
-                    handleAcceptOpponent(message);
-                    break;
-                //Server Browser
-                case ResistileMessageTypes.getHostList:
-                    handleGetHostList();
-                    break;
-                case ResistileMessageTypes.requestJoinGame:
-                    handleRequestJoinGame(message);
-                    break;
-                case ResistileMessageTypes.cancelJoinRequest:
-                    handleCancelJoinRequest(message);
-                    break;
-                case ResistileMessageTypes.gameLoaded:
-                    handleGameLoaded();
-                    break;
+                switch (message.messageCode)
+                {
+                    //General
+                    case ResistileMessageTypes.ping:
+                        handlePing();
+                        break;
+                    //Login Scene
+                    case ResistileMessageTypes.login:
+                        handleLogin(message);
+                        break;
+                    //MainMenu
+                    case ResistileMessageTypes.startHosting:
+                        handleStartHosting();
+                        break;
+                    //Host Scene
+                    case ResistileMessageTypes.cancelSearch:
+                        handleCancelSearch();
+                        break;
+                    case ResistileMessageTypes.declineOpponent:
+                        handleDeclineOpponent(message);
+                        break;
+                    case ResistileMessageTypes.acceptOpponent:
+                        handleAcceptOpponent(message);
+                        break;
+                    //Server Browser
+                    case ResistileMessageTypes.getHostList:
+                        handleGetHostList();
+                        break;
+                    case ResistileMessageTypes.requestJoinGame:
+                        handleRequestJoinGame(message);
+                        break;
+                    case ResistileMessageTypes.cancelJoinRequest:
+                        handleCancelJoinRequest(message);
+                        break;
+                    case ResistileMessageTypes.gameLoaded:
+                        handleGameLoaded();
+                        break;
 
-                // In Game
-                case ResistileMessageTypes.endTurn:
-                    handleEndTurn(message);
-                    break;
-                //case ResistileMessageTypes.guessResistance:
-                //    break;
-                //case ResistileMessageTypes.gameResults:
-                //    break;
-                //case ResistileMessageTypes.replay:
-                //    break;
-                //case ResistileMessageTypes.quitGame:
-                //    break;
-                case ResistileMessageTypes.applicationQuit:
-                    if (availableHosts.Contains(clName))
-                    {
-                        availableHosts.Remove(clName);
-                    }
-                    handleClients.Remove(this);
-                    clientSocket.Close();
-                    break;
-                default:
-                    break;
+                    // In Game
+                    case ResistileMessageTypes.endTurn:
+                        handleEndTurn(message);
+                        break;
+                    case ResistileMessageTypes.guessResistance:
+                        var resistance = gameManager.calculateResistance();
+                        var guess = message.guess;
+                        break;
+                    //case ResistileMessageTypes.gameResults:
+                    //    break;
+                    //case ResistileMessageTypes.replay:
+                    //    break;
+                    //case ResistileMessageTypes.quitGame:
+                    //    break;
+                    case ResistileMessageTypes.applicationQuit:
+                        if (availableHosts.Contains(clName))
+                        {
+                            availableHosts.Remove(clName);
+                        }
+                        handleClients.Remove(this);
+                        clientSocket.Close();
+                        break;
+                    default:
+                        break;
+                }
             }
         }
 
@@ -221,6 +228,7 @@ namespace ResistileServer
                 oppMsg1.coordinates = new ArrayList(coords);
                 opponentHandle.writeClient(oppMsg1);
 
+                Thread.Sleep(100);
                 //Sent player new tile data
                 writeClient(gameID, ResistileMessageTypes.validMove, "");
                 var messageToBeSent = new ResistileMessage(gameID, ResistileMessageTypes.drawTile);
@@ -229,6 +237,7 @@ namespace ResistileServer
                 messageToBeSent.tileID = card.id;
                 writeClient(messageToBeSent);
 
+                Thread.Sleep(100);
                 if (card.type.Contains("Wire"))
                 {
                     var oppMsg2 = new ResistileMessage(gameID, ResistileMessageTypes.drawTile);
@@ -364,14 +373,17 @@ namespace ResistileServer
 
         private void writeClient(ResistileMessage msg)
         {
-            using (StringWriter textWriter = new StringWriter())
+            lock (thisLock2)
             {
-                NetworkStream serverStream = clientSocket.GetStream();
-                serializer.Serialize(textWriter, msg);
-                var line = textWriter.ToString();
-                byte[] outStream = Encoding.ASCII.GetBytes(line + "$");
-                serverStream.Write(outStream, 0, outStream.Length);
-                serverStream.Flush();
+                using (StringWriter textWriter = new StringWriter())
+                {
+                    NetworkStream serverStream = clientSocket.GetStream();
+                    serializer.Serialize(textWriter, msg);
+                    var line = textWriter.ToString();
+                    byte[] outStream = Encoding.ASCII.GetBytes(line + "$");
+                    serverStream.Write(outStream, 0, outStream.Length);
+                    serverStream.Flush();
+                }
             }
         }
     }
