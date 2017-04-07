@@ -31,4 +31,5 @@ public class QuitGame : MonoBehaviour {
     {
         exitGamePanel.SetActive(false);
     }
+
 }

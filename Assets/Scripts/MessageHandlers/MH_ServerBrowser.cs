@@ -80,6 +80,7 @@ public class MH_ServerBrowser : MonoBehaviour, MessageHanderInterface {
     private void hostDeclined(ResistileMessage message)
     {
         //TODO: Tell user that host declined
+        Debug.Log("Host Declined");
         panelManager.GetComponent<HostScreenPanelAdapter>().isWaiting = true;
     }
 
@@ -107,14 +108,16 @@ public class MH_ServerBrowser : MonoBehaviour, MessageHanderInterface {
 
     public void joinLobby(string username)
     {
+        NetworkManager.networkManager.username = username;
         NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.requestJoinGame, username));
         panelManager.GetComponent<HostScreenPanelAdapter>().isWaiting = false;
     }
 
     public void cancelRequest()
     {
-        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.cancelJoinRequest, ""));
+        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.cancelJoinRequest, NetworkManager.networkManager.username));
         panelManager.GetComponent<HostScreenPanelAdapter>().isWaiting = true;
+        NetworkManager.networkManager.username = "";
     }
 
     public void goBack() //uses for back button, if viewing server list it sends a ping, if waiting for host sends cancelJoinRequest

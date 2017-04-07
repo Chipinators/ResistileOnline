@@ -79,7 +79,7 @@ public class MH_Host : MonoBehaviour, MessageHanderInterface {
     //SEND MESSAGES TO SERVER
     public void declineOpponent()
     {
-        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.declineOpponent, ""));
+        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.declineOpponent, opponentName.GetComponent<Text>().text));
         panelManager.GetComponent<HostScreenPanelAdapter>().changeWaiting();
     }
 

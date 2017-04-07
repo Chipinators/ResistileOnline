@@ -18,6 +18,7 @@ public class NetworkManager : MonoBehaviour {
     private static XmlSerializer serializer;
     public Thread readDataThread;
     public MessageHanderInterface messageInterface;
+    public string opponent;
 
     // Use this for initialization
     void Start () {

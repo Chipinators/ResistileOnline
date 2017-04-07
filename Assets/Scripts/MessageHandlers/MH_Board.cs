@@ -195,7 +195,7 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
 
     private void replay(ResistileMessage message)
     {
-        if(message.message == "true")
+        if(message.replay == true)
         {
             SceneManager.LoadScene("Board");
         }
@@ -209,7 +209,7 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
     {
         GameHandler.gameHandler.alert("Opponent Left The Game, Returning To Main Menu");
         StartCoroutine(backToMainMenu());
-        SceneManager.LoadScene("MainMenu");
+
     }
 
     private IEnumerator backToMainMenu()
@@ -263,15 +263,16 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
     //TODO:
     public void replay()
     {
-        ResistileMessage message = new ResistileMessage(0, ResistileMessageTypes.guessResistance, "");
+        ResistileMessage message = new ResistileMessage(0, ResistileMessageTypes.replay, "");
         message.replay = true;
-        NetworkManager.networkManager.sendMessage(message   );
+        NetworkManager.networkManager.sendMessage(message);
     }
 
     public void noReplay()
     {
-        ResistileMessage message = new ResistileMessage(0, ResistileMessageTypes.guessResistance, "");
+        ResistileMessage message = new ResistileMessage(0, ResistileMessageTypes.replay, "");
         message.replay = false;
         NetworkManager.networkManager.sendMessage(message);
+        SceneManager.LoadScene("MainMenu");
     }
 }

@@ -217,7 +217,7 @@ public class GameHandler : MonoBehaviour {
         Draggable[] resDrags = resHand.transform.GetComponentsInChildren<Draggable>();
         Draggable[] wireDrags = wireHand.transform.GetComponentsInChildren<Draggable>();
 
-        foreach(Draggable drag1 in resDrags)
+        foreach (Draggable drag1 in resDrags)
         {
             drag1.enabled = isDrag;
         }
@@ -225,16 +225,7 @@ public class GameHandler : MonoBehaviour {
         {
             drag2.enabled = isDrag;
         }
-
-        //foreach (Transform wireTile in wireHand.transform)
-        //{
-        //    wireTile.gameObject.GetComponent<Draggable>().enabled = isDrag;
-        //}
-        //foreach (Transform resTile in resHand.transform)
-        //{
-        //    resHand.gameObject.GetComponent<Draggable>().enabled = isDrag;
-        //}
-    }   //Sets draggable on hand tiles based on boolean
+    }
 
     public void cleanSolderedBoard()
     {
