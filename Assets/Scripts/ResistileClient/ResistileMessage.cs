@@ -19,7 +19,7 @@ namespace ResistileClient
         public ArrayList secondaryObjectives;
         public bool win;
         public double guess;
-
+        public bool replay;
         ResistileMessage()
         {
             gameID = -1;

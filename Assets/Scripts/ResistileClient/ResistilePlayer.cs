@@ -13,7 +13,8 @@ namespace ResistileClient
         public double primaryObjective;
         public int[] secondaryObjective;
         private const int MAXHAND = 5;
-
+        public double guess;
+        public bool guessed = false;
         public ResistilePlayer()
         {
             
@@ -27,6 +28,12 @@ namespace ResistileClient
             secondaryObjective = newSecondaryOjective;
 
             this.hand = hand;
+        }
+
+        public void setGuess(double guess)
+        {
+            guessed = true;
+            this.guess = guess;
         }
 
         public ArrayList getHand()

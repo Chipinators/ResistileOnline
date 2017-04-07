@@ -135,15 +135,7 @@ namespace ResistileServer
                         handleEndTurn(message);
                         break;
                     case ResistileMessageTypes.guessResistance:
-                        var sendThisMessage = new ResistileMessage(gameID, ResistileMessageTypes.gameResults);
-                        //sendThisMessage.win = true;
-                        //sendThisMessage.messageArray = new ArrayList();
-                        //sendThisMessage.messageArray[0] = primaryScore // bool
-                        //sendThisMessage.messageArray[1] = secondaryObj1 // bool
-                        //sendThisMessage.messageArray[2] = secondaryObj2 // bool
-                        //sendThisMessage.messageArray[3] = guessScore // bool
-                        var resistance = gameManager.calculateResistance();
-                        var guess = message.guess;
+                        handleGuessResistance(message);
                         break;
                     //case ResistileMessageTypes.replay:
                     //    break;
@@ -161,6 +153,38 @@ namespace ResistileServer
                         break;
                 }
             }
+        }
+
+        private void handleGuessResistance(ResistileMessage message)
+        {
+            gameManager.getPlayer(clName).setGuess(message.guess);
+            if (gameManager.getPlayer(clName).guessed && gameManager.getOpponent(clName).guessed)
+            {
+                //TODO: program this
+                //wait two players to come here,
+                //then calculate primary based on who is closest,
+                //secondaries
+                //the winner based on most score gained
+                //then send both the message
+                var sendThisMessage = new ResistileMessage(gameID, ResistileMessageTypes.gameResults);
+                sendThisMessage.messageArray = new ArrayList();
+                sendThisMessage.messageArray[0] = true; //primaryScore bool
+                sendThisMessage.messageArray[1] = true; //secondaryObj1 bool
+                sendThisMessage.messageArray[2] = true; // secondaryObj2 bool
+                sendThisMessage.messageArray[3] = true; // guessScore bool
+                sendThisMessage.win = true;
+                writeClient(sendThisMessage);
+                var opponentHandle = handleClients.Find(handles => handles.clName == gameManager.getOpponent(clName).userName);
+                sendThisMessage.messageArray = new ArrayList();
+                sendThisMessage.messageArray[0] = false; //primaryScore bool
+                sendThisMessage.messageArray[1] = false; //secondaryObj1 bool
+                sendThisMessage.messageArray[2] = false; // secondaryObj2 bool
+                sendThisMessage.messageArray[3] = false; // guessScore bool
+                sendThisMessage.win = true;
+                opponentHandle.writeClient(sendThisMessage);
+            }
+            //var resistance = gameManager.calculateResistance();
+            //var guess = message.guess;
         }
 
         private void handleEndTurn(ResistileMessage message)
@@ -217,22 +241,23 @@ namespace ResistileServer
         private void writeClientOnValidMove(bool isGameOver, bool isSolder, GameTile tile, int rotation, int[] coords, ResistilePlayer player, ResistilePlayer opponent,
             GameTile solder)
         {
+            //Sent opponent placed tile data
+            var opponentHandle = handleClients.Find(handle => handle.clName == opponent.userName);
+            var oppMsg1 = new ResistileMessage(gameID, ResistileMessageTypes.tilePlaced);
+            oppMsg1.tileID = tile.id;
+            oppMsg1.turn = true;
+            oppMsg1.rotation = rotation;
+            oppMsg1.coordinates = new ArrayList(coords);
+            opponentHandle.writeClient(oppMsg1);
+
             if (isGameOver)
             {
                 writeClient(gameID, ResistileMessageTypes.gameOver);
+                opponentHandle.writeClient(gameID, ResistileMessageTypes.gameOver);
             }
             else
             {
-                //Sent opponent placed tile data
-                var opponentHandle = handleClients.Find(handle => handle.clName == opponent.userName);
-
-                var oppMsg1 = new ResistileMessage(gameID, ResistileMessageTypes.tilePlaced);
-                oppMsg1.tileID = tile.id;
-                oppMsg1.turn = true;
-                oppMsg1.rotation = rotation;
-                oppMsg1.coordinates = new ArrayList(coords);
-                opponentHandle.writeClient(oppMsg1);
-
+                
                 Thread.Sleep(100);
                 //Sent player new tile data
                 writeClient(gameID, ResistileMessageTypes.validMove, "");
