@@ -135,11 +135,16 @@ namespace ResistileServer
                         handleEndTurn(message);
                         break;
                     case ResistileMessageTypes.guessResistance:
+                        var sendThisMessage = new ResistileMessage(gameID, ResistileMessageTypes.gameResults);
+                        //sendThisMessage.win = true;
+                        //sendThisMessage.messageArray = new ArrayList();
+                        //sendThisMessage.messageArray[0] = primaryScore // bool
+                        //sendThisMessage.messageArray[1] = secondaryObj1 // bool
+                        //sendThisMessage.messageArray[2] = secondaryObj2 // bool
+                        //sendThisMessage.messageArray[3] = guessScore // bool
                         var resistance = gameManager.calculateResistance();
                         var guess = message.guess;
                         break;
-                    //case ResistileMessageTypes.gameResults:
-                    //    break;
                     //case ResistileMessageTypes.replay:
                     //    break;
                     //case ResistileMessageTypes.quitGame:
