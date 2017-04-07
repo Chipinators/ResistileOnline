@@ -140,8 +140,9 @@ namespace ResistileServer
                     case ResistileMessageTypes.replay:
                         handleReplay(message);
                         break;
-                    //case ResistileMessageTypes.quitGame:
-                    //    break;
+                    case ResistileMessageTypes.quitGame:
+                        handleQuit(message);
+                        break;
                     case ResistileMessageTypes.applicationQuit:
                         if (availableHosts.Contains(clName))
                         {
@@ -154,6 +155,12 @@ namespace ResistileServer
                         break;
                 }
             }
+        }
+
+        private void handleQuit(ResistileMessage message)
+        {
+            var opponent = handleClients.Find(handle => handle.clName == gameManager.getOpponent(clName).userName);
+            opponent.writeClient(gameID, ResistileMessageTypes.opponentQuit);
         }
 
         private void handleReplay(ResistileMessage message)
@@ -175,6 +182,7 @@ namespace ResistileServer
                     var messageToSend = new ResistileMessage(gameID, ResistileMessageTypes.replay) { replay = true };
                     writeClient(messageToSend);
                     opponentHandle.writeClient(messageToSend);
+                    handleAcceptOpponent(new ResistileMessage(0, ResistileMessageTypes.acceptOpponent, opponent.userName));
                 }
             }
         }
@@ -275,8 +283,10 @@ namespace ResistileServer
             oppMsg1.coordinates = new ArrayList(coords);
             opponentHandle.writeClient(oppMsg1);
 
+            writeClient(gameID, ResistileMessageTypes.validMove, "");
             if (isGameOver)
             {
+
                 writeClient(gameID, ResistileMessageTypes.gameOver);
                 opponentHandle.writeClient(gameID, ResistileMessageTypes.gameOver);
             }
@@ -285,7 +295,6 @@ namespace ResistileServer
                 
                 Thread.Sleep(100);
                 //Sent player new tile data
-                writeClient(gameID, ResistileMessageTypes.validMove, "");
                 var messageToBeSent = new ResistileMessage(gameID, ResistileMessageTypes.drawTile);
                 var card = gameManager.draw(tile, player);
                 messageToBeSent.turn = false;
@@ -339,8 +348,8 @@ namespace ResistileServer
 
         private static void handleCancelJoinRequest(ResistileMessage message)
         {
-            var theHost2 = handleClients.Find(client => client.clName == message.message);
-            theHost2.writeClient(0, ResistileMessageTypes.opponentCanceled, "");
+            var theHost = handleClients.Find(client => client.clName == message.message);
+            theHost.writeClient(0, ResistileMessageTypes.opponentCanceled, "");
         }
 
         private void handleRequestJoinGame(ResistileMessage message)
