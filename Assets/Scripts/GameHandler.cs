@@ -16,12 +16,13 @@ public class GameHandler : MonoBehaviour {
     public GameObject gameOverPanelHeader, primaryScore, secondary1Score, secondary2Score, guessScore, totalScore, starPanel, yellowStar, blueStar;
     public Sprite winTrophy, loseTrophy;
     public GameObject alertPanel, alertText;
-    public Button playAgain;
+    public Button submitResButton, playAgain;
     public string yourName, opponentName;
     public GameObject currentTile, solderTile;
     public int gameID;
     public InputField playerResGuess;
     public GameObject endGameOverlay;
+    public GameObject waitingForOpponent;
 
     private Dictionary<int, string> secondaryObjs;
     private Dictionary<int, ResistileServer.GameTile> tileLookup = (new ResistileServer.DeckManager()).allTiles;
@@ -190,13 +191,15 @@ public class GameHandler : MonoBehaviour {
         {
             headerText.GetComponent<Text>().text = "Your Turn!";
             endTurn.GetComponent<Button>().interactable = true;
-           // setAllTileDrag(true);
+            GameHandler.gameHandler.waitingForOpponent.SetActive(false);
+            // setAllTileDrag(true);
 
         }
         else
         {
             headerText.GetComponent<Text>().text = opponentName + "'s Turn";
             endTurn.GetComponent<Button>().interactable = false;
+            GameHandler.gameHandler.waitingForOpponent.SetActive(true);
             //setAllTileDrag(false);
         }
         

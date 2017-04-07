@@ -154,7 +154,6 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
         GameHandler.gameHandler.setTurn();
         GameHandler.gameHandler.setAllTileDrag(false);
         GameHandler.gameHandler.removeRotate(GameHandler.gameHandler.currentTile);
-        //DestroyObject(GameHandler.gameHandler.solderTile);
         GameHandler.gameHandler.cleanSolderedBoard();
         GameHandler.gameHandler.currentTile = null;
     }
@@ -180,6 +179,7 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
     private void gameOver(ResistileMessage messageFromThread)
     {
         GameHandler.gameHandler.guessScorePanel.SetActive(true);
+        GameHandler.gameHandler.endTurn.interactable = false;
     }
 
     private void gameResults(ResistileMessage message)
@@ -254,10 +254,12 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
     //TODO:
     public void guessResistance()
     {
-        Debug.Log("Guess Resistence Sent");
+        GameHandler.gameHandler.submitResButton.GetComponent<Button>().interactable = false;
+        GameHandler.gameHandler.playerResGuess.GetComponent<InputField>().interactable = false;
         ResistileMessage message = new ResistileMessage(0, ResistileMessageTypes.guessResistance, "");
         message.guess = float.Parse(GameHandler.gameHandler.playerResGuess.text);
         NetworkManager.networkManager.sendMessage(message);
+        
     }
 
     //TODO:

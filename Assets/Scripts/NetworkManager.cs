@@ -28,8 +28,8 @@ public class NetworkManager : MonoBehaviour {
         
         try
         {
-            //dest.Connect("127.0.0.1", 8888);
-            dest.Connect(Dns.GetHostAddresses("witr90gme4p.wit.private"), 8888);
+            dest.Connect("127.0.0.1", 8888);
+            //dest.Connect(Dns.GetHostAddresses("witr90gme4p.wit.private"), 8888);
             Debug.Log("Client Socket Program - Server Connected ...");
         }
         catch (Exception e)
