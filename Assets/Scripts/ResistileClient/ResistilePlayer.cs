@@ -15,6 +15,8 @@ namespace ResistileClient
         private const int MAXHAND = 5;
         public double guess;
         public bool guessed = false;
+        public bool replay = false;
+
         public ResistilePlayer()
         {
             

@@ -137,8 +137,9 @@ namespace ResistileServer
                     case ResistileMessageTypes.guessResistance:
                         handleGuessResistance(message);
                         break;
-                    //case ResistileMessageTypes.replay:
-                    //    break;
+                    case ResistileMessageTypes.replay:
+                        handleReplay(message);
+                        break;
                     //case ResistileMessageTypes.quitGame:
                     //    break;
                     case ResistileMessageTypes.applicationQuit:
@@ -151,6 +152,29 @@ namespace ResistileServer
                         break;
                     default:
                         break;
+                }
+            }
+        }
+
+        private void handleReplay(ResistileMessage message)
+        {
+            var player = gameManager.getPlayer(clName);
+            var opponent = gameManager.getOpponent(clName);
+            var opponentHandle = handleClients.Find(handle => handle.clName == opponent.userName);
+            if (message.replay == false)
+            {
+                var messageToSend = new ResistileMessage(gameID, ResistileMessageTypes.replay) {replay = false};
+                opponentHandle.writeClient(messageToSend);
+            }
+            else
+            {
+                player.replay = message.replay;
+                if (player.replay && opponent.replay)
+                {
+                    //send both replay
+                    var messageToSend = new ResistileMessage(gameID, ResistileMessageTypes.replay) { replay = true };
+                    writeClient(messageToSend);
+                    opponentHandle.writeClient(messageToSend);
                 }
             }
         }
@@ -168,19 +192,20 @@ namespace ResistileServer
                 //then send both the message
                 var sendThisMessage = new ResistileMessage(gameID, ResistileMessageTypes.gameResults);
                 sendThisMessage.messageArray = new ArrayList();
-                sendThisMessage.messageArray[0] = true; //primaryScore bool
-                sendThisMessage.messageArray[1] = true; //secondaryObj1 bool
-                sendThisMessage.messageArray[2] = true; // secondaryObj2 bool
-                sendThisMessage.messageArray[3] = true; // guessScore bool
+                sendThisMessage.messageArray.Add(true); //primaryScore bool
+                sendThisMessage.messageArray.Add(true); //secondaryObj1 bool
+                sendThisMessage.messageArray.Add(false); // secondaryObj2 bool
+                sendThisMessage.messageArray.Add(true); // guessScore bool
                 sendThisMessage.win = true;
                 writeClient(sendThisMessage);
+                sendThisMessage = new ResistileMessage(gameID, ResistileMessageTypes.gameResults);
                 var opponentHandle = handleClients.Find(handles => handles.clName == gameManager.getOpponent(clName).userName);
                 sendThisMessage.messageArray = new ArrayList();
-                sendThisMessage.messageArray[0] = false; //primaryScore bool
-                sendThisMessage.messageArray[1] = false; //secondaryObj1 bool
-                sendThisMessage.messageArray[2] = false; // secondaryObj2 bool
-                sendThisMessage.messageArray[3] = false; // guessScore bool
-                sendThisMessage.win = true;
+                sendThisMessage.messageArray.Add(false); //primaryScore bool
+                sendThisMessage.messageArray.Add(true); //secondaryObj1 bool
+                sendThisMessage.messageArray.Add(false); // secondaryObj2 bool
+                sendThisMessage.messageArray.Add(false); // guessScore bool
+                sendThisMessage.win = false;
                 opponentHandle.writeClient(sendThisMessage);
             }
             //var resistance = gameManager.calculateResistance();
