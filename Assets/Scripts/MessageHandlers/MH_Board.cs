@@ -161,7 +161,7 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
     private void invalidMove(ResistileMessage message)
     {
         GameHandler.gameHandler.alert("Invalid Move, Please Select a Valid Placement");
-        if (GameHandler.gameHandler.currentTile.GetComponent<TileData>().type.Contains("Resistor") || GameHandler.gameHandler.currentTile.GetComponent<TileData>().type == ResistileServer.GameTileTypes.solder)
+        if (GameHandler.gameHandler.currentTile.GetComponent<TileData>().type.Contains("Resistor"))
         {
             GameHandler.gameHandler.currentTile.transform.SetParent(GameHandler.gameHandler.resHand.transform, false);
         }
@@ -171,9 +171,10 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
         }
         if(GameHandler.gameHandler.solderTile != null)
         {
-            GameHandler.gameHandler.solderTile.transform.SetParent(GameHandler.gameHandler.resDeck.transform, false);
+            GameHandler.gameHandler.solderTile.transform.SetParent(GameHandler.gameHandler.resHand.transform, false);
         }
-
+        GameHandler.gameHandler.solder = null;
+        GameHandler.gameHandler.currentTile= null;
         GameHandler.gameHandler.setAllTileDrag(true);
     }
 
@@ -181,6 +182,8 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
     {
         GameHandler.gameHandler.guessScorePanel.SetActive(true);
         GameHandler.gameHandler.endTurn.interactable = false;
+        GameHandler.gameHandler.setAllTileDrag(false);
+        GameHandler.gameHandler.waitingForOpponent.SetActive(false);
     }
 
     private void gameResults(ResistileMessage message)
@@ -252,7 +255,6 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
         GameHandler.gameHandler.currentTile.GetComponent<Draggable>().enabled = false;
     }
 
-    //TODO:
     public void guessResistance()
     {
         GameHandler.gameHandler.submitResButton.GetComponent<Button>().interactable = false;
@@ -263,12 +265,13 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
         
     }
 
-    //TODO:
     public void replay()
     {
         ResistileMessage message = new ResistileMessage(0, ResistileMessageTypes.replay, "");
         message.replay = true;
         NetworkManager.networkManager.sendMessage(message);
+        GameHandler.gameHandler.playAgain.GetComponent<Button>().interactable = false;
+        GameHandler.gameHandler.alert("Waiting for Opponent");
     }
 
     public void noReplay()

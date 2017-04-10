@@ -5,8 +5,7 @@ namespace Assets.Scripts
 {
     public class Draggable : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler {
 
-        internal Transform _returnParent = null;
-        private GameObject _draggedGameObject = null;
+        internal Transform returnParent = null;
         void Start()
         {
 
@@ -14,21 +13,20 @@ namespace Assets.Scripts
 
         public void OnBeginDrag(PointerEventData eventData)
         { 
-            _draggedGameObject = this.gameObject;
-            _returnParent = _draggedGameObject.transform.parent;
-            _draggedGameObject.transform.SetParent(GameObject.Find("Canvas").transform);
-            _draggedGameObject.GetComponent<CanvasGroup>().blocksRaycasts = false;
+            returnParent = gameObject.transform.parent;
+            gameObject.transform.SetParent(GameObject.Find("Canvas").transform);
+            gameObject.GetComponent<CanvasGroup>().blocksRaycasts = false;
         }
 
         public void OnDrag(PointerEventData eventData)
         {
-            _draggedGameObject.transform.position = eventData.position;
+            gameObject.transform.position = eventData.position;
         }
 
         public void OnEndDrag(PointerEventData eventData)
         {
-            _draggedGameObject.transform.SetParent(_returnParent);
-            _draggedGameObject.transform.SetAsFirstSibling();
+            gameObject.transform.SetParent(returnParent);
+            gameObject.transform.SetAsFirstSibling();
             GetComponent<CanvasGroup>().blocksRaycasts = true;
         }
 

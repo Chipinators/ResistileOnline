@@ -228,6 +228,17 @@ public class GameHandler : MonoBehaviour {
         }
     }
 
+    public void setSolderTileDrag(bool isDrag)
+    {
+        Draggable[] resDrags = resHand.transform.GetComponentsInChildren<Draggable>();
+
+        foreach (Draggable drag in resDrags)
+        {
+            if(drag.gameObject.GetComponent<TileData>().type == ResistileServer.GameTileTypes.solder)
+                drag.enabled = isDrag;
+        }
+    }
+
     public void cleanSolderedBoard()
     {
         foreach(Transform node in gameBoard.transform)
@@ -306,6 +317,7 @@ public class GameHandler : MonoBehaviour {
     public void noPlayAgain()
     {
         playAgain.GetComponent<Button>().interactable = false;
+        alert("Opponent Declined a Rematch");
     }
 
     public ResistileServer.GameTile getGameTile(int i)
