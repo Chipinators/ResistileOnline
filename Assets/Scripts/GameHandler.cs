@@ -192,7 +192,6 @@ public class GameHandler : MonoBehaviour {
             headerText.GetComponent<Text>().text = "Your Turn!";
             endTurn.GetComponent<Button>().interactable = true;
             GameHandler.gameHandler.waitingForOpponent.SetActive(false);
-            // setAllTileDrag(true);
 
         }
         else
@@ -200,7 +199,6 @@ public class GameHandler : MonoBehaviour {
             headerText.GetComponent<Text>().text = opponentName + "'s Turn";
             endTurn.GetComponent<Button>().interactable = false;
             GameHandler.gameHandler.waitingForOpponent.SetActive(true);
-            //setAllTileDrag(false);
         }
         
     }

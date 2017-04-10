@@ -173,7 +173,8 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
         {
             GameHandler.gameHandler.solderTile.transform.SetParent(GameHandler.gameHandler.resDeck.transform, false);
         }
-        
+
+        GameHandler.gameHandler.setAllTileDrag(true);
     }
 
     private void gameOver(ResistileMessage messageFromThread)
