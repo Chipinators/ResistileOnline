@@ -19,6 +19,7 @@ public class NetworkManager : MonoBehaviour {
     public Thread readDataThread;
     public MessageHanderInterface messageInterface;
     public string opponent;
+    public bool runNetworkThread = true, quitGame = false;
 
     // Use this for initialization
     void Start () {
@@ -40,6 +41,14 @@ public class NetworkManager : MonoBehaviour {
         readDataThread.Start();
     }
 
+    void Update()
+    {
+        if (quitGame)
+        {
+            //UnityEditor.EditorApplication.Exit(0);
+            Application.Quit();
+        }
+    }
 
     void Awake()
     {
@@ -67,7 +76,7 @@ public class NetworkManager : MonoBehaviour {
 
     private void receiveMessage()
     {
-        while (true)
+        while (runNetworkThread)
         {
             NetworkStream serverStream = dest.GetStream();
             byte[] inStream = new byte[dest.ReceiveBufferSize];
