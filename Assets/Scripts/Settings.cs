@@ -9,19 +9,22 @@ public class Settings : MonoBehaviour {
     public Slider volumeSlider;
     public Dropdown resolutionDropdown;
     public Resolution[] resList;
+    public bool nameChange = false;
+    public string username;
     public Toggle fullscreenToggle;
     private bool isFullscreen;
-    private bool nameChange = false, resChange = true, fullscreenChange = false;
+    private bool resChange = true, fullscreenChange = false;
 
     void Start()
     {
-        usernameField.transform.FindChild("Placeholder").GetComponent<Text>().text = NetworkManager.networkManager.username;
-        volumeSlider.GetComponent<Slider>().value = AudioManager.audioManager.GetComponent<AudioSource>().volume;
+        usernameField.transform.FindChild("Placeholder").GetComponent<Text>().text = NetworkManager.networkManager.username;    //Set Username
+        volumeSlider.GetComponent<Slider>().value = AudioManager.audioManager.GetComponent<AudioSource>().volume;   //Set Volume Level
         resolutionDropdown.interactable = !isFullscreen;
         isFullscreen = Screen.fullScreen;
         fillResolutions();
         Resolution curRes = Screen.currentResolution;
         if (!curRes.Equals(resList[0])) resChange = true;
+        if (Screen.fullScreen) fullscreenToggle.isOn = true;    //Set Fullscreen
     }
 
     public void ApplySettings()
