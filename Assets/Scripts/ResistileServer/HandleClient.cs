@@ -401,7 +401,14 @@ namespace ResistileServer
         private void handleLogin(ResistileMessage message)
         {
             // create a player object with username
-            clName = message.message;
+            if (handleClients.Exists(handle => handle.clName == message.message))
+            {
+                writeClient(gameID, ResistileMessageTypes.login, "Not a valid username");
+            }
+            else
+            {
+                clName = message.message;
+            }
         }
 
         private void handlePing()
