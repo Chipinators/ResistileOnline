@@ -108,6 +108,7 @@ namespace ResistileServer
 
         public bool AddTileWithSolder(ResistilePlayer player, GameTile tile, GameTile solder, int[] coords)
         {
+
             player.hand.Remove(solder);
             AddTile(player, tile, coords);
             return false;
@@ -140,6 +141,31 @@ namespace ResistileServer
                 resistance = board.Calculate();
             }
             return resistance;
+        }
+
+        //1 EASY STREET: Have exactly three resistors in series back to back somewhere in the circuit.
+        //2 LONGEST ROAD: Have five or more resistors in series without being interrupted by branches.
+        //3 IT'S FUTILE: Solder out a piece (resistor or wire) and replace it with an identical piece.
+        //4 CLEAN HOUSE: Ensure the completed circuit has no loose ends.
+        //5 ALL THE CONNECTIONS: Esure that there are at least two loose ends when the circuit is complete.
+
+        //Check secondary objectives - end turn
+        //3 IT"S FUTILE
+
+        private bool[] secondaryObjectiveChecks = new bool[secondaryMAX];
+        private void checkEndTurnSecondaryObjectives()
+        {
+            
+        }
+
+        //Check secondary objectives - end game
+        //1 EASY STREET
+        //2 LONGEST ROAD
+        //4 CLEAN HOUSE
+        //5 ALL THE CONNECTIONS
+        private void checkEndGameSecondaryObjectives()
+        {
+            
         }
     }
 }
