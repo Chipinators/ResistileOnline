@@ -53,7 +53,7 @@ namespace ResistileServer
                 tempHand.Add(deck.drawResistorSolder());
             }
             var p2SecObj = CreateSecondaryObj();
-            //var p2SecObj = new[] {1, 2};
+            //var p2SecObj = new[] {3, 5};
             playerTwo = new ResistilePlayer(playerTwoUsername, tempHand, GetRandomPrimary(primaryMIN, primaryMAX), p2SecObj);
 
             currentTurnPlayer = random.Next(0, 2) == 1 ? playerOne : playerTwo;
@@ -98,7 +98,6 @@ namespace ResistileServer
         public bool AddTile(ResistilePlayer player, GameTile tile, int[] coords)
         {
             board.AddTile(tile, coords);
-            GameTile newTile;
             if (tile.type.Contains("Wire"))
             {
                 wireHand.Remove(tile);
@@ -143,6 +142,7 @@ namespace ResistileServer
         {
             if (!calculated)
             {
+                resistance = 10;
                 resistance = board.Calculate();
                 calculated = true;
             }
@@ -299,7 +299,7 @@ namespace ResistileServer
                 if(gameTile != null && gameTile != board.startTile && gameTile != board.endTile)
                     allPlacedTiles.Add(gameTile);   
             }
-            return allPlacedTiles.FindAll(tile => tile.neighbors.Values.Contains(null)).Count > 0;
+            return allPlacedTiles.FindAll(tile => tile.neighbors.Values.Contains(null)).Count == 0;
         }
         //5 ALL THE CONNECTIONS: Esure that there are at least two loose ends when the circuit is complete.
         private bool checkAllTheConnections()

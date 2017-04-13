@@ -10,6 +10,44 @@ namespace ResistileServer
     public class TestCases
     {
         [TestMethod]
+        public void testPrimary()
+        {
+            
+        }
+
+        [TestMethod]
+        public void testSecondary1()
+        {
+            var boardManager = new BoardManager();
+            var tile = new GameTile(GameTileTypes.Wire.typeI, -1);
+            var tile2 = new GameTile(GameTileTypes.Wire.typeII, -1);
+        }
+
+        [TestMethod]
+        public void testSecondary2()
+        {
+            
+        }
+
+        [TestMethod]
+        public void testSecondary3()
+        {
+            
+        }
+
+        [TestMethod]
+        public void testSecondary4()
+        {
+            
+        }
+
+        [TestMethod]
+        public void testSecondary5()
+        {
+            
+        }
+
+        [TestMethod]
         public void testWire()
         {
             var boardManager = new BoardManager();
