@@ -138,13 +138,14 @@ namespace ResistileServer
         }
 
         private double resistance = -1;
-        public double calculateResistance()
+        private bool calculated = false;
+        public void calculateResistance()
         {
-            if (resistance < 0)
+            if (!calculated)
             {
                 resistance = board.Calculate();
+                calculated = true;
             }
-            return resistance;
         }
 
         //Check secondary objectives - end turn
@@ -165,6 +166,16 @@ namespace ResistileServer
             }
         }
 
+        public void checkEndGamePrimaryObjective(ResistilePlayer player, ResistilePlayer opponent)
+        {
+            player.primaryAchieved = Math.Abs(resistance - player.primaryObjective) < Math.Abs(resistance - opponent.primaryObjective);
+            opponent.primaryAchieved = !player.primaryAchieved;
+        }
+
+        public void checkGuessAchieved(ResistilePlayer player)
+        {
+            player.guessAchieved = Math.Abs(resistance - player.guess) < 0.2;
+        }
 
         //Check secondary objectives - end game
         public void checkEndGameSecondaryObjectives(ResistilePlayer player)
@@ -300,6 +311,14 @@ namespace ResistileServer
                     allPlacedTiles.Add(gameTile);
             }
             return allPlacedTiles.FindAll(tile => tile.neighbors.Values.Contains(null)).Count >= 2;
+        }
+
+        public void calculateWhoWon(ResistilePlayer player, ResistilePlayer opponent)
+        {
+            int playerScore = (player.primaryAchieved ? 1 : 0 ) + (player.guessAchieved ? 1 : 0) + player.getSecondaryObjectiveResults().Count(e => e);
+            int opponentScore = (opponent.primaryAchieved ? 1 : 0) + (opponent.guessAchieved ? 1 : 0) + opponent.getSecondaryObjectiveResults().Count(e => e);
+            player.won = playerScore > opponentScore;
+            opponent.won = !player.won;
         }
     }
 }

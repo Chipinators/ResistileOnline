@@ -17,8 +17,22 @@ namespace ResistileServer
             {Directions.right, null}
         };
         public double resistance;
-        private int currentIndex = -1;
+        public int currentIndex = -1;
         public string type;
+
+        public GameTile firstAccessor;
+
+        public double getResistanceWithDirection(GameTile accessor)
+        {
+            if (accessor == firstAccessor)
+            {
+                return resistance;
+            }
+            else
+            {
+                return -resistance;
+            }
+        }
 
         public GameTile()
         {

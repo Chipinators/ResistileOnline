@@ -3,6 +3,7 @@ using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Accord.Math;
 
 namespace ResistileServer
 {
@@ -29,16 +30,109 @@ namespace ResistileServer
 
         public double Calculate()
         {
-            var resistance = 0;
             // every open end should reference to blocked direction tile
             blockOpenEnds();
+            addOneWireToAdjacentTWires();
             var paths = FindAllPaths();
             // one path, return sum of all.
             if (paths.Count == 1)
                 return paths[0].Sum(gameTile => gameTile.resistance);
-
-            
-            return resistance;
+            else
+            {
+                //first, put current index in each tile in paths.
+                int currentIndex = 0;
+                var allTWires = new List<GameTile>();
+                foreach (var path in paths)
+                {
+                    GameTile previousTile = path[0]; //should be endTile at the beginning.
+                    for (var i = 1; i < path.Count; i++)
+                    {
+                        GameTile tile = path[i];
+                        if (tile.firstAccessor == null)
+                        {
+                            tile.firstAccessor = previousTile;
+                            tile.currentIndex = currentIndex;
+                        }
+                        if (tile.type == GameTileTypes.Wire.typeT)
+                        {
+                            currentIndex++;
+                            if(!allTWires.Contains(tile))
+                                allTWires.Add(tile);
+                        }
+                            
+                        previousTile = tile;
+                    }
+                }
+                double voltage = 12;
+                double[,] solutionMatrix = new double[currentIndex + 1, currentIndex + 1];
+                double[,] rightSide = new double[currentIndex + 1, 1];
+                //then find first nonblockdir T mach, get current index,
+                //special case start tile
+                int row = 0;
+                if (
+                    startTile.neighbors.Values.Where(neighbor => neighbor != GameTile.blockedDirectionTile)
+                        .ToList()
+                        .Count == 2)
+                {
+                    var neighbor1 =
+                        startTile.neighbors.Values.First(neighbor => neighbor != GameTile.blockedDirectionTile);
+                    var neighbor2 =
+                        startTile.neighbors.Values.First(
+                            neighbor => neighbor != GameTile.blockedDirectionTile && neighbor != neighbor1);
+                    solutionMatrix[row, 0] = 1;
+                    solutionMatrix[row, neighbor1.currentIndex] = -1;
+                    solutionMatrix[row, neighbor2.currentIndex] = -1;
+                    rightSide[row, 0] = 0;
+                }
+                else
+                {
+                    var neighbor1 =
+                        startTile.neighbors.Values.First(neighbor => neighbor != GameTile.blockedDirectionTile);
+                    solutionMatrix[row, 0] = 1;
+                    solutionMatrix[row, neighbor1.currentIndex] = -1;
+                    rightSide[row, 0] = 0;
+                }
+                row++;
+                foreach (var wire in allTWires)
+                {
+                    var neighborA = wire.neighbors.Values.First(neighbor => neighbor != GameTile.blockedDirectionTile);
+                    var neighborB = wire.neighbors.Values.First(neighbor => neighbor != GameTile.blockedDirectionTile && neighbor != neighborA);
+                    var neighborC = wire.neighbors.Values.First(neighbor => neighbor != GameTile.blockedDirectionTile && neighbor != neighborA && neighbor != neighborB);
+                    solutionMatrix[row, neighborA.currentIndex] = 1;
+                    solutionMatrix[row, neighborB.currentIndex] = -1;
+                    solutionMatrix[row, neighborC.currentIndex] = -1;
+                    rightSide[row, 0] = 0;
+                    row += row < currentIndex ? 1 : 0; //just in case
+                }
+                foreach (var path in paths)
+                {
+                    double tempResistance = 0;
+                    int tempIndex = 0;
+                    for (var i = 1; i < path.Count; i++)
+                    {
+                        GameTile tempTile = path[i];
+                        if (tempTile.currentIndex == tempIndex)
+                        {
+                            tempResistance += tempTile.resistance;
+                        }
+                        else
+                        {
+                            solutionMatrix[row, tempIndex] = tempResistance;
+                            tempResistance = tempTile.resistance;
+                        }
+                        tempIndex = tempTile.currentIndex;
+                    }
+                    rightSide[row, 0] = voltage;
+                    row += row < currentIndex ? 1 : 0; //just in case
+                }
+                //specific equals case for start and end tiles.
+                //     set that 1, get other neighbors, their current indexes, 0 into solution matrix
+                //Ideally, matrix should be square, but can be approximated if less.
+                
+                var amp = solutionMatrix.Solve(rightSide, leastSquares: true)[0, 0];
+                double totalResistance = voltage / amp;
+                return totalResistance;;
+            }
         }
 
         private List<List<GameTile>> FindAllPaths()
@@ -68,7 +162,7 @@ namespace ResistileServer
                     {
                         //there will be two nodes to be traversed
                         //those neighbors should be the ones not in the current visit.
-                        var addToBeTraversedList = tempTile.neighbors.Values.Where(search => !currentVisits.Contains(search));
+                        var addToBeTraversedList = tempTile.neighbors.Values.Where(search => search != GameTile.blockedDirectionTile && !currentVisits.Contains(search));
                         foreach (var addToBeTraversed in addToBeTraversedList)
                         {
                             toBeTraversed.Add(addToBeTraversed);
@@ -78,16 +172,41 @@ namespace ResistileServer
                     }
                     else
                     {
-                        tempTile = tempTile.neighbors.Values.FirstOrDefault(search => !currentVisits.Contains(search));
+                        tempTile = tempTile.neighbors.Values.FirstOrDefault(search => search != GameTile.blockedDirectionTile && !currentVisits.Contains(search));
                     }
                 }
 
                 if (tempTile == startTile)
                     paths.Add(tempPath);
+                    
             }
             return paths;
         }
 
+        private void addOneWireToAdjacentTWires()
+        {
+            foreach (GameTile gameTile in board)
+            {
+                if (gameTile != null && gameTile.type == GameTileTypes.Wire.typeT)
+                {
+                    var neighbors = gameTile.neighbors.ToList();
+                    for (int index = 0; index < neighbors.Count; index++)
+                    {
+                        var neighbor = neighbors[index];
+                        if (neighbor.Value.type == GameTileTypes.Wire.typeT)
+                        {
+                            var facingDirection = Directions.Facing[neighbor.Key];
+                            var tileToBeAdded = new GameTile(GameTileTypes.Wire.typeI, 1);
+                            gameTile.neighbors[neighbor.Key] = tileToBeAdded;
+                            tileToBeAdded.neighbors[Directions.left] = gameTile;
+                            tileToBeAdded.neighbors[Directions.right] = neighbor.Value;
+                            neighbor.Value.neighbors[facingDirection] = tileToBeAdded;
+                        }
+                    }
+                }
+            }
+
+        }
         private void blockOpenEnds()
         {
             // for every open end,
