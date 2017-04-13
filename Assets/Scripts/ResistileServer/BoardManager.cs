@@ -17,7 +17,7 @@ namespace ResistileServer
         public bool isGameOver = false;
         public GameTile[,] board = new GameTile[xlength, ylength];
 
-        private GameTile startTile, endTile;
+        public GameTile startTile, endTile;
         public BoardManager()
         {
             startTile = new GameTile(GameTileTypes.Wire.typeT);

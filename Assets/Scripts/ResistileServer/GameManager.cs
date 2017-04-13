@@ -41,7 +41,9 @@ namespace ResistileServer
             {
                 tempHand.Add(deck.drawResistorSolder());
             }
-            playerOne = new ResistilePlayer(playerOneUsername, tempHand, GetRandomPrimary(primaryMIN, primaryMAX), CreateSecondaryObj());
+            var p1SecObj = CreateSecondaryObj();
+            //var p1SecObj = new[] {1, 2}; //to set objectives manually for testing
+            playerOne = new ResistilePlayer(playerOneUsername, tempHand, GetRandomPrimary(primaryMIN, primaryMAX), p1SecObj);
             /*
             Initialize playerTwo
             */
@@ -50,7 +52,9 @@ namespace ResistileServer
             {
                 tempHand.Add(deck.drawResistorSolder());
             }
-            playerTwo = new ResistilePlayer(playerTwoUsername, tempHand, GetRandomPrimary(primaryMIN, primaryMAX), CreateSecondaryObj());
+            var p2SecObj = CreateSecondaryObj();
+            //var p2SecObj = new[] {1, 2};
+            playerTwo = new ResistilePlayer(playerTwoUsername, tempHand, GetRandomPrimary(primaryMIN, primaryMAX), p2SecObj);
 
             currentTurnPlayer = random.Next(0, 2) == 1 ? playerOne : playerTwo;
             for (int i = 0; i < MAXHAND; i++)
@@ -108,7 +112,7 @@ namespace ResistileServer
 
         public bool AddTileWithSolder(ResistilePlayer player, GameTile tile, GameTile solder, int[] coords)
         {
-
+            checkItsFutile(player, tile, coords);
             player.hand.Remove(solder);
             AddTile(player, tile, coords);
             return false;
@@ -143,29 +147,159 @@ namespace ResistileServer
             return resistance;
         }
 
-        //1 EASY STREET: Have exactly three resistors in series back to back somewhere in the circuit.
-        //2 LONGEST ROAD: Have five or more resistors in series without being interrupted by branches.
-        //3 IT'S FUTILE: Solder out a piece (resistor or wire) and replace it with an identical piece.
-        //4 CLEAN HOUSE: Ensure the completed circuit has no loose ends.
-        //5 ALL THE CONNECTIONS: Esure that there are at least two loose ends when the circuit is complete.
-
         //Check secondary objectives - end turn
-        //3 IT"S FUTILE
+        //private void checkEndTurnSecondaryObjectives(GameTile tile, int[] coords)
+        //{
+        //}
 
-        private bool[] secondaryObjectiveChecks = new bool[secondaryMAX];
-        private void checkEndTurnSecondaryObjectives()
+        //3 IT'S FUTILE: Solder out a piece (resistor or wire) and replace it with an identical piece.
+        private void checkItsFutile(ResistilePlayer player, GameTile tile, int[] coords)
         {
-            
+            if (player.secondaryObjectiveChecks[3] == false)
+            {
+                var tileToBeChecked = board.board[coords[0], coords[1]];
+                bool check = tileToBeChecked.type == tile.type && tileToBeChecked.rotation == tile.rotation &&
+                    (Math.Abs(tileToBeChecked.resistance - tile.resistance) < 0.01);
+
+                player.secondaryObjectiveChecks[3] = check; // once its true, its always true.
+            }
         }
 
+
         //Check secondary objectives - end game
-        //1 EASY STREET
-        //2 LONGEST ROAD
-        //4 CLEAN HOUSE
-        //5 ALL THE CONNECTIONS
-        private void checkEndGameSecondaryObjectives()
+        public void checkEndGameSecondaryObjectives(ResistilePlayer player)
         {
-            
+            var objectives = player.secondaryObjective;
+            foreach (var objective in objectives)
+            {
+                switch (objective)
+                {
+                    case 1:
+                        player.secondaryObjectiveChecks[1] = checkEasyStreet();
+                        break;
+                    case 2:
+                        player.secondaryObjectiveChecks[2] = checkLongestRoad();
+                        break;
+                    case 4:
+                        player.secondaryObjectiveChecks[4] = checkCleanHouse();
+                        break;
+                    case 5:
+                        player.secondaryObjectiveChecks[5] = checkAllTheConnections();
+                        break;
+                }
+            }
+        }
+
+        //1 EASY STREET: Have exactly three resistors in series back to back somewhere in the circuit.
+        private bool checkEasyStreet()
+        {
+            //foreach tile on board, check backward, then check forward neighbors.
+            List<GameTile> allResistorTiles = new List<GameTile>();
+            foreach (var gameTile in board.board)
+            {
+                if (gameTile != null && gameTile.type.Contains("Resistor"))
+                {
+                    allResistorTiles.Add(gameTile);
+                }
+            }   
+            foreach (var aResistorTile in allResistorTiles)
+            {
+                var neighborTraversed = new ArrayList();
+                neighborTraversed.Add(aResistorTile);
+                var neighborA = aResistorTile.neighbors.First(neighbor => neighbor.Value != GameTile.blockedDirectionTile).Value;
+                var neighborB = aResistorTile.neighbors.First(neighbor => neighbor.Value != GameTile.blockedDirectionTile && neighbor.Value != neighborA).Value;
+                for (var i = 0; i < neighborTraversed.Count; i++)
+                {
+                    if (neighborA != null && neighborA.type.Contains("Resistor"))
+                    {
+                        neighborTraversed.Add(neighborA);
+                        neighborA =
+                            neighborA.neighbors.First(
+                                neighbor =>
+                                    neighbor.Value != GameTile.blockedDirectionTile &&
+                                    !neighborTraversed.Contains(neighbor.Value)).Value;
+                    }
+                    if (neighborB != null && neighborB.type.Contains("Resistor"))
+                    {
+                        neighborTraversed.Add(neighborB);
+                        neighborB =
+                            neighborB.neighbors.First(
+                                neighbor =>
+                                    neighbor.Value != GameTile.blockedDirectionTile &&
+                                    !neighborTraversed.Contains(neighbor.Value)).Value;
+                    }
+                }
+                if (neighborTraversed.Count == 3)
+                    return true;
+            }
+
+            return false;
+        }
+        //2 LONGEST ROAD: Have five or more resistors in series without being interrupted by branches.
+        private bool checkLongestRoad()
+        {
+            //foreach tile on board, check backward, then check forward neighbors.
+            List<GameTile> allResistorTiles = new List<GameTile>();
+            foreach (var gameTile in board.board)
+            {
+                if (gameTile != null && gameTile.type.Contains("Resistor"))
+                {
+                    allResistorTiles.Add(gameTile);
+                }
+            }
+            foreach (var aResistorTile in allResistorTiles)
+            {
+                var neighborTraversed = new List<GameTile>();
+                neighborTraversed.Add(aResistorTile);
+                var neighborA = aResistorTile.neighbors.First(neighbor => neighbor.Value != GameTile.blockedDirectionTile).Value;
+                var neighborB = aResistorTile.neighbors.First(neighbor => neighbor.Value != GameTile.blockedDirectionTile && neighbor.Value != neighborA).Value;
+                for (var i = 0; i < neighborTraversed.Count; i++)
+                {
+                    if (neighborA != null && neighborA.type != GameTileTypes.Wire.typeT)
+                    {
+                        neighborTraversed.Add(neighborA);
+                        neighborA =
+                            neighborA.neighbors.First(
+                                neighbor =>
+                                    neighbor.Value != GameTile.blockedDirectionTile &&
+                                    !neighborTraversed.Contains(neighbor.Value)).Value;
+                    }
+                    if (neighborB != null && neighborB.type != GameTileTypes.Wire.typeT)
+                    {
+                        neighborTraversed.Add(neighborB);
+                        neighborB =
+                            neighborB.neighbors.First(
+                                neighbor =>
+                                    neighbor.Value != GameTile.blockedDirectionTile &&
+                                    !neighborTraversed.Contains(neighbor.Value)).Value;
+                    }
+                }
+                if (neighborTraversed.FindAll(neighbor => neighbor.type.Contains("Resistor")).Count >= 5)
+                    return true;
+            }
+            return false;
+        }
+        //4 CLEAN HOUSE: Ensure the completed circuit has no loose ends.
+        private bool checkCleanHouse()
+        {
+            var allPlacedTiles = new List<GameTile>();
+            foreach (var gameTile in board.board)
+            {
+                if(gameTile != null && gameTile != board.startTile && gameTile != board.endTile)
+                    allPlacedTiles.Add(gameTile);   
+            }
+            return allPlacedTiles.FindAll(tile => tile.neighbors.Values.Contains(null)).Count > 0;
+        }
+        //5 ALL THE CONNECTIONS: Esure that there are at least two loose ends when the circuit is complete.
+        private bool checkAllTheConnections()
+        {
+            var allPlacedTiles = new List<GameTile>();
+            foreach (var gameTile in board.board)
+            {
+                if (gameTile != null && gameTile != board.startTile && gameTile != board.endTile)
+                    allPlacedTiles.Add(gameTile);
+            }
+            return allPlacedTiles.FindAll(tile => tile.neighbors.Values.Contains(null)).Count >= 2;
         }
     }
 }

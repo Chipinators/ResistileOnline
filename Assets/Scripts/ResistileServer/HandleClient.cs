@@ -189,7 +189,8 @@ namespace ResistileServer
 
         private void handleGuessResistance(ResistileMessage message)
         {
-            gameManager.getPlayer(clName).setGuess(message.guess);
+            var player = gameManager.getPlayer(clName);
+            player.setGuess(message.guess);
             if (gameManager.getPlayer(clName).guessed && gameManager.getOpponent(clName).guessed)
             {
                 //TODO: program this
@@ -201,17 +202,21 @@ namespace ResistileServer
                 var sendThisMessage = new ResistileMessage(gameID, ResistileMessageTypes.gameResults);
                 sendThisMessage.messageArray = new ArrayList();
                 sendThisMessage.messageArray.Add(true); //primaryScore bool
-                sendThisMessage.messageArray.Add(true); //secondaryObj1 bool
-                sendThisMessage.messageArray.Add(false); // secondaryObj2 bool
+                var playerSecondaryObjectives = player.getSecondaryObjectiveValues();
+                sendThisMessage.messageArray.Add(playerSecondaryObjectives[0]); //secondaryObj1 bool
+                sendThisMessage.messageArray.Add(playerSecondaryObjectives[1]); // secondaryObj2 bool
                 sendThisMessage.messageArray.Add(true); // guessScore bool
                 sendThisMessage.win = true;
                 writeClient(sendThisMessage);
+
+                var opponent = gameManager.getOpponent(clName);
                 sendThisMessage = new ResistileMessage(gameID, ResistileMessageTypes.gameResults);
                 var opponentHandle = handleClients.Find(handles => handles.clName == gameManager.getOpponent(clName).userName);
                 sendThisMessage.messageArray = new ArrayList();
                 sendThisMessage.messageArray.Add(false); //primaryScore bool
-                sendThisMessage.messageArray.Add(true); //secondaryObj1 bool
-                sendThisMessage.messageArray.Add(false); // secondaryObj2 bool
+                var opponentSecondaryObjectives = opponent.getSecondaryObjectiveValues();
+                sendThisMessage.messageArray.Add(opponentSecondaryObjectives[0]); //secondaryObj1 bool
+                sendThisMessage.messageArray.Add(opponentSecondaryObjectives[1]); // secondaryObj2 bool
                 sendThisMessage.messageArray.Add(false); // guessScore bool
                 sendThisMessage.win = false;
                 opponentHandle.writeClient(sendThisMessage);
@@ -286,7 +291,8 @@ namespace ResistileServer
             writeClient(gameID, ResistileMessageTypes.validMove, "");
             if (isGameOver)
             {
-
+                gameManager.checkEndGameSecondaryObjectives(player);
+                gameManager.checkEndGameSecondaryObjectives(opponent);
                 writeClient(gameID, ResistileMessageTypes.gameOver);
                 opponentHandle.writeClient(gameID, ResistileMessageTypes.gameOver);
             }
