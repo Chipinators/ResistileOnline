@@ -32,6 +32,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Accord">
+      <HintPath>..\..\packages\Accord.3.4.0\lib\net35\Accord.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Accord.Math">
+      <HintPath>..\..\packages\Accord.Math.3.4.0\lib\net35\Accord.Math.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Accord.Math.Core">
+      <HintPath>..\..\packages\Accord.Math.3.4.0\lib\net35\Accord.Math.Core.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Microsoft Visual Studio 14.0\Common7\IDE\PublicAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</HintPath>

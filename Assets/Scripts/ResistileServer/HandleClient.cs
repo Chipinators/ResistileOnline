@@ -298,12 +298,14 @@ namespace ResistileServer
             writeClient(gameID, ResistileMessageTypes.validMove, "");
             if (isGameOver)
             {
+                writeClient(gameID, ResistileMessageTypes.gameOver);
+                opponentHandle.writeClient(gameID, ResistileMessageTypes.gameOver);
+
                 gameManager.checkEndGameSecondaryObjectives(player);
                 gameManager.checkEndGameSecondaryObjectives(opponent);
                 gameManager.calculateResistance();
                 gameManager.checkEndGamePrimaryObjective(player, opponent);
-                writeClient(gameID, ResistileMessageTypes.gameOver);
-                opponentHandle.writeClient(gameID, ResistileMessageTypes.gameOver);
+                
             }
             else
             {

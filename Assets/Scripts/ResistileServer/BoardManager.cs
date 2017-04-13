@@ -414,35 +414,101 @@ namespace ResistileServer
 
         public bool IsValidSolder(GameTile newtile, Coordinates coordinates)
         {
-            bool isValid = true;
             if (board[coordinates.x(), coordinates.y()] == null)
             {
                 return false;
             }
-
-
+            
             var tileOnBoard = board[coordinates.x(), coordinates.y()];
-            foreach (var neighbor in tileOnBoard.neighbors)
+            //up
+            if (newtile.neighbors[Directions.up] == null)
             {
-                if (neighbor.Value == GameTile.blockedDirectionTile)
+                var newcoords = coordinates.up();
+                var test = IsOutOfBoard(newcoords.x(), newcoords.y());
+                if (test)
+                    return false;
+                var testedNeighbor = board[newcoords.x(), newcoords.y()];
+                if (testedNeighbor != null && testedNeighbor.neighbors[Directions.down] == GameTile.blockedDirectionTile)
+                    return false;
+            }
+            else
+            {
+                var newcoords = coordinates.up();
+                var test = IsOutOfBoard(newcoords.x(), newcoords.y());
+                if (!test)
                 {
-                    if (newtile.neighbors[neighbor.Key] == null)
-                    {
-                        var facingDirection = Directions.Facing[neighbor.Key];
-                        var facingTile = board[coordinates.getDirection(neighbor.Key).x(),
-                            coordinates.getDirection(neighbor.Key).y()];
-                        if (facingTile != null && facingTile.neighbors[facingDirection] == GameTile.blockedDirectionTile)
-                        {
-                            isValid = false;
-                        }
-                    }
-                    else
-                    {
-                        isValid &= newtile.neighbors[neighbor.Key] == neighbor.Value;
-                    }
+                    var testedNeighbor = board[newcoords.x(), newcoords.y()];
+                    if (testedNeighbor != null && testedNeighbor.neighbors[Directions.down] == GameTile.blockedDirectionTile)
+                        return false;
                 }
             }
-            return isValid;
+            //down
+            if (newtile.neighbors[Directions.down] == null)
+            {
+                var newcoords = coordinates.down();
+                var test = IsOutOfBoard(newcoords.x(), newcoords.y());
+                if (test)
+                    return false;
+                var testedNeighbor = board[newcoords.x(), newcoords.y()];
+                if (testedNeighbor != null && testedNeighbor.neighbors[Directions.up] == GameTile.blockedDirectionTile)
+                    return false;
+            }
+            else
+            {
+                var newcoords = coordinates.down();
+                var test = IsOutOfBoard(newcoords.x(), newcoords.y());
+                if (!test)
+                {
+                    var testedNeighbor = board[newcoords.x(), newcoords.y()];
+                    if (testedNeighbor != null && testedNeighbor.neighbors[Directions.up] == GameTile.blockedDirectionTile)
+                        return false;
+                }
+            }
+            //left
+            if (newtile.neighbors[Directions.left] == null)
+            {
+                var newcoords = coordinates.left();
+                var test = IsOutOfBoard(newcoords.x(), newcoords.y());
+                if (test)
+                    return false;
+                var testedNeighbor = board[newcoords.x(), newcoords.y()];
+                if (testedNeighbor != null && testedNeighbor.neighbors[Directions.right] == GameTile.blockedDirectionTile)
+                    return false;
+            }
+            else
+            {
+                var newcoords = coordinates.left();
+                var test = IsOutOfBoard(newcoords.x(), newcoords.y());
+                if (!test)
+                {
+                    var testedNeighbor = board[newcoords.x(), newcoords.y()];
+                    if (testedNeighbor != null && testedNeighbor.neighbors[Directions.right] == GameTile.blockedDirectionTile)
+                        return false;
+                }
+            }
+            //right
+            if (newtile.neighbors[Directions.right] == null)
+            {
+                var newcoords = coordinates.right();
+                var test = IsOutOfBoard(newcoords.x(), newcoords.y());
+                if (test)
+                    return false;
+                var testedNeighbor = board[newcoords.x(), newcoords.y()];
+                if (testedNeighbor != null && testedNeighbor.neighbors[Directions.left] == GameTile.blockedDirectionTile)
+                    return false;
+            }
+            else
+            {
+                var newcoords = coordinates.right();
+                var test = IsOutOfBoard(newcoords.x(), newcoords.y());
+                if (!test)
+                {
+                    var testedNeighbor = board[newcoords.x(), newcoords.y()];
+                    if (testedNeighbor != null && testedNeighbor.neighbors[Directions.left] == GameTile.blockedDirectionTile)
+                        return false;
+                }
+            }
+            return true;
         }
 
         // Check if tile has an end looking out of the board
