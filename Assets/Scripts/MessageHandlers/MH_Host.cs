@@ -11,6 +11,7 @@ public class MH_Host : MonoBehaviour, MessageHanderInterface {
     private int msgFromThread = -1;
     private ResistileMessage messageFromThread;
     private System.Object thisLock = new System.Object();
+    private float pingWaitingTimer = 5.0f;
 
     void Start()
     {
@@ -57,6 +58,12 @@ public class MH_Host : MonoBehaviour, MessageHanderInterface {
             }
             msgFromThread = -1;
         }
+        if (pingWaitingTimer <= 0)
+        {
+            ping();
+            pingWaitingTimer = 5.0f;
+        }
+        else pingWaitingTimer -= Time.deltaTime;
     }
 
     //RECEIVE MESSAGES FROM SERVER
@@ -85,15 +92,18 @@ public class MH_Host : MonoBehaviour, MessageHanderInterface {
 
     public void cancelSearch()
     {
-        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.cancelSearch, NetworkManager.networkManager.username));
-        SceneManager.LoadScene("MainMenu");
+        if(NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.cancelSearch, NetworkManager.networkManager.username)))
+            SceneManager.LoadScene("MainMenu");
     }
 
     public void acceptOpponent()
     {
-        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.acceptOpponent, opponentName.GetComponent<Text>().text));
-        SceneManager.LoadScene("Board");
+        if(NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.acceptOpponent, opponentName.GetComponent<Text>().text)))
+            SceneManager.LoadScene("Board");
     }
 
-
+    private bool ping()
+    {
+        return NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.ping, ""));
+    }
 }

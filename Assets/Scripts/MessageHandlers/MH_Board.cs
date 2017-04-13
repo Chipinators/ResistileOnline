@@ -11,6 +11,7 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
     private int msgFromThread = -1;
     private ResistileMessage messageFromThread;
     private System.Object thisLock = new System.Object();
+    private float pingWaitingTimer = 5.0f;
 
     // Use this for initialization
     void Start () {
@@ -102,7 +103,12 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
                 opponentQuit(messageFromThread);
             }
             msgFromThread = -1;
-
+            if (pingWaitingTimer <= 0)
+            {
+                ping();
+                pingWaitingTimer = 5.0f;
+            }
+            else pingWaitingTimer -= Time.deltaTime;
         }
         
     }
@@ -160,7 +166,7 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
 
     private void invalidMove(ResistileMessage message)
     {
-        GameHandler.gameHandler.alert("Invalid Move, Please Select a Valid Placement");
+        GameHandler.gameHandler.alert.alert("Invalid Move, Please Select a Valid Placement", 2.0f, true);
         if (GameHandler.gameHandler.currentTile.GetComponent<TileData>().type.Contains("Resistor"))
         {
             GameHandler.gameHandler.currentTile.transform.SetParent(GameHandler.gameHandler.resHand.transform, false);
@@ -211,9 +217,8 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
 
     private void opponentQuit(ResistileMessage message)
     {
-        GameHandler.gameHandler.alert("Opponent Left The Game, Returning To Main Menu");
+        GameHandler.gameHandler.alert.alert("Opponent Left The Game, Returning To Main Menu", 4.0f, true);
         StartCoroutine(backToMainMenu());
-
     }
 
     private IEnumerator backToMainMenu()
@@ -271,7 +276,7 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
         message.replay = true;
         NetworkManager.networkManager.sendMessage(message);
         GameHandler.gameHandler.playAgain.GetComponent<Button>().interactable = false;
-        GameHandler.gameHandler.alert("Waiting for Opponent");
+        GameHandler.gameHandler.alert.alert("Waiting for Opponent to Accept", 3.0f, false);
     }
 
     public void noReplay()
@@ -280,5 +285,10 @@ public class MH_Board : MonoBehaviour, MessageHanderInterface {
         message.replay = false;
         NetworkManager.networkManager.sendMessage(message);
         SceneManager.LoadScene("MainMenu");
+    }
+
+    private bool ping()
+    {
+        return NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.ping, ""));
     }
 }

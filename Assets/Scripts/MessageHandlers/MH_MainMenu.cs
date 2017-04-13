@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using ResistileClient;
 using UnityEngine.SceneManagement;
+using System;
 
 public class MH_MainMenu : MonoBehaviour, MessageHanderInterface {
     void Start()
@@ -29,30 +30,33 @@ public class MH_MainMenu : MonoBehaviour, MessageHanderInterface {
     //SEND MESSAGES TO SERVER
     public void startHosting()
     {
-        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.startHosting, NetworkManager.networkManager.username));
-        SceneManager.LoadScene("HostWaitingScreen");
+        if(NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.startHosting, NetworkManager.networkManager.username))) {
+            SceneManager.LoadScene("HostWaitingScreen");
+        }
+        
     }
 
     public void serverBrowser()
     {
-        SceneManager.LoadScene("ServerBrowser");
+        if(ping())
+            SceneManager.LoadScene("ServerBrowser");
     }
 
     public void tutorial()
     {
-        ping();
-        SceneManager.LoadScene("Tutorial");
+        if (ping())
+            SceneManager.LoadScene("Tutorial");
     }
 
     public void settings()
     {
-        ping();
-        SceneManager.LoadScene("SettingsMenu");
+        if (ping())
+            SceneManager.LoadScene("SettingsMenu");
     }
 
-    private void ping()
+    private bool ping()
     {
-        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.ping, ""));
+        return NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.ping, ""));
     }
 
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using ResistileClient;
 
 public class Settings : MonoBehaviour {
 
@@ -29,9 +30,10 @@ public class Settings : MonoBehaviour {
 
     public void ApplySettings()
     {
-        if (nameChange) NetworkManager.networkManager.username = usernameField.transform.FindChild("Text").GetComponent<Text>().text;
         if (resChange) setResolution();
         if (fullscreenChange) setFullScreen();
+        username = GetComponent<Settings>().usernameField.transform.FindChild("Text").GetComponent<Text>().text;
+        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.login, username));
     }
 
     public void setVolume(float value)

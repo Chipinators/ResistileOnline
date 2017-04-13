@@ -13,9 +13,9 @@ public class QuitGame : MonoBehaviour {
 
     public void quitGame()
     {
-        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.applicationQuit, NetworkManager.networkManager.username));
         NetworkManager.networkManager.runNetworkThread = false;
         NetworkManager.networkManager.quitGame = true;
+        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.applicationQuit, NetworkManager.networkManager.username));
     }
 
     public void declineQuit()

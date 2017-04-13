@@ -22,19 +22,11 @@ public class HostScreenPanelAdapter : MonoBehaviour {
         {
             waitingPanel.SetActive(true);
             foundPanel.SetActive(false);
-            //waitCanvas.alpha = 1;
-            //waitCanvas.blocksRaycasts = true;
-            //foundCanvas.alpha = 0;
-            //foundCanvas.blocksRaycasts = false;
         }
         else
         {
             waitingPanel.SetActive(false);
             foundPanel.SetActive(true);
-            //waitCanvas.alpha = 0;
-            //waitCanvas.blocksRaycasts = false;
-            //foundCanvas.alpha = 1;
-            //foundCanvas.blocksRaycasts = true;
         }
     }
 

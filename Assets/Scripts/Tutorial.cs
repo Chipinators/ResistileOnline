@@ -56,11 +56,11 @@ public class Tutorial : MonoBehaviour {
         headerText.Add(2, "Secondary Objectives:");
         bodyText.Add(2, "These are your Secondary Objectives. You will earn 1 bonus point at the end of the game for each Secondary Objective you complete.");
         headerText.Add(3, "Resistor Hand:");
-        bodyText.Add(3, "This is your Resistor Hand. These tiles will increase the resistance of the circuit. Solder Tiles will also appear in this hand. A Solder Tile will allow you to remove a Tile from the current circuit and replace it with a new valid Tile.");
+        bodyText.Add(3, "This is your Resistor Hand.These tiles are available only to you. Resistor Tiles will increase the resistance of the circuit. Solder Tiles will also appear in this hand. A Solder Tile will allow you to remove a Tile from the current circuit and replace it with a new valid Tile.");
         headerText.Add(4, "Wire Hand:");
         bodyText.Add(4, "This is your Wire Hand. These Tiles are shared between you and your opponent. A Wire Tile can be placed on your turn instead of placing one of your Resistor Tiles if you wish to not change the resistance of the circuit. The Wire Hand will also contain T-Shape Tiles. These tiles will create a parallel circuit, reducing the overall resistance of the circuit.");
         headerText.Add(5, "Game Board:");
-        bodyText.Add(5, "This is the Game Board. On your turn you will place either a Resistor Tile or Wire tile on one of the open connections from the start node. At any point of the game when a connection has been made between the Start Node and End Node the game will be over.");
+        bodyText.Add(5, "This is the Game Board. Both you and your opponent will place Tiles on the same board. On your turn you will place either a Resistor Tile or Wire tile on one of the open connections from the start node. At any point of the game when a connection has been made between the Start Node and End Node the game will be over.");
         headerText.Add(6, "Start Node:");
         bodyText.Add(6, "This is the Start Node. You can place a connecting node on either side of the Start Node at any point of the game. If only one side of the Start Node has a connection the other side will not be considered in the final calculation.");
         headerText.Add(7, "End Node:");

@@ -11,6 +11,8 @@ public class MH_ServerBrowser : MonoBehaviour, MessageHanderInterface {
     private int msgFromThread = -1;
     private ResistileMessage messageFromThread;
     private System.Object thisLock = new System.Object();
+    private float pingWaitingTimer = 5.0f;
+
     void Start()
     {
         GameObject.FindGameObjectWithTag("NetworkManager").GetComponent<NetworkManager>().messageInterface = this;
@@ -64,6 +66,12 @@ public class MH_ServerBrowser : MonoBehaviour, MessageHanderInterface {
                 hostNotFound(messageFromThread);
             }
             msgFromThread = -1;
+            if (pingWaitingTimer <= 0)
+            {
+                ping();
+                pingWaitingTimer = 5.0f;
+            }
+            else pingWaitingTimer -= Time.deltaTime;
         }
     }
 
@@ -91,7 +99,6 @@ public class MH_ServerBrowser : MonoBehaviour, MessageHanderInterface {
 
     private void hostNotFound(ResistileMessage message)
     {
-        //TODO Add alert
         panelManager.GetComponent<HostScreenPanelAdapter>().isWaiting = true;
         getHostList();
     }
@@ -109,27 +116,39 @@ public class MH_ServerBrowser : MonoBehaviour, MessageHanderInterface {
     public void joinLobby(string username)
     {
         NetworkManager.networkManager.username = username;
-        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.requestJoinGame, username));
-        panelManager.GetComponent<HostScreenPanelAdapter>().isWaiting = false;
+        if(NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.requestJoinGame, username)))
+        {
+            panelManager.GetComponent<HostScreenPanelAdapter>().isWaiting = false;
+        }
     }
 
     public void cancelRequest()
     {
-        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.cancelJoinRequest, NetworkManager.networkManager.username));
-        panelManager.GetComponent<HostScreenPanelAdapter>().isWaiting = true;
-        NetworkManager.networkManager.username = "";
+        if(NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.cancelJoinRequest, NetworkManager.networkManager.username)))
+        {
+            panelManager.GetComponent<HostScreenPanelAdapter>().isWaiting = true;
+        }
     }
 
     public void goBack() //uses for back button, if viewing server list it sends a ping, if waiting for host sends cancelJoinRequest
     {
-        if (panelManager.GetComponent<HostScreenPanelAdapter>().isWaiting) ping();
-        else NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.cancelJoinRequest, ""));
-        SceneManager.LoadScene("MainMenu");
+        if (panelManager.GetComponent<HostScreenPanelAdapter>().isWaiting)
+        {
+            if (ping())
+                SceneManager.LoadScene("MainMenu");
+            else
+                SceneManager.LoadScene("LoginScreen");
+        }
+        else
+            if (NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.cancelJoinRequest, "")))
+                SceneManager.LoadScene("MainMenu");
+            else
+                SceneManager.LoadScene("LoginScreen");
     }
 
-    private void ping()
+    private bool ping()
     {
-        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.ping, ""));
+       return NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.ping, ""));
     }
 
     private void addHost(string username)

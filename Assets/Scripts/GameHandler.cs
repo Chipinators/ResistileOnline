@@ -15,7 +15,6 @@ public class GameHandler : MonoBehaviour {
     public GameObject guessScorePanel;
     public GameObject gameOverPanelHeader, primaryScore, secondary1Score, secondary2Score, guessScore, totalScore, starPanel, yellowStar, blueStar;
     public Sprite winTrophy, loseTrophy;
-    public GameObject alertPanel, alertText;
     public Button submitResButton, playAgain;
     public string yourName, opponentName;
     public GameObject currentTile, solderTile;
@@ -23,30 +22,24 @@ public class GameHandler : MonoBehaviour {
     public InputField playerResGuess;
     public GameObject endGameOverlay;
     public GameObject waitingForOpponent;
+    public GameObject alertPanel;
+    public Alert alert;
 
     private Dictionary<int, string> secondaryObjs;
     private Dictionary<int, ResistileServer.GameTile> tileLookup = (new ResistileServer.DeckManager()).allTiles;
     public bool isTurn;
-    private float alertTimer;
+
 
     void Start()
     {
         gameHandler = this;
         fillObjectives();
-        alertTimer = 0.0f;
+        alert = alertPanel.GetComponent<Alert>();
     }
 
     void Update()
     {
-        if (alertTimer > 0)
-        {
-            alertTimer -= Time.deltaTime;
-            alertPanel.SetActive(true);
-        }
-        else if (alertTimer <= 0)
-        {
-            alertPanel.SetActive(false);
-        }
+        
         if (currentTile == null) endTurn.GetComponent<Button>().interactable = false;
         else if (currentTile != null && currentTile.GetComponent<TileData>().type != ResistileServer.GameTileTypes.solder && isTurn) endTurn.GetComponent<Button>().interactable = true;
     }
@@ -252,12 +245,6 @@ public class GameHandler : MonoBehaviour {
         }
     }
 
-    public void alert(string alertStr)
-    {
-        alertText.GetComponent<Text>().text = alertStr;
-        alertTimer = 2.0f;
-    }
-
     public void gameOver(bool isWinner, int pScore, int s1Score, int s2Score, int gScore, int tScore)
     {
         guessScorePanel.SetActive(false);
@@ -317,7 +304,7 @@ public class GameHandler : MonoBehaviour {
     public void noPlayAgain()
     {
         playAgain.GetComponent<Button>().interactable = false;
-        alert("Opponent Declined a Rematch");
+        alert.alert("Opponent Declined a Rematch", 2.0f, true);
     }
 
     public ResistileServer.GameTile getGameTile(int i)
