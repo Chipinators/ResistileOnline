@@ -16,6 +16,7 @@ namespace ResistileClient
         public double guess;
         public bool guessed = false;
         public bool replay = false;
+        public bool[] secondaryObjectiveChecks = new bool[6];
 
         public ResistilePlayer()
         {
@@ -24,7 +25,7 @@ namespace ResistileClient
 
         public ResistilePlayer(string newUserName,ArrayList hand, double newPrimaryObjective, int[] newSecondaryOjective)
         {
-
+            Array.Clear(secondaryObjectiveChecks, 0, secondaryObjectiveChecks.Length);
             userName = newUserName;
             primaryObjective = newPrimaryObjective;
             secondaryObjective = newSecondaryOjective;
@@ -41,6 +42,12 @@ namespace ResistileClient
         public ArrayList getHand()
         {
             return hand;
+        }
+
+        public bool[] getSecondaryObjectiveValues()
+        {
+            return new[]
+                {secondaryObjectiveChecks[secondaryObjective[0]], secondaryObjectiveChecks[secondaryObjective[1]]};
         }
     }
 }
