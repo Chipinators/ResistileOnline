@@ -67,6 +67,7 @@ public class NetworkManager : MonoBehaviour {
             catch (Exception e2)
             {
             }
+            refreshTimer -= Time.deltaTime;
         }
         else
         {
@@ -116,7 +117,7 @@ public class NetworkManager : MonoBehaviour {
             }
             else
             {
-                refreshTimer -= Time.deltaTime;
+                
             }
         }
     }

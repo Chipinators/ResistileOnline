@@ -32,8 +32,12 @@ public class Settings : MonoBehaviour {
     {
         if (resChange) setResolution();
         if (fullscreenChange) setFullScreen();
-        username = GetComponent<Settings>().usernameField.transform.FindChild("Text").GetComponent<Text>().text;
-        NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.login, username));
+        if (nameChange && !GetComponent<Settings>().usernameField.transform.FindChild("Text").GetComponent<Text>().text.Equals(""))
+        {
+            username = GetComponent<Settings>().usernameField.transform.FindChild("Text").GetComponent<Text>().text;
+            NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.login, username));
+            NetworkManager.networkManager.username = username;
+        }
     }
 
     public void setVolume(float value)
