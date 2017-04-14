@@ -153,9 +153,8 @@ namespace ResistileServer
                 {
                     currentVisits = visited[tempTile];
                 }
-
-                List<GameTile> tempPath = new List<GameTile>();
-                while (tempTile != null || tempTile != startTile)
+                
+                while (tempTile != null && tempTile != startTile)
                 {
                     currentVisits.Add(tempTile);
                     if (tempTile.type == GameTileTypes.Wire.typeT)
@@ -177,7 +176,7 @@ namespace ResistileServer
                 }
 
                 if (tempTile == startTile)
-                    paths.Add(tempPath);
+                    paths.Add(currentVisits);
                     
             }
             return paths;
@@ -218,8 +217,11 @@ namespace ResistileServer
             List<GameTile> openEnds = new List<GameTile>();
             startTile.neighbors[Directions.left] = GameTile.blockedDirectionTile;
             if(startTile.neighbors[Directions.right] == null) startTile.neighbors[Directions.right] = GameTile.blockedDirectionTile;
-            if (startTile.neighbors[Directions.right] == null) startTile.neighbors[Directions.right] = GameTile.blockedDirectionTile;
+            if (startTile.neighbors[Directions.down] == null) startTile.neighbors[Directions.down] = GameTile.blockedDirectionTile;
             endTile.neighbors[Directions.down] = GameTile.blockedDirectionTile;
+            if (endTile.neighbors[Directions.up] == null) startTile.neighbors[Directions.up] = GameTile.blockedDirectionTile;
+            if (endTile.neighbors[Directions.left] == null) startTile.neighbors[Directions.left] = GameTile.blockedDirectionTile;
+
             foreach (var gameTile in board)
             {
                 if (gameTile != null)
@@ -240,12 +242,9 @@ namespace ResistileServer
                     }
                     else
                     {
-                        foreach (var neighbor in gameTile.neighbors.Keys.ToList())
+                        if (gameTile.neighbors.Values.Contains(null))
                         {
-                            if (gameTile.neighbors[neighbor] == null)
-                            {
-                                openEnds.Add(gameTile);
-                            }
+                            openEnds.Add(gameTile);
                         }
                     }
                 }
