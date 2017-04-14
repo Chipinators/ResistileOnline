@@ -50,7 +50,15 @@ namespace Assets.Scripts
         public void OnEndDrag(PointerEventData eventData)
         {
             gameObject.transform.SetParent(returnParent);
-            gameObject.transform.SetSiblingIndex(placeholder.transform.GetSiblingIndex());
+            if(returnParent.Equals(GameHandler.gameHandler.resHand) || returnParent.Equals(GameHandler.gameHandler.wireHand))
+            {   //If return parent is the resistor or wire hand
+                gameObject.transform.SetSiblingIndex(placeholder.transform.GetSiblingIndex());
+            }   //If return parent is on the board
+            else
+            {
+                gameObject.transform.SetAsFirstSibling();
+            }
+            
             GetComponent<CanvasGroup>().blocksRaycasts = true;
             DestroyImmediate(placeholder);
         }

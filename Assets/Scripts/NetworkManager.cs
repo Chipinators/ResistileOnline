@@ -12,23 +12,27 @@ using ResistileClient;
 using UnityEngine.SceneManagement;
 
 public class NetworkManager : MonoBehaviour {
-    public static NetworkManager networkManager;
+    public static NetworkManager networkManager = null;
     public TcpClient dest;
     public NetworkStream destStream;
     public int gameID;
     public string username;
     private static XmlSerializer serializer;
-    public Thread readDataThread;
+    public Thread readDataThread, serverConnectionThread;
     public MessageHanderInterface messageInterface;
     public string opponent;
-    public bool runNetworkThread = true, quitGame = false, searchingForServer = true;
+    public bool runNetworkThread = true, quitGame = false, searchingForServer = true, serverFound = false;
     public float refreshTimer;
 
     // Use this for initialization
     void Start () {
         networkManager = this;
-        serializer = new XmlSerializer(typeof(ResistileClient.ResistileMessage));
+        serializer = new XmlSerializer(typeof(ResistileMessage));
         dest = new TcpClient();
+
+        serverConnectionThread = new Thread(connectToServer);
+        serverConnectionThread.IsBackground = true;
+        serverConnectionThread.Start();
     }
 
     void OnApplicationQuit()
@@ -46,16 +50,50 @@ public class NetworkManager : MonoBehaviour {
         runNetworkThread = false;
         quitGame = true;
         searchingForServer = false;
-        readDataThread.Abort();
     }
 
     void Update()
     {
+        if (quitGame)
+        {
+            if (!Application.isEditor) System.Diagnostics.Process.GetCurrentProcess().Kill();
+        }
         if (searchingForServer)
         {
             try
             {
-                if (refreshTimer <= 0)
+                GameObject.Find("AlertPanel").GetComponent<Alert>().alert("Server Is Offline", refreshTimer + 1.0f, true);
+            }
+            catch (Exception e2)
+            {
+            }
+        }
+        else
+        {
+            if (serverFound)
+            {
+                GameObject.Find("AlertPanel").GetComponent<Alert>().alert("Connected to Server", 2.0f, false);
+                serverFound = false;
+            }
+        }
+    }
+
+    void Awake()
+    {
+        //if (networkManager == null)
+        //    networkManager = this;
+        //else if (networkManager != this)
+        //    Destroy(gameObject);
+        DontDestroyOnLoad(this);
+    }
+
+    public void connectToServer()
+    {
+        while (searchingForServer)
+        {
+            if (refreshTimer <= 0)
+            {
+                try
                 {
                     refreshTimer = 5.0f;
                     dest.Connect("127.0.0.1", 8888);
@@ -65,38 +103,22 @@ public class NetworkManager : MonoBehaviour {
                     readDataThread = new Thread(receiveMessage);
                     readDataThread.IsBackground = true;
                     readDataThread.Start();
+                    serverFound = true;
                     searchingForServer = false;
-                    GameObject.Find("AlertPanel").GetComponent<Alert>().alert("Connected to Server", 2.0f, false);   
                 }
-                else
+                catch (Exception e)
                 {
-                    refreshTimer -= Time.deltaTime;
+                    Debug.Log(e);
+                    searchingForServer = true;
+                    serverFound = false;
+                    Debug.Log("Couldn't connect to server.\n" + e);
                 }
             }
-            catch (Exception e)
+            else
             {
-                Debug.Log(e);
-                searchingForServer = true;
-                Debug.Log("Couldn't connect to server.\n" + e);
-                try {
-                    GameObject.Find("AlertPanel").GetComponent<Alert>().alert("Server Is Offline", refreshTimer + 0.5f, true);
-                }
-                catch (Exception e2)
-                {
-
-                }
+                refreshTimer -= Time.deltaTime;
             }
         }
-
-        if (quitGame)
-        {
-            if (!Application.isEditor) System.Diagnostics.Process.GetCurrentProcess().Kill();
-        }
-    }
-
-    void Awake()
-    {
-        DontDestroyOnLoad(this);
     }
 
     public bool sendMessage(ResistileMessage message)
@@ -116,13 +138,15 @@ public class NetworkManager : MonoBehaviour {
                 if (!quitGame)
                 {
                     SceneManager.LoadScene("LoginScreen");
+                    networkManager.searchingForServer = true;
                     DestroyImmediate(gameObject);
-                    DestroyImmediate(GameObject.Find("AudioManager"));
+                    //DestroyImmediate(GameObject.Find("AudioManager"));
                 }
                 else
                 {
                     if (!Application.isEditor) System.Diagnostics.Process.GetCurrentProcess().Kill();
                 }
+                runNetworkThread = false;
                 return false;
             }
         }

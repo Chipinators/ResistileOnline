@@ -38,7 +38,7 @@ public class GameHandler : MonoBehaviour {
         //Draw(51);
         //Draw(45);
         //Draw(60);
-        //Draw(63);
+        //Draw(90);
         alert = alertPanel.GetComponent<Alert>();
     }
 
