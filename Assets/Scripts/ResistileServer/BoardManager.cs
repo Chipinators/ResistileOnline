@@ -216,6 +216,10 @@ namespace ResistileServer
             //         save them in a list
             //     then iterate board, find them, then put blockedNeighbor to its closes't wireT parent.
             List<GameTile> openEnds = new List<GameTile>();
+            startTile.neighbors[Directions.left] = GameTile.blockedDirectionTile;
+            if(startTile.neighbors[Directions.right] == null) startTile.neighbors[Directions.right] = GameTile.blockedDirectionTile;
+            if (startTile.neighbors[Directions.right] == null) startTile.neighbors[Directions.right] = GameTile.blockedDirectionTile;
+            endTile.neighbors[Directions.down] = GameTile.blockedDirectionTile;
             foreach (var gameTile in board)
             {
                 if (gameTile != null)

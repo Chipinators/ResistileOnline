@@ -1,24 +1,36 @@
 ﻿using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Xml.Serialization;
 namespace ResistileServer
 {
     class Program
     {
+        private static TcpListener serverSocket;
+        private static TcpClient clientSocket;
+        static ConsoleEventDelegate handler;   // Keeps it from getting garbage collected
+                                               // Pinvoke
+        private delegate bool ConsoleEventDelegate(int eventType);
+        [DllImport("kernel32.dll", SetLastError = true)]
+        private static extern bool SetConsoleCtrlHandler(ConsoleEventDelegate callback, bool add);
+
+        private static bool running = true;
         static void Main(string[] args)
         {
+            handler = new ConsoleEventDelegate(ConsoleEventCallback);
+            SetConsoleCtrlHandler(handler, true);
             writeServerTitle();
             IPAddress ip = IPAddress.Parse("0.0.0.0");
-            TcpListener serverSocket = new TcpListener(ip, 8888);
-            TcpClient clientSocket = default(TcpClient);
+            serverSocket = new TcpListener(ip, 8888);
+            clientSocket = default(TcpClient);
             int counter = 0;
 
             serverSocket.Start();
             Console.WriteLine(" >> " + "Server Started");
 
             counter = 0;
-            while (true)
+            while (running)
             {
                 counter += 1;
                 clientSocket = serverSocket.AcceptTcpClient();
@@ -27,11 +39,22 @@ namespace ResistileServer
                 client.startClient(clientSocket, Convert.ToString(counter));
             }
 
-            //clientSocket.Close();
-            //serverSocket.Stop();
-            //Console.WriteLine(" >> " + "exit");
-            //Console.ReadLine();
+            
         }
+        static bool ConsoleEventCallback(int eventType)
+        {
+            if (eventType == 2)
+            {
+                running = false;
+                Console.WriteLine("Console window closing, death imminent");
+                clientSocket.Close();
+                serverSocket.Stop();
+                Console.WriteLine(" >> " + "exit");
+                
+            }
+            return false;
+        }
+        
         private static void writeServerTitle()
         {
             Console.WriteLine();

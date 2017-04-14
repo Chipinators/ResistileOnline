@@ -85,15 +85,6 @@
     <Reference Include="UnityEditor.iOS.Extensions.Common">
       <HintPath>Library\UnityAssemblies\UnityEditor.iOS.Extensions.Common.dll</HintPath>
     </Reference>
-    <Reference Include="Accord">
-      <HintPath>Assets\packages\Accord.3.4.0\lib\net35\Accord.dll</HintPath>
-    </Reference>
-    <Reference Include="Accord.Math.Core">
-      <HintPath>Assets\packages\Accord.Math.3.4.0\lib\net35\Accord.Math.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Accord.Math">
-      <HintPath>Assets\packages\Accord.Math.3.4.0\lib\net35\Accord.Math.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
       <HintPath>Assets\packages\Microsoft\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll</HintPath>
     </Reference>

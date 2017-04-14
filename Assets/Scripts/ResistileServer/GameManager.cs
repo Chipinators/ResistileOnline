@@ -142,8 +142,8 @@ namespace ResistileServer
         {
             if (!calculated)
             {
-                resistance = 10;
-                resistance = board.Calculate();
+                resistance = 15;
+                //resistance = board.Calculate();
                 calculated = true;
             }
         }
