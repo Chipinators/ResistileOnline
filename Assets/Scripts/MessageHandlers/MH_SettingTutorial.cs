@@ -66,14 +66,7 @@ public class MH_SettingTutorial : MonoBehaviour, MessageHanderInterface {
     {
         if (ping())
         {
-            if (GetComponent<Settings>().nameChange)
-            {
-                NetworkManager.networkManager.sendMessage(new ResistileMessage(0, ResistileMessageTypes.login, GetComponent<Settings>().usernameField.transform.FindChild("Text").GetComponent<Text>().text));
-            }
-            else
-            {
-                SceneManager.LoadScene("MainMenu");
-            }
+            SceneManager.LoadScene("MainMenu");
         }
         else
         {
