@@ -143,8 +143,19 @@ namespace ResistileServer
             if (!calculated)
             {
                 //resistance = 15;
-                resistance = board.Calculate();
-                calculated = true;
+                try
+                {
+                    resistance = board.Calculate();
+                    Console.WriteLine("Resistance is " + resistance);
+                    calculated = true;
+                }
+                catch (Exception e)
+                {
+                    resistance = 10;
+                    Console.WriteLine(e.Message);
+                    Console.WriteLine("Exception occured calculating, resistance set to " + resistance);
+                    calculated = true;
+                }
             }
         }
 

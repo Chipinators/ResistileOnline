@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Accord;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ResistileServer
@@ -10,41 +11,96 @@ namespace ResistileServer
     public class TestCases
     {
         [TestMethod]
-        public void testPrimary()
-        {
-            
-        }
-
-        [TestMethod]
-        public void testSecondary1()
+        public void testCalculateOnePath()
         {
             var boardManager = new BoardManager();
-            var tile = new GameTile(GameTileTypes.Wire.typeI, -1);
-            var tile2 = new GameTile(GameTileTypes.Wire.typeII, -1);
+            for (var i = 1; i < 8; i++)
+            {
+                boardManager.AddTile(new GameTile(GameTileTypes.Wire.typeI),new []{i, 0} );
+            }
+            boardManager.AddTile(new GameTile(GameTileTypes.Wire.typeII), new[] { 8, 0 });
+            for (var i = 1; i < 8; i++)
+            {
+                var tile = new GameTile(GameTileTypes.Wire.typeI);
+                tile.Rotate();
+                boardManager.AddTile(tile, new []{8, i});
+            }
+            var result = boardManager.Calculate();
+            Assert.IsTrue(result.IsLessThan(0.1) && result.IsGreaterThan(-0.1));
         }
 
         [TestMethod]
-        public void testSecondary2()
+        public void testCalculateTwoPaths()
         {
-            
+            var boardManager = new BoardManager();
+            for (var i = 1; i < 7; i++)
+            {
+                boardManager.AddTile(new GameTile(GameTileTypes.Wire.typeI), new[] { i, 0 });
+            }
+            boardManager.AddTile(new GameTile(GameTileTypes.Wire.typeT), new []{7, 0});
+            var tile1 = new GameTile(GameTileTypes.Resistor.typeII, 0, 4);
+            tile1.Rotate();
+            tile1.Rotate();
+            boardManager.AddTile(tile1, new[] { 7, 1 });
+            boardManager.AddTile(new GameTile(GameTileTypes.Resistor.typeII, 0, 4), new[] { 8, 0 });
+            var tile2 = new GameTile(GameTileTypes.Wire.typeT);
+            tile2.Rotate();
+            boardManager.AddTile(tile2, new []{8, 1});
+            for (var i = 2; i < 8; i++)
+            {
+                var tile = new GameTile(GameTileTypes.Wire.typeI);
+                tile.Rotate();
+                boardManager.AddTile(tile, new[] { 8, i });
+            }
+            var result = boardManager.Calculate();
+            Assert.IsTrue(result.IsLessThan(2.1) && result.IsGreaterThan(1.9));
         }
 
         [TestMethod]
-        public void testSecondary3()
+        public void testCalculateThreePaths()
         {
-            
-        }
+            var boardManager = new BoardManager();
+            for (var i = 1; i < 6; i++)
+            {
+                boardManager.AddTile(new GameTile(GameTileTypes.Wire.typeI), new[] { i, 0 });
+            }
+            boardManager.AddTile(new GameTile(GameTileTypes.Wire.typeT), new[] { 6, 0 });
+            boardManager.AddTile(new GameTile(GameTileTypes.Wire.typeT), new[] { 7, 0 });
+            boardManager.AddTile(new GameTile(GameTileTypes.Resistor.typeII, 0, 4), new[] { 8, 0 });
 
-        [TestMethod]
-        public void testSecondary4()
-        {
-            
-        }
+            var tile = new GameTile(GameTileTypes.Wire.typeI);
+            tile.Rotate();
+            boardManager.AddTile(tile, new[] { 6, 1 });
 
-        [TestMethod]
-        public void testSecondary5()
-        {
+            tile = new GameTile(GameTileTypes.Resistor.typeII, 0, 12);
+            tile.Rotate();
+            tile.Rotate();
+            boardManager.AddTile(tile, new[] { 6, 2 });
+
+            tile = new GameTile(GameTileTypes.Wire.typeI);
+            boardManager.AddTile(tile, new[] { 7, 2 });
+
+            tile = new GameTile(GameTileTypes.Resistor.typeII, 0, 12);
+            tile.Rotate();
+            tile.Rotate();
+            boardManager.AddTile(tile, new[] { 7, 1 });
             
+            tile = new GameTile(GameTileTypes.Wire.typeT);
+            tile.Rotate();
+            boardManager.AddTile(tile, new[] { 8, 1 });
+
+            tile = new GameTile(GameTileTypes.Wire.typeT);
+            tile.Rotate();
+            boardManager.AddTile(tile, new[] { 8, 2 });
+
+            for (var i = 3; i < 8; i++)
+            {
+                tile = new GameTile(GameTileTypes.Wire.typeI);
+                tile.Rotate();
+                boardManager.AddTile(tile, new[] { 8, i });
+            }
+            var result = boardManager.Calculate();
+            Assert.IsTrue(result.IsLessThan(4.1) && result.IsGreaterThan(3.9));
         }
 
         [TestMethod]
@@ -56,7 +112,7 @@ namespace ResistileServer
             tile2.Rotate();
             boardManager.AddTile(tile, new[] { 1, 0 });
             var check = boardManager.IsValidMove(tile2, new[] {2, 1});
-            Assert.IsTrue(check, "Weird case returning false");
+            Assert.IsFalse(check, "Not a valid placement on 2,1 because blocks type1 on 1,0 false");
         }
         [TestMethod]
         public void BlockStart()

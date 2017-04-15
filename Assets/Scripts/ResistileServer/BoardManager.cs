@@ -32,11 +32,21 @@ namespace ResistileServer
         {
             // every open end should reference to blocked direction tile
             blockOpenEnds();
-            addOneWireToAdjacentTWires();
+            Console.WriteLine("blocked open ends");
+            //addOneWireToAdjacentTWires();
+            Console.WriteLine("added wires to any adjacent Ts");
             var paths = FindAllPaths();
+            Console.WriteLine("Found all paths");
             // one path, return sum of all.
+            if (paths.Count == 0)
+            {
+                Console.WriteLine("No Paths Found... Something went wrong.");
+                return -2;
+            }
             if (paths.Count == 1)
+            {
                 return paths[0].Sum(gameTile => gameTile.resistance);
+            }
             else
             {
                 //first, put current index in each tile in paths.
@@ -56,16 +66,17 @@ namespace ResistileServer
                         if (tile.type == GameTileTypes.Wire.typeT)
                         {
                             currentIndex++;
-                            if(!allTWires.Contains(tile))
+                            if (!allTWires.Contains(tile) && tile != startTile)
                                 allTWires.Add(tile);
                         }
-                            
+
                         previousTile = tile;
                     }
                 }
+                Console.WriteLine("All indexes are written");
                 double voltage = 12;
-                double[,] solutionMatrix = new double[currentIndex + 1, currentIndex + 1];
-                double[,] rightSide = new double[currentIndex + 1, 1];
+                double[,] solutionMatrix = new double[currentIndex+1, currentIndex+1];
+                double[,] rightSide = new double[currentIndex+1, 1];
                 //then find first nonblockdir T mach, get current index,
                 //special case start tile
                 int row = 0;
@@ -98,62 +109,58 @@ namespace ResistileServer
                     var neighborA = wire.neighbors.Values.First(neighbor => neighbor != GameTile.blockedDirectionTile);
                     var neighborB = wire.neighbors.Values.First(neighbor => neighbor != GameTile.blockedDirectionTile && neighbor != neighborA);
                     var neighborC = wire.neighbors.Values.First(neighbor => neighbor != GameTile.blockedDirectionTile && neighbor != neighborA && neighbor != neighborB);
-                    solutionMatrix[row, neighborA.currentIndex] = 1;
-                    solutionMatrix[row, neighborB.currentIndex] = -1;
-                    solutionMatrix[row, neighborC.currentIndex] = -1;
+                    solutionMatrix[row, neighborA.currentIndex] = neighborA.firstAccessor == wire ? 1 : -1;
+                    solutionMatrix[row, neighborB.currentIndex] = neighborB.firstAccessor == wire ? 1 : -1;
+                    solutionMatrix[row, neighborC.currentIndex] = neighborC.firstAccessor == wire ? 1 : -1;
                     rightSide[row, 0] = 0;
-                    row += row < currentIndex ? 1 : 0; //just in case
+                    row++;
                 }
                 foreach (var path in paths)
                 {
                     double tempResistance = 0;
                     int tempIndex = 0;
+                    GameTile prevTile = path[0];
                     for (var i = 1; i < path.Count; i++)
                     {
                         GameTile tempTile = path[i];
-                        if (tempTile.currentIndex == tempIndex)
+                        if (tempTile.type != GameTileTypes.Wire.typeT)
                         {
-                            tempResistance += tempTile.resistance;
+                            if (tempTile.currentIndex == tempIndex)
+                            {
+                                tempResistance += tempTile.getResistanceWithDirection(prevTile);
+                            }
+                            else
+                            {
+                                solutionMatrix[row, tempIndex] = tempResistance;
+                                tempResistance = tempTile.getResistanceWithDirection(prevTile);
+                            }
+                            tempIndex = tempTile.currentIndex;
                         }
-                        else
-                        {
-                            solutionMatrix[row, tempIndex] = tempResistance;
-                            tempResistance = tempTile.resistance;
-                        }
-                        tempIndex = tempTile.currentIndex;
+                        prevTile = tempTile;
                     }
                     rightSide[row, 0] = voltage;
-                    row += row < currentIndex ? 1 : 0; //just in case
+                    row++;
                 }
                 //specific equals case for start and end tiles.
                 //     set that 1, get other neighbors, their current indexes, 0 into solution matrix
                 //Ideally, matrix should be square, but can be approximated if less.
-                
+
                 var amp = solutionMatrix.Solve(rightSide, leastSquares: true)[0, 0];
                 double totalResistance = voltage / amp;
-                return totalResistance;;
+                return totalResistance;
             }
         }
 
         private List<List<GameTile>> FindAllPaths()
         {
-            List<GameTile> toBeTraversed = new List<GameTile> {endTile};
-            Dictionary<GameTile, List<GameTile>> visited = new Dictionary<GameTile, List<GameTile>>();
+            List<GameTile> toBeTraversed = new List<GameTile> { endTile.neighbors.Values.First(neighbor => neighbor != GameTile.blockedDirectionTile && neighbor != endTile) };
+            List<List<GameTile>> visited = new List<List<GameTile>>() { new List<GameTile>() { endTile } };
             List<List<GameTile>> paths = new List<List<GameTile>>();
             for (var i = 0; i < toBeTraversed.Count; i++)
             {
                 var tempTile = toBeTraversed[i];
-                List<GameTile> currentVisits;
-                if (!visited.ContainsKey(tempTile))
-                {
-                    currentVisits = new List<GameTile>();
-                    visited.Add(tempTile, currentVisits);
-                }
-                else
-                {
-                    currentVisits = visited[tempTile];
-                }
-                
+                List<GameTile> currentVisits = visited[i];
+
                 while (tempTile != null && tempTile != startTile)
                 {
                     currentVisits.Add(tempTile);
@@ -161,13 +168,14 @@ namespace ResistileServer
                     {
                         //there will be two nodes to be traversed
                         //those neighbors should be the ones not in the current visit.
-                        var addToBeTraversedList = tempTile.neighbors.Values.Where(search => search != GameTile.blockedDirectionTile && !currentVisits.Contains(search));
+                        var addToBeTraversedList = tempTile.neighbors.Values.Where(search => search != GameTile.blockedDirectionTile && !currentVisits.Contains(search)).ToList();
                         foreach (var addToBeTraversed in addToBeTraversedList)
                         {
                             toBeTraversed.Add(addToBeTraversed);
                             var copyCurrentPath = new List<GameTile>(currentVisits);
-                            visited.Add(addToBeTraversed, copyCurrentPath);
+                            visited.Add(copyCurrentPath);
                         }
+                        tempTile = null;
                     }
                     else
                     {
@@ -177,7 +185,7 @@ namespace ResistileServer
 
                 if (tempTile == startTile)
                     paths.Add(currentVisits);
-                    
+
             }
             return paths;
         }
@@ -216,7 +224,7 @@ namespace ResistileServer
             //     then iterate board, find them, then put blockedNeighbor to its closes't wireT parent.
             List<GameTile> openEnds = new List<GameTile>();
             startTile.neighbors[Directions.left] = GameTile.blockedDirectionTile;
-            if(startTile.neighbors[Directions.right] == null) startTile.neighbors[Directions.right] = GameTile.blockedDirectionTile;
+            if (startTile.neighbors[Directions.right] == null) startTile.neighbors[Directions.right] = GameTile.blockedDirectionTile;
             if (startTile.neighbors[Directions.down] == null) startTile.neighbors[Directions.down] = GameTile.blockedDirectionTile;
             endTile.neighbors[Directions.down] = GameTile.blockedDirectionTile;
             if (endTile.neighbors[Directions.up] == null) startTile.neighbors[Directions.up] = GameTile.blockedDirectionTile;
@@ -256,7 +264,7 @@ namespace ResistileServer
                 do
                 {
                     traversed.Add(neighbor);
-                    neighbor = 
+                    neighbor =
                        neighbor.neighbors.Values.First(
                            newNeighbor => newNeighbor != null && !traversed.Contains(newNeighbor) && newNeighbor != GameTile.blockedDirectionTile);
 
@@ -392,7 +400,7 @@ namespace ResistileServer
             //Case 3.3
             isValid = isValid & HasAtLeastOneNeighbor();
             //Case 4
-            if ((coordinates[0] == xUpTerminal && coordinates[1] == yUpTerminal) || 
+            if ((coordinates[0] == xUpTerminal && coordinates[1] == yUpTerminal) ||
                 (coordinates[0] == xLeftTerminal && coordinates[1] == yLeftTerminal))
             {
                 if (neighborCount > 1)
@@ -405,7 +413,7 @@ namespace ResistileServer
                 }
             }
 
-            
+
             return isValid;
 
         }
@@ -421,7 +429,7 @@ namespace ResistileServer
             {
                 return false;
             }
-            
+
             var tileOnBoard = board[coordinates.x(), coordinates.y()];
             //up
             if (newtile.neighbors[Directions.up] == null)
@@ -526,7 +534,7 @@ namespace ResistileServer
 
         private bool HappyNeighbor(GameTile tile, string direction)
         {
-            if(tile == null)
+            if (tile == null)
             {
                 return true;
             }
@@ -535,7 +543,7 @@ namespace ResistileServer
                 neighborCount++;
                 return tile.neighbors[direction] == null;
             }
-            
+
         }
 
         private bool HasAtLeastOneNeighbor()

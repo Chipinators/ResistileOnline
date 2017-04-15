@@ -65,8 +65,7 @@ namespace ResistileServer
 
         public override bool Equals(object obj)
         {
-            var gameTile = (GameTile)obj;
-            return gameTile != null && id == gameTile.id;
+            return Object.ReferenceEquals(obj, this);
         }
 
         public static readonly GameTile blockedDirectionTile = new GameTile(GameTileTypes.blockedDirection, -1);
